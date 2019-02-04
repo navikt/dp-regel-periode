@@ -1,24 +1,31 @@
 package no.nav.dagpenger.regel.periode
 
-import java.time.LocalDate
+import org.json.JSONObject
 
-data class SubsumsjonsBehov (
-    val aktørId: String,
-    val vedtakId: Int,
-    val beregningsDato: LocalDate,
-    val avtjentVerneplikt: Boolean? = false,
-    val eøs: Boolean? = false,
-    val antallBarn: Int? = 0,
-    val inntekt: Int? = null,
+data class SubsumsjonsBehov(val jsonObject: JSONObject) {
 
-    var tasks: List<String>? = null,
+    fun needsHentInntektsTask(): Boolean = !hasInntekt() && !hasHentInntektTask()
 
-    var periodeSubsumsjon: PeriodeSubsumsjon? = null
-)
+    fun needsPeriodeSubsumsjon(): Boolean = hasInntekt() && !hasPeriodeSubsumsjon()
 
-data class PeriodeSubsumsjon(
-    val sporingsId: String,
-    val subsumsjonsId: String,
-    val regelIdentifikator: String,
-    val antallUker: Int
-)
+    private fun hasInntekt() = jsonObject.has("inntekt")
+
+    private fun hasHentInntektTask(): Boolean {
+        if (jsonObject.has("tasks")) {
+            val tasks = jsonObject.getJSONArray("tasks")
+            for (task in tasks) {
+                if (task.toString() == "hentInntekt") {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun hasPeriodeSubsumsjon() = jsonObject.has("periodeSubsumsjon")
+
+    fun hasTasks(): Boolean = jsonObject.has("tasks")
+
+    fun hasVerneplikt(): Boolean = jsonObject.has("tasks")
+}
+

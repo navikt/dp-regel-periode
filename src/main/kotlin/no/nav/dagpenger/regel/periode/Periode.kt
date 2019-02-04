@@ -12,6 +12,7 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
+import org.json.JSONObject
 import java.util.Properties
 
 private val LOGGER = KotlinLogging.logger {}
@@ -45,10 +46,11 @@ class Periode(val env: Environment) : Service() {
 
         val (needsInntekt, needsSubsumsjon) = stream
             .peek { key, value -> LOGGER.info("Processing ${value.javaClass} with key $key") }
+                .mapValues { value: JSONObject -> SubsumsjonsBehov(value) }
             .filter { _, behov -> shouldBeProcessed(behov) }
             .kbranch(
-                { _, behov: SubsumsjonsBehov -> behov.inntekt == null },
-                { _, behov: SubsumsjonsBehov -> behov.inntekt != null })
+                { _, behov: SubsumsjonsBehov -> behov.needsHentInntektsTask() },
+                { _, behov: SubsumsjonsBehov -> behov.needsPeriodeSubsumsjon() })
 
         needsInntekt.mapValues(this::addInntektTask)
         needsSubsumsjon.mapValues(this::addRegelresultat)
@@ -69,36 +71,36 @@ class Periode(val env: Environment) : Service() {
         return props
     }
 
-    private fun addInntektTask(behov: SubsumsjonsBehov): SubsumsjonsBehov {
-        behov.tasks = listOf("hentInntekt")
-        return behov
+    private fun addInntektTask(behov: SubsumsjonsBehov): JSONObject {
+        val jsonObject = behov.jsonObject
+
+        if (behov.hasTasks()) {
+           jsonObject.append("tasks", "hentInntekt")
+        } else {
+            jsonObject.put("tasks", listOf("hentInntekt"))
+        }
+
+        return jsonObject
     }
 
-    private fun addRegelresultat(behov: SubsumsjonsBehov): SubsumsjonsBehov {
-        behov.periodeSubsumsjon = PeriodeSubsumsjon(
-            "aaa",
-            "bbb",
-            "Periode.v1",
-            if (behov.avtjentVerneplikt == true) 26 else 0
-        )
+    private fun addRegelresultat(behov: SubsumsjonsBehov): JSONObject {
+            val jsonObject = behov.jsonObject
+
+                    jsonObject.put("periodeSubsumsjon", mapOf(
+                            "sporingsId" to "aaa",
+                            "subsumsjonsId" to "bbb",
+                            "regelIdentifikator" to "Periode.v1",
+                            "antallUker" to if (behov.avtjentVerneplikt == true) 26 else 0
+                    ))
+
         return behov
     }
 }
 
 fun shouldBeProcessed(behov: SubsumsjonsBehov): Boolean {
     return when {
-        needsInntektTask(behov) -> true
-        needsMinsteinntektSubsumsjon(behov) -> true
+        behov.needsHentInntektsTask() -> true
+        behov.needsPeriodeSubsumsjon() -> true
         else -> false
     }
 }
-
-fun needsInntektTask(behov: SubsumsjonsBehov): Boolean {
-    return behov.inntekt == null && behov.tasks == null
-}
-
-fun needsMinsteinntektSubsumsjon(behov: SubsumsjonsBehov): Boolean {
-    return behov.inntekt != null && behov.periodeSubsumsjon == null
-}
-
-class MinsteinntektRegelException(override val message: String) : RuntimeException(message)
