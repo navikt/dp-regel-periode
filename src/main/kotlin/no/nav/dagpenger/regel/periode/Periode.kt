@@ -79,7 +79,7 @@ class Periode(val env: Environment) : Service() {
             "aaa",
             "bbb",
             "Periode.v1",
-            0
+            if (behov.avtjentVerneplikt == true) 26 else 0
         )
         return behov
     }
