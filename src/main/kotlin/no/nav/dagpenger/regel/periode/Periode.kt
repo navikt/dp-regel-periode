@@ -3,6 +3,7 @@ package no.nav.dagpenger.regel.periode
 import mu.KotlinLogging
 import no.nav.dagpenger.streams.KafkaCredential
 import no.nav.dagpenger.streams.Service
+import no.nav.dagpenger.streams.Topic
 import no.nav.dagpenger.streams.Topics
 import no.nav.dagpenger.streams.kbranch
 import no.nav.dagpenger.streams.streamConfig
@@ -16,6 +17,12 @@ import org.json.JSONObject
 import java.util.Properties
 
 private val LOGGER = KotlinLogging.logger {}
+
+val dagpengerBehovTopic = Topic(
+        Topics.DAGPENGER_BEHOV_EVENT.name,
+        Serdes.StringSerde(),
+        Serdes.serdeFrom(JsonSerializer(), JsonDeserializer())
+)
 
 class Periode(val env: Environment) : Service() {
     override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
@@ -37,11 +44,9 @@ class Periode(val env: Environment) : Service() {
     internal fun buildTopology(): Topology {
         val builder = StreamsBuilder()
 
-        val topic = Topics.DAGPENGER_BEHOV_EVENT
-
         val stream = builder.stream(
-                Topics.DAGPENGER_BEHOV_EVENT.name,
-                Consumed.with(Serdes.StringSerde(), Serdes.serdeFrom(JsonSerializer(), JsonDeserializer()))
+                dagpengerBehovTopic.name,
+                Consumed.with(dagpengerBehovTopic.keySerde, dagpengerBehovTopic.valueSerde)
         )
 
         val (needsInntekt, needsSubsumsjon) = stream
@@ -57,7 +62,8 @@ class Periode(val env: Environment) : Service() {
 
         needsInntekt.merge(needsSubsumsjon)
                 .peek { key, value -> LOGGER.info("Producing ${value.javaClass} with key $key") }
-                .to(topic.name, Produced.with(Serdes.StringSerde(), Serdes.serdeFrom(JsonSerializer(), JsonDeserializer())))
+                .mapValues { _, behov -> behov.jsonObject }
+                .to(dagpengerBehovTopic.name, Produced.with(dagpengerBehovTopic.keySerde, dagpengerBehovTopic.valueSerde))
 
         return builder.build()
     }
@@ -71,7 +77,7 @@ class Periode(val env: Environment) : Service() {
         return props
     }
 
-    private fun addInntektTask(behov: SubsumsjonsBehov): JSONObject {
+    private fun addInntektTask(behov: SubsumsjonsBehov): SubsumsjonsBehov {
         val jsonObject = behov.jsonObject
 
         if (behov.hasTasks()) {
@@ -80,28 +86,20 @@ class Periode(val env: Environment) : Service() {
             jsonObject.put("tasks", listOf("hentInntekt"))
         }
 
-        return jsonObject
+        return SubsumsjonsBehov(jsonObject)
     }
 
-    private fun addRegelresultat(behov: SubsumsjonsBehov): JSONObject {
-
-        val antallUker = if (behov.avtjentVerneplikt == true) 26 else 0
-
+    private fun addRegelresultat(behov: SubsumsjonsBehov): SubsumsjonsBehov {
         val jsonObject = behov.jsonObject
 
-        return jsonObject.put("periodeSubsumsjon", mapOf(
-                "sporingsId" to "aaa",
-                "subsumsjonsId" to "bbb",
-                "regelIdentifikator" to "Periode.v1",
-                "antallUker" to
-        ))
+        return SubsumsjonsBehov(jsonObject
+                .put("periodeSubsumsjon", JSONObject()
+                        .put("sporingsId", "123")
+                        .put("subsumsjonsId", "456")
+                        .put("regelIdentifikator", "Periode.v1")
+                        .put("antallUker", if (behov.getAvtjentVerneplikt()) 26 else 0))
+        )
     }
 }
 
-fun shouldBeProcessed(behov: SubsumsjonsBehov): Boolean {
-    return when {
-        behov.needsHentInntektsTask() -> true
-        behov.needsPeriodeSubsumsjon() -> true
-        else -> false
-    }
-}
+fun shouldBeProcessed(behov: SubsumsjonsBehov): Boolean = behov.needsHentInntektsTask() || behov.needsPeriodeSubsumsjon()

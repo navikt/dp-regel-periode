@@ -1,25 +1,22 @@
 package no.nav.dagpenger.regel.periode
 
-import no.nav.dagpenger.streams.Topics
-import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
+import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Properties
-import java.util.Random
 import kotlin.test.assertTrue
 
 class PeriodeTopologyTest {
 
-    val jsonAdapter = moshiInstance.adapter(SubsumsjonsBehov::class.java)
-
     companion object {
-        val factory = ConsumerRecordFactory<String, String>(
-            Topics.DAGPENGER_BEHOV_EVENT.name,
-            Serdes.String().serializer(),
-            Serdes.String().serializer()
+        val factory = ConsumerRecordFactory<String, JSONObject>(
+                dagpengerBehovTopic.name,
+                dagpengerBehovTopic.keySerde.serializer(),
+                dagpengerBehovTopic.valueSerde.serializer()
         )
 
         val config = Properties().apply {
@@ -31,64 +28,60 @@ class PeriodeTopologyTest {
     @Test
     fun ` Should add inntekt task to subsumsjonsBehov without inntekt `() {
         val datalaster = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
+                Environment(
+                        username = "bogus",
+                        password = "bogus"
+                )
         )
 
-        val behov = SubsumsjonsBehov(
-            "12345",
-            Random().nextInt(),
-            LocalDate.now())
-        val behovJson = jsonAdapter.toJson(behov)
+        val behov = JSONObject()
+                .put("vedtaksId", "123456")
+                .put("aktorId", 123)
+                .put("beregningsDato", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .put("tasks", listOf("othertask"))
 
         TopologyTestDriver(datalaster.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(behovJson)
+            val inputRecord = factory.create(behov)
             topologyTestDriver.pipeInput(inputRecord)
 
             val ut = topologyTestDriver.readOutput(
-                Topics.DAGPENGER_BEHOV_EVENT.name,
-                Serdes.String().deserializer(),
-                Serdes.String().deserializer()
+                    dagpengerBehovTopic.name,
+                    dagpengerBehovTopic.keySerde.deserializer(),
+                    dagpengerBehovTopic.valueSerde.deserializer()
             )
 
-            val utBehov = jsonAdapter.fromJson(ut.value())!!
-
-            assertTrue("Inntekt task should have been added") { utBehov.tasks != null }
+            assertTrue("Inntekt task should have been added") { "hentInntekt" in ut.value().getJSONArray("tasks") }
+            assertTrue("Other task should be preserved") { "othertask" in ut.value().getJSONArray("tasks") }
         }
     }
 
     @Test
     fun ` Should add PeriodeSubsumsjon to subsumsjonsBehov with inntekt `() {
         val datalaster = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
+                Environment(
+                        username = "bogus",
+                        password = "bogus"
+                )
         )
 
-        val behov = SubsumsjonsBehov(
-            "12345",
-            Random().nextInt(),
-            LocalDate.now(),
-            inntekt = 500000)
-        val behovJson = jsonAdapter.toJson(behov)
+        val behov = JSONObject()
+                .put("vedtaksId", "123456")
+                .put("aktorId", 123)
+                .put("beregningsDato", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .put("inntekt", 0)
 
         TopologyTestDriver(datalaster.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(behovJson)
+            val inputRecord = factory.create(behov)
             topologyTestDriver.pipeInput(inputRecord)
 
             val ut = topologyTestDriver.readOutput(
-                Topics.DAGPENGER_BEHOV_EVENT.name,
-                Serdes.String().deserializer(),
-                Serdes.String().deserializer()
+                    dagpengerBehovTopic.name,
+                    dagpengerBehovTopic.keySerde.deserializer(),
+                    dagpengerBehovTopic.valueSerde.deserializer()
             )
 
-            val utBehov = jsonAdapter.fromJson(ut.value())!!
-
             assertTrue("MinsteinntektSubsumsjon should have been added") {
-                utBehov.periodeSubsumsjon != null
+                ut.value().get("periodeSubsumsjon") != null
             }
         }
     }

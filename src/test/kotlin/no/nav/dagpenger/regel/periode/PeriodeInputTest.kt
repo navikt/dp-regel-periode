@@ -66,13 +66,13 @@ class PeriodeInputTest {
                         .put("vedtaksId", "123456")
                         .put("aktorId", 123)
                         .put("beregningsDato", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                        .put("periodeSubsumsjon", mapOf(
-                                "sporingsId" to "123",
-                                "subsumsjonsId" to "456",
-                                "regelIdentifikator" to "Periode.v1",
-                                "antallUker" to 0
+                        .put("inntekt", 0)
+                        .put("periodeSubsumsjon", JSONObject()
+                                .put("sporingsId", "123")
+                                .put("subsumsjonsId", "456")
+                                .put("regelIdentifikator", "Periode.v1")
+                                .put("antallUker", 0)
                         ))
-        )
 
         assertFalse(shouldBeProcessed(behov))
     }

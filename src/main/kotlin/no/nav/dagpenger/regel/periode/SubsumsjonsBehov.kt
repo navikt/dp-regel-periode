@@ -10,7 +10,7 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
 
     private fun hasInntekt() = jsonObject.has("inntekt")
 
-    private fun hasHentInntektTask(): Boolean {
+    fun hasHentInntektTask(): Boolean {
         if (jsonObject.has("tasks")) {
             val tasks = jsonObject.getJSONArray("tasks")
             for (task in tasks) {
@@ -26,6 +26,5 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
 
     fun hasTasks(): Boolean = jsonObject.has("tasks")
 
-    fun hasVerneplikt(): Boolean = jsonObject.has("tasks")
+    fun getAvtjentVerneplikt(): Boolean = if (jsonObject.has("avtjentVerneplikt")) jsonObject.getBoolean("avtjentVerneplikt") else false
 }
-
