@@ -69,6 +69,8 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4j2Version")
     implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:0.15")
 
+    implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.2.0")
+
     implementation("org.json:json:$orgJsonVersion")
 
     testImplementation(kotlin("test"))
