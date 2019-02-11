@@ -1,5 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
+import de.huxhorn.sulky.ulid.ULID
 import mu.KotlinLogging
 import no.nav.dagpenger.streams.KafkaCredential
 import no.nav.dagpenger.streams.Service
@@ -27,6 +28,8 @@ val dagpengerBehovTopic = Topic(
 class Periode(val env: Environment) : Service() {
     override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
     override val HTTP_PORT: Int = env.httpPort ?: super.HTTP_PORT
+    val ulidGenerator = ULID()
+    val REGELIDENTIFIKATOR = "Periode.v1"
 
     companion object {
         @JvmStatic
@@ -78,28 +81,34 @@ class Periode(val env: Environment) : Service() {
     }
 
     private fun addInntektTask(behov: SubsumsjonsBehov): SubsumsjonsBehov {
-        val jsonObject = behov.jsonObject
 
-        if (behov.hasTasks()) {
-            jsonObject.append("tasks", "hentInntekt")
-        } else {
-            jsonObject.put("tasks", listOf("hentInntekt"))
-        }
+        behov.addTask("hentInntekt")
 
-        return SubsumsjonsBehov(jsonObject)
+        return behov
     }
 
     private fun addRegelresultat(behov: SubsumsjonsBehov): SubsumsjonsBehov {
-        val jsonObject = behov.jsonObject
-
-        return SubsumsjonsBehov(jsonObject
-                .put("periodeSubsumsjon", JSONObject()
-                        .put("sporingsId", "123")
-                        .put("subsumsjonsId", "456")
-                        .put("regelIdentifikator", "Periode.v1")
-                        .put("antallUker", if (behov.getAvtjentVerneplikt()) 26 else 0))
-        )
+        behov.addPeriodeSubsumsjon(
+            SubsumsjonsBehov.PeriodeSubsumsjon(
+                ulidGenerator.nextULID(),
+                ulidGenerator.nextULID(),
+                REGELIDENTIFIKATOR,
+                finnPeriode(behov.getAvtjentVerneplikt(), behov.getInntekt())))
+        return behov
     }
 }
 
-fun shouldBeProcessed(behov: SubsumsjonsBehov): Boolean = behov.needsHentInntektsTask() || behov.needsPeriodeSubsumsjon()
+fun finnPeriode(verneplikt: Boolean, inntekt: Int): Int {
+    return when (verneplikt) {
+        true -> 26
+        false -> 0
+    }
+}
+
+fun shouldBeProcessed(behov: SubsumsjonsBehov): Boolean {
+    return when {
+        behov.needsHentInntektsTask() -> true
+        behov.needsPeriodeSubsumsjon() -> true
+        else -> false
+    }
+}

@@ -34,6 +34,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
+
 val kafkaVersion = "2.0.1"
 val kotlinLoggingVersion = "1.4.9"
 val log4j2Version = "2.11.1"
@@ -68,6 +70,8 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:$log4j2Version")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4j2Version")
     implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:0.15")
+
+    implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.2.0")
 
     implementation("org.json:json:$orgJsonVersion")
 
