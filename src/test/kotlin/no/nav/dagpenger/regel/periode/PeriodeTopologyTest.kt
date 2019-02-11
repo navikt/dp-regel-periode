@@ -7,8 +7,6 @@ import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Properties
 import kotlin.test.assertTrue
 
@@ -37,9 +35,6 @@ class PeriodeTopologyTest {
         )
 
         val behov = SubsumsjonsBehov.Builder()
-            .vedtaksId("123456")
-            .aktorId("123")
-            .beregningsDato(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .build()
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
@@ -69,9 +64,6 @@ class PeriodeTopologyTest {
         )
 
         val behov = SubsumsjonsBehov.Builder()
-            .vedtaksId("123456")
-            .aktorId("123")
-            .beregningsDato(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .inntekt(0)
             .build()
 

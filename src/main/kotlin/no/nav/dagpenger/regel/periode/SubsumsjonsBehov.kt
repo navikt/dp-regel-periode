@@ -4,19 +4,32 @@ import org.json.JSONObject
 
 data class SubsumsjonsBehov(val jsonObject: JSONObject) {
 
+    companion object {
+        val PERIODE_RESULTAT = "periodeResultat"
+        val INNTEKT = "inntekt"
+        val TASKS = "tasks"
+        val TASKS_HENT_INNTEKT = "hentInntekt"
+        val AVTJENT_VERNEPLIKT = "avtjentVerneplikt"
+
+        val SPORINGSID = "sporingsId"
+        val SUBSUMSJONSID = "subsumsjonsId"
+        val REGELIDENTIFIKATOR = "regelIdentifikator"
+        val PERIODE = "periode"
+    }
+
     fun needsHentInntektsTask(): Boolean = !hasInntekt() && !hasHentInntektTask()
 
     fun needsPeriodeSubsumsjon(): Boolean = hasInntekt() && !hasPeriodeSubsumsjon()
 
-    fun hasPeriodeSubsumsjon(): Boolean = jsonObject.has("periodeSubsumsjon")
+    fun hasPeriodeSubsumsjon(): Boolean = jsonObject.has(PERIODE_RESULTAT)
 
-    private fun hasInntekt() = jsonObject.has("inntekt")
+    fun hasInntekt() = jsonObject.has(INNTEKT)
 
     fun hasHentInntektTask(): Boolean {
-        if (jsonObject.has("tasks")) {
-            val tasks = jsonObject.getJSONArray("tasks")
+        if (jsonObject.has(TASKS)) {
+            val tasks = jsonObject.getJSONArray(TASKS)
             for (task in tasks) {
-                if (task.toString() == "hentInntekt") {
+                if (task.toString() == TASKS_HENT_INNTEKT) {
                     return true
                 }
             }
@@ -24,30 +37,31 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
         return false
     }
 
-    fun hasTasks(): Boolean = jsonObject.has("tasks")
+    fun hasTasks(): Boolean = jsonObject.has(TASKS)
 
     fun addTask(task: String) {
         if (hasTasks()) {
-            jsonObject.append("tasks", task)
+            jsonObject.append(TASKS, task)
         } else {
-            jsonObject.put("tasks", listOf(task))
+            jsonObject.put(TASKS, listOf(task))
         }
     }
 
-    fun getAvtjentVerneplikt(): Boolean = if (jsonObject.has("avtjentVerneplikt")) jsonObject.getBoolean("avtjentVerneplikt") else false
+    fun getAvtjentVerneplikt(): Boolean = if (jsonObject.has(AVTJENT_VERNEPLIKT)) jsonObject.getBoolean(
+        AVTJENT_VERNEPLIKT) else false
 
-    fun addPeriodeSubsumsjon(periodeSubsumsjon: PeriodeSubsumsjon) { jsonObject.put("periodeSubsumsjon", periodeSubsumsjon.build()) }
+    fun addPeriodeSubsumsjon(periodeSubsumsjon: PeriodeSubsumsjon) { jsonObject.put(PERIODE_RESULTAT, periodeSubsumsjon.build()) }
 
-    fun getInntekt(): Int = jsonObject.get("inntekt") as Int
+    fun getInntekt(): Int = jsonObject.get(INNTEKT) as Int
 
     data class PeriodeSubsumsjon(val sporingsId: String, val subsumsjonsId: String, val regelidentifikator: String, val periode: Int) {
 
         fun build(): JSONObject {
             return JSONObject()
-                .put("sporingsId", sporingsId)
-                .put("subsumsjonsId", subsumsjonsId)
-                .put("regelIdentifikator", regelidentifikator)
-                .put("periode", periode)
+                .put(SPORINGSID, sporingsId)
+                .put(SUBSUMSJONSID, subsumsjonsId)
+                .put(REGELIDENTIFIKATOR, regelidentifikator)
+                .put(PERIODE, periode)
         }
     }
 
@@ -55,33 +69,18 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
 
         val jsonObject = JSONObject()
 
-        fun vedtaksId(vedtaktsId: String): Builder {
-            jsonObject.put("vedtaksId", vedtaktsId)
-            return this
-        }
-
-        fun aktorId(aktorId: String): Builder {
-            jsonObject.put("aktorId", aktorId)
-            return this
-        }
-
-        fun beregningsDato(beregningDato: String): Builder {
-            jsonObject.put("beregningsDato", beregningDato)
-            return this
-        }
-
         fun inntekt(inntekt: Int): Builder {
-            jsonObject.put("inntekt", inntekt)
+            jsonObject.put(INNTEKT, inntekt)
             return this
         }
 
         fun task(tasks: List<String>): Builder {
-            jsonObject.put("tasks", tasks)
+            jsonObject.put(TASKS, tasks)
             return this
         }
 
         fun periodeSubsumsjon(periodeSubsumsjon: PeriodeSubsumsjon): Builder {
-            jsonObject.put("periodeSubsumsjon", periodeSubsumsjon.build())
+            jsonObject.put(PERIODE_RESULTAT, periodeSubsumsjon.build())
             return this
         }
 

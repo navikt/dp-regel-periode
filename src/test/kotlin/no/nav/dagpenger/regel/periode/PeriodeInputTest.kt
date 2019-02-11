@@ -2,13 +2,11 @@ package no.nav.dagpenger.regel.periode
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class PeriodeInputTest {
 
     @Test
-    fun `Process behov without inntekt and no tasks`() {
+    fun ` Process behov without inntekt and no tasks `() {
 
         val behov = SubsumsjonsBehov.Builder()
             .build()
@@ -17,7 +15,7 @@ class PeriodeInputTest {
     }
 
     @Test
-    fun `Process behov without inntekt and no hentinntekt task`() {
+    fun ` Process behov without inntekt and no hentinntekt task `() {
 
         val behov = SubsumsjonsBehov.Builder()
             .task(listOf("noe annet"))
@@ -27,7 +25,7 @@ class PeriodeInputTest {
     }
 
     @Test
-    fun `Do not process behov without inntekt but with hentinntekt task`() {
+    fun ` Do not process behov without inntekt but with hentinntekt task `() {
 
         val behov = SubsumsjonsBehov.Builder()
             .task(listOf("hentInntekt"))
@@ -37,7 +35,7 @@ class PeriodeInputTest {
     }
 
     @Test
-    fun `Process behov with inntekt`() {
+    fun ` Process behov with inntekt `() {
 
         val behov = SubsumsjonsBehov.Builder()
             .inntekt(0)
@@ -47,7 +45,7 @@ class PeriodeInputTest {
     }
 
     @Test
-    fun `Do not reprocess behov with periodeSubsumsjon`() {
+    fun ` Do not reprocess behov with periodeSubsumsjon `() {
 
         val behov = SubsumsjonsBehov.Builder()
             .inntekt(0)

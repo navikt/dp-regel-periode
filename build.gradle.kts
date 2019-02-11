@@ -34,6 +34,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
+
 val kafkaVersion = "2.0.1"
 val kotlinLoggingVersion = "1.4.9"
 val log4j2Version = "2.11.1"
