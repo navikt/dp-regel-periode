@@ -14,7 +14,7 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
         val SPORINGSID = "sporingsId"
         val SUBSUMSJONSID = "subsumsjonsId"
         val REGELIDENTIFIKATOR = "regelIdentifikator"
-        val PERIODE = "periode"
+        val PERIODE = "periodeAntallUker"
     }
 
     fun needsHentInntektsTask(): Boolean = !hasInntekt() && !hasHentInntektTask()
