@@ -38,7 +38,7 @@ class PeriodeInputTest {
     fun ` Process behov with inntekt `() {
 
         val behov = SubsumsjonsBehov.Builder()
-            .inntekt(0)
+            .inntekt(Inntekt("", 0))
             .build()
 
         assert(shouldBeProcessed(behov))
@@ -48,8 +48,8 @@ class PeriodeInputTest {
     fun ` Do not reprocess behov with periodeSubsumsjon `() {
 
         val behov = SubsumsjonsBehov.Builder()
-            .inntekt(0)
-            .periodeSubsumsjon(SubsumsjonsBehov.PeriodeSubsumsjon("123", "987", "555", 26))
+            .inntekt(Inntekt("", 0))
+            .periodeSubsumsjon(PeriodeSubsumsjon("123", "987", "555", 26))
             .build()
 
         assertFalse(shouldBeProcessed(behov))

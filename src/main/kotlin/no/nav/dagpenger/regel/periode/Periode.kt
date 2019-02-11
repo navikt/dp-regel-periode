@@ -89,7 +89,7 @@ class Periode(val env: Environment) : Service() {
 
     private fun addRegelresultat(behov: SubsumsjonsBehov): SubsumsjonsBehov {
         behov.addPeriodeSubsumsjon(
-            SubsumsjonsBehov.PeriodeSubsumsjon(
+            PeriodeSubsumsjon(
                 ulidGenerator.nextULID(),
                 ulidGenerator.nextULID(),
                 REGELIDENTIFIKATOR,
@@ -98,7 +98,7 @@ class Periode(val env: Environment) : Service() {
     }
 }
 
-fun finnPeriode(verneplikt: Boolean, inntekt: Int): Int {
+fun finnPeriode(verneplikt: Boolean, inntekt: Inntekt): Int {
     return when (verneplikt) {
         true -> 26
         false -> 0

@@ -16,7 +16,7 @@ class PeriodeSubsumsjonsBehovTest {
 
     val jsonBehovMedInntekt = """
             {
-                "inntekt": 0
+                "inntekt": {"inntektsId": "", "inntekt": 0}
             }
             """.trimIndent()
     val jsonObjectMedInntekt = JsonDeserializer().deserialize(null, jsonBehovMedInntekt.toByteArray())!!
@@ -56,7 +56,7 @@ class PeriodeSubsumsjonsBehovTest {
 
     val jsonBehovMedInntektogPeriodeSubsumsjon = """
             {
-                "inntekt": 0,
+                "inntekt": {"inntektsId": "", "inntekt": 0},
                 "periodeResultat": {}
             }
             """.trimIndent()
@@ -65,7 +65,7 @@ class PeriodeSubsumsjonsBehovTest {
 
     val jsonBehovMedInntektogHentInntektTask = """
             {
-                "inntekt": 0,
+                "inntekt": {"inntektsId": "", "inntekt": 0},
                 "tasks": ["hentInntekt"]
             }
             """.trimIndent()
@@ -169,7 +169,7 @@ class PeriodeSubsumsjonsBehovTest {
 
         assertFalse(subsumsjonsBehov.hasPeriodeSubsumsjon())
 
-        val periodeSubsumsjon = SubsumsjonsBehov.PeriodeSubsumsjon("123", "456", "REGEL", 0)
+        val periodeSubsumsjon = PeriodeSubsumsjon("123", "456", "REGEL", 0)
         subsumsjonsBehov.addPeriodeSubsumsjon(periodeSubsumsjon)
 
         assert(subsumsjonsBehov.hasPeriodeSubsumsjon())
@@ -178,7 +178,7 @@ class PeriodeSubsumsjonsBehovTest {
     @Test
     fun ` Should be able to return inntekt `() {
 
-        assertEquals(0, subsumsjonsBehovMedInntekt.getInntekt())
+        assertEquals(0, subsumsjonsBehovMedInntekt.getInntekt().inntektValue)
         assertThrows<JSONException> { emptysubsumsjonsBehov.getInntekt() }
     }
 }

@@ -64,7 +64,7 @@ class PeriodeTopologyTest {
         )
 
         val behov = SubsumsjonsBehov.Builder()
-            .inntekt(0)
+            .inntekt(Inntekt("", 0))
             .build()
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
