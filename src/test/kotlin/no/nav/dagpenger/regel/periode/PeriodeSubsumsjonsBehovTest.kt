@@ -74,7 +74,7 @@ class PeriodeSubsumsjonsBehovTest {
 
     val jsonBehovMedVernepliktTrue = """
             {
-                "avtjentVerneplikt": true
+                "harAvtjentVerneplikt": true
             }
             """.trimIndent()
     val jsonObjectMedVernepliktTrue = JsonDeserializer().deserialize(null, jsonBehovMedVernepliktTrue.toByteArray())!!
@@ -82,7 +82,7 @@ class PeriodeSubsumsjonsBehovTest {
 
     val jsonBehovMedVernepliktFalse = """
             {
-                "avtjentVerneplikt": false
+                "harAvtjentVerneplikt": false
             }
             """.trimIndent()
     val jsonObjectMedVernepliktFalse = JsonDeserializer().deserialize(null, jsonBehovMedVernepliktFalse.toByteArray())!!

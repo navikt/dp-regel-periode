@@ -9,7 +9,7 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
         val INNTEKT = "inntekt"
         val TASKS = "tasks"
         val TASKS_HENT_INNTEKT = "hentInntekt"
-        val AVTJENT_VERNEPLIKT = "avtjentVerneplikt"
+        val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
     }
 
     fun needsHentInntektsTask(): Boolean = !hasInntekt() && !hasHentInntektTask()
