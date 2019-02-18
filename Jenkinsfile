@@ -1,11 +1,12 @@
 pipeline {
   agent any
-
   environment {
     APPLICATION_NAME = 'dp-regel-periode'
     ZONE = 'fss'
     NAMESPACE = 'default'
-    VERSION = sh(script: './gradlew -q printVersion', returnStdout: true).trim()
+    VERSION = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+    DOCKER_REPO = 'repo.adeo.no:5443/'
+    DOCKER_IMAGE_VERSION = '${DOCKER_REPO}${APPLICATION_NAME}:${VERSION}'
   }
 
   stages {
@@ -17,7 +18,7 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh "./gradlew check"
+        sh "./gradlew build"
       }
 
       post {
@@ -51,7 +52,10 @@ pipeline {
         }
 
         script {
-          sh "./gradlew dockerPush"
+          sh "docker build . --pull -t ${DOCKER_IMAGE_VERSION}"
+        }
+        script {
+          sh "docker push ${DOCKER_IMAGE_VERSION}"
         }
       }
     }
@@ -71,15 +75,7 @@ pipeline {
     stage('Deploy to non-production') {
       steps {
         script {
-          response = naisDeploy.createNaisAutodeployment(env.APPLICATION_NAME, env.VERSION,"t0",env.ZONE ,env.NAMESPACE, "")
-        }
-      }
-    }
-
-    stage('Deploy to production') {
-      steps {
-        script {
-          response = naisDeploy.createNaisAutodeployment(env.APPLICATION_NAME, env.VERSION,"p", env.ZONE ,env.NAMESPACE, "")
+          response = naisDeploy.createNaisAutodeployment(env.APPLICATION_NAME, env.VERSION,"t5",env.ZONE ,env.NAMESPACE, "")
         }
       }
     }
