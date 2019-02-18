@@ -19,8 +19,9 @@ apply {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://dl.bintray.com/kittinunf/maven")
     maven("http://packages.confluent.io/maven/")
 }
 
