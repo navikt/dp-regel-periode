@@ -15,6 +15,8 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.json.JSONObject
+import java.math.BigDecimal
+import java.time.YearMonth
 import java.util.Properties
 
 private val LOGGER = KotlinLogging.logger {}
@@ -93,16 +95,54 @@ class Periode(val env: Environment) : Service() {
                 ulidGenerator.nextULID(),
                 ulidGenerator.nextULID(),
                 REGELIDENTIFIKATOR,
-                finnPeriode(behov.getAvtjentVerneplikt(), behov.getInntekt())))
+                finnPeriode(behov.getAvtjentVerneplikt(), behov.getInntekt(), behov.getSenesteInntektsmåned())))
         return behov
     }
 }
 
-fun finnPeriode(verneplikt: Boolean, inntekt: Inntekt): Int {
+fun finnPeriode(verneplikt: Boolean, inntekt: Inntekt, senesteInntektsmåned: YearMonth): Int {
+    val enG = BigDecimal(96883)
+    val inntektSiste12 = sumArbeidsInntekt(inntekt, senesteInntektsmåned, 11)
+    val inntektSiste36 = sumArbeidsInntekt(inntekt, senesteInntektsmåned, 35)
+    val inntektSnittSiste36 = inntektSiste36 / BigDecimal(3)
+
+    var harTjentNok = false
+    if (inntektSiste12 > (enG.times(BigDecimal(1.5))) || inntektSiste36 > (enG.times(BigDecimal(3)))) {
+        harTjentNok = true
+    }
+
+    if (harTjentNok) {
+        if (inntektSiste12 > enG.times(BigDecimal(2)) || inntektSnittSiste36 > enG.times(BigDecimal(2))) {
+            return 104
+        }
+
+        if (inntektSiste12 < enG.times(BigDecimal(2)) || inntektSnittSiste36 < enG.times(BigDecimal(2))) {
+            return 52
+        }
+    }
+
     return when (verneplikt) {
         true -> 26
         false -> 0
     }
+}
+
+fun sumArbeidsInntekt(inntekt: Inntekt, fraMåned: YearMonth, lengde: Int): BigDecimal {
+    val tidligsteMåned = finnTidligsteMåned(fraMåned, lengde)
+
+    val gjeldendeMåneder = inntekt.inntektsListe.filter { it.årMåned <= fraMåned && it.årMåned >= tidligsteMåned }
+
+    val sumGjeldendeMåneder = gjeldendeMåneder
+        .flatMap { it.klassifiserteInntekter
+            .filter { it.inntektKlasse == InntektKlasse.ARBEIDSINNTEKT }
+            .map { it.beløp } }.fold(BigDecimal.ZERO, BigDecimal::add)
+
+    return sumGjeldendeMåneder
+}
+
+fun finnTidligsteMåned(fraMåned: YearMonth, lengde: Int): YearMonth {
+
+    return fraMåned.minusMonths(lengde.toLong())
 }
 
 fun shouldBeProcessed(behov: SubsumsjonsBehov): Boolean {
