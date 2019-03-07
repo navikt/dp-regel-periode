@@ -2,6 +2,7 @@ package no.nav.dagpenger.regel.periode
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
+import java.time.YearMonth
 
 class PeriodeInputTest {
 
@@ -39,6 +40,7 @@ class PeriodeInputTest {
 
         val behov = SubsumsjonsBehov.Builder()
             .inntekt(Inntekt("123", emptyList()))
+            .senesteInntektsMåned(YearMonth.of(2018, 1))
             .build()
 
         assert(shouldBeProcessed(behov))
@@ -55,6 +57,7 @@ class PeriodeInputTest {
                     "555",
                     52))
             .inntekt(Inntekt("123", emptyList()))
+            .senesteInntektsMåned(YearMonth.of(2018, 1))
             .build()
 
         assertFalse(shouldBeProcessed(behov))

@@ -7,6 +7,12 @@ import kotlin.test.assertEquals
 
 class InnvilgetPeriodeTest {
 
+    fun generate36MånederArbeidsInntekt(): List<KlassifisertInntektMåned> {
+        return (1..36).toList().map {
+            KlassifisertInntektMåned(YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(KlassifisertInntekt(BigDecimal(50000), InntektKlasse.ARBEIDSINNTEKT)))
+        }
+    }
+
     @Test
     fun `Skal få periode på 26 uker ved verneplikt`() {
         val resultat = finnPeriode(
@@ -42,5 +48,17 @@ class InnvilgetPeriodeTest {
             Inntekt("123", inntektsListe),
             YearMonth.of(2019, 4))
         assertEquals(52, resultat)
+    }
+
+    @Test
+    fun `Hvis tidligere brukte inntekter finnes skal de ikke taes med`() {
+        val resultat = finnPeriode(
+            false,
+            Inntekt("123", generate36MånederArbeidsInntekt()),
+            YearMonth.of(2019, 2),
+            InntektsPeriode(YearMonth.of(2015, 1), YearMonth.of(2018, 10 ))
+        )
+
+        assertEquals(0, resultat)
     }
 }

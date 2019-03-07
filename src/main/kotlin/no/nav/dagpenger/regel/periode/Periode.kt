@@ -100,10 +100,20 @@ class Periode(val env: Environment) : Service() {
     }
 }
 
-fun finnPeriode(verneplikt: Boolean, inntekt: Inntekt, senesteInntektsmåned: YearMonth): Int {
+fun finnPeriode(
+    verneplikt: Boolean,
+    inntekt: Inntekt,
+    senesteInntektsmåned: YearMonth,
+    bruktInntektsPeriode: InntektsPeriode? = null
+): Int {
+
+    val inntektsListe = bruktInntektsPeriode?.let {
+        filterBruktInntekt(inntekt.inntektsListe, bruktInntektsPeriode)
+    } ?: inntekt.inntektsListe
+
     val enG = BigDecimal(96883)
-    val inntektSiste12 = sumArbeidsInntekt(inntekt, senesteInntektsmåned, 11)
-    val inntektSiste36 = sumArbeidsInntekt(inntekt, senesteInntektsmåned, 35)
+    val inntektSiste12 = sumArbeidsInntekt(inntektsListe, senesteInntektsmåned, 11)
+    val inntektSiste36 = sumArbeidsInntekt(inntektsListe, senesteInntektsmåned, 35)
     val inntektSnittSiste36 = inntektSiste36 / BigDecimal(3)
 
     var harTjentNok = false
@@ -127,10 +137,20 @@ fun finnPeriode(verneplikt: Boolean, inntekt: Inntekt, senesteInntektsmåned: Ye
     }
 }
 
-fun sumArbeidsInntekt(inntekt: Inntekt, fraMåned: YearMonth, lengde: Int): BigDecimal {
+fun filterBruktInntekt(
+    inntektsListe: List<KlassifisertInntektMåned>,
+    bruktInntektsPeriode: InntektsPeriode
+): List<KlassifisertInntektMåned> {
+
+    return inntektsListe.filter {
+        it.årMåned.isBefore(bruktInntektsPeriode.førsteMåned) || it.årMåned.isAfter(bruktInntektsPeriode.sisteMåned)
+    }
+}
+
+fun sumArbeidsInntekt(inntektsListe: List<KlassifisertInntektMåned>, fraMåned: YearMonth, lengde: Int): BigDecimal {
     val tidligsteMåned = finnTidligsteMåned(fraMåned, lengde)
 
-    val gjeldendeMåneder = inntekt.inntektsListe.filter { it.årMåned <= fraMåned && it.årMåned >= tidligsteMåned }
+    val gjeldendeMåneder = inntektsListe.filter { it.årMåned <= fraMåned && it.årMåned >= tidligsteMåned }
 
     val sumGjeldendeMåneder = gjeldendeMåneder
         .flatMap { it.klassifiserteInntekter

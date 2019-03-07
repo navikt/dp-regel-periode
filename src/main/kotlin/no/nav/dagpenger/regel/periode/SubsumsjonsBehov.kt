@@ -13,18 +13,31 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
         val TASKS_HENT_INNTEKT = "hentInntekt"
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
         val SENESTE_INNTEKTSMÅNED = "senesteInntektsmåned"
+        val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
+
         val jsonAdapterInntekt = moshiInstance.adapter(Inntekt::class.java)
+        val jsonAdapterInntektsPeriode = moshiInstance.adapter(InntektsPeriode::class.java)
     }
 
     fun needsHentInntektsTask(): Boolean = !hasInntekt() && !hasHentInntektTask()
 
-    fun needsPeriodeSubsumsjon(): Boolean = hasInntekt() && !hasPeriodeSubsumsjon()
+    fun needsPeriodeSubsumsjon(): Boolean = hasInntekt() && !hasPeriodeSubsumsjon() && hasSenesteInntektsmåned()
 
     fun hasPeriodeSubsumsjon(): Boolean = jsonObject.has(PERIODE_RESULTAT)
 
     fun hasInntekt() = jsonObject.has(INNTEKT)
 
+    fun hasSenesteInntektsmåned(): Boolean = jsonObject.has(SENESTE_INNTEKTSMÅNED)
+
     fun getSenesteInntektsmåned(): YearMonth = YearMonth.parse(jsonObject.get(SENESTE_INNTEKTSMÅNED).toString())
+
+    fun hasBruktInntektsPeriode(): Boolean = jsonObject.has(BRUKT_INNTEKTSPERIODE)
+
+    fun getBruktInntektsPeriode(): InntektsPeriode? {
+        return if (hasBruktInntektsPeriode())
+            jsonAdapterInntektsPeriode.fromJson(jsonObject.get(BRUKT_INNTEKTSPERIODE).toString())!!
+        else null
+    }
 
     fun hasHentInntektTask(): Boolean {
         if (jsonObject.has(TASKS)) {
@@ -103,6 +116,11 @@ data class PeriodeSubsumsjon(val sporingsId: String, val subsumsjonsId: String, 
             .put(PERIODE, periode)
     }
 }
+
+data class InntektsPeriode(
+    val førsteMåned: YearMonth,
+    val sisteMåned: YearMonth
+)
 
 data class Inntekt(
     val inntektsId: String,
