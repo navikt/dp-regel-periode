@@ -18,7 +18,9 @@ class InnvilgetPeriodeTest {
         val resultat = finnPeriode(
             true,
             Inntekt("123", emptyList()),
-            YearMonth.of(2019, 4))
+            YearMonth.of(2019, 4),
+            null,
+            false)
         assertEquals(26, resultat)
     }
 
@@ -27,7 +29,9 @@ class InnvilgetPeriodeTest {
         val resultat = finnPeriode(
             false,
             Inntekt("123", emptyList()),
-            YearMonth.of(2019, 4))
+            YearMonth.of(2019, 4),
+            null,
+            false)
         assertEquals(0, resultat)
     }
 
@@ -46,8 +50,52 @@ class InnvilgetPeriodeTest {
         val resultat = finnPeriode(
             false,
             Inntekt("123", inntektsListe),
-            YearMonth.of(2019, 4))
+            YearMonth.of(2019, 4),
+            null,
+            false)
         assertEquals(52, resultat)
+    }
+
+    @Test
+    fun `Skal få periode på 52 uker med mellom 1,5 og 2G i næringsinntekt siste 12 mnd hvis fangst og fisk`() {
+
+        val inntektsListe = (1..36).toList().map {
+            KlassifisertInntektMåned(
+                YearMonth.now().minusMonths(it.toLong()),
+                listOf(
+                    KlassifisertInntekt(
+                        BigDecimal(14500),
+                        InntektKlasse.NÆRINGSINNTEKT)))
+        }
+
+        val resultat = finnPeriode(
+            false,
+            Inntekt("123", inntektsListe),
+            YearMonth.of(2019, 4),
+            null,
+            true)
+        assertEquals(52, resultat)
+    }
+
+    @Test
+    fun `Skal få periode på 52 uker med mellom 1,5 og 2G i næringsinntekt siste 12 mnd hvis ikke fangst og fisk`() {
+
+        val inntektsListe = (1..36).toList().map {
+            KlassifisertInntektMåned(
+                YearMonth.now().minusMonths(it.toLong()),
+                listOf(
+                    KlassifisertInntekt(
+                        BigDecimal(14500),
+                        InntektKlasse.NÆRINGSINNTEKT)))
+        }
+
+        val resultat = finnPeriode(
+            false,
+            Inntekt("123", inntektsListe),
+            YearMonth.of(2019, 4),
+            null,
+            false)
+        assertEquals(0, resultat)
     }
 
     @Test
@@ -56,7 +104,8 @@ class InnvilgetPeriodeTest {
             false,
             Inntekt("123", generate36MånederArbeidsInntekt()),
             YearMonth.of(2019, 2),
-            InntektsPeriode(YearMonth.of(2015, 1), YearMonth.of(2018, 10 ))
+            InntektsPeriode(YearMonth.of(2015, 1), YearMonth.of(2018, 10 )),
+            false
         )
 
         assertEquals(0, resultat)

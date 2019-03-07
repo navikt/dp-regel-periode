@@ -32,18 +32,20 @@ class SumInntekterTest {
     @Test
     fun ` should add Arbeidsinntekt in sumSiste12 `() {
 
-        assertEquals(BigDecimal(12000), sumArbeidsInntekt(
-            generateSiste36MånederArbeidsInntekt(),
+        assertEquals(BigDecimal(12000), sumInntektIkkeFangstOgFisk(
+                generateSiste36MånederArbeidsInntekt(),
             YearMonth.now().minusMonths(1),
-            11))
+            11)
+        )
     }
 
     @Test
     fun ` should not add næringsinntekt in sumSiste12 when there is no fangst og fisk `() {
 
-        assertEquals(BigDecimal(0), sumArbeidsInntekt(
-            generateSiste36MånederNæringsInntekt(),
+        assertEquals(BigDecimal(0), sumInntektIkkeFangstOgFisk(
+                generateSiste36MånederNæringsInntekt(),
             YearMonth.now().minusMonths(1),
-            11))
+            11)
+        )
     }
 }

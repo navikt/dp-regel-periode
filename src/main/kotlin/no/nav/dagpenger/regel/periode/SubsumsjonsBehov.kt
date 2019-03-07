@@ -12,6 +12,7 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
         val TASKS = "tasks"
         val TASKS_HENT_INNTEKT = "hentInntekt"
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
+        val FANGST_OG_FISK = "fangstOgFisk"
         val SENESTE_INNTEKTSMÅNED = "senesteInntektsmåned"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
 
@@ -61,6 +62,8 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
         }
     }
 
+    fun hasFangstOgFisk(): Boolean = if (jsonObject.has(FANGST_OG_FISK)) jsonObject.getBoolean(FANGST_OG_FISK) else false
+
     fun getAvtjentVerneplikt(): Boolean = if (jsonObject.has(AVTJENT_VERNEPLIKT)) jsonObject.getBoolean(
         AVTJENT_VERNEPLIKT) else false
 
@@ -82,6 +85,11 @@ data class SubsumsjonsBehov(val jsonObject: JSONObject) {
 
         fun senesteInntektsMåned(senesteInntektsMåned: YearMonth): Builder {
             jsonObject.put(SENESTE_INNTEKTSMÅNED, senesteInntektsMåned)
+            return this
+        }
+
+        fun fangstOgFisk(fangstOgFisk: Boolean): Builder {
+            jsonObject.put(FANGST_OG_FISK, fangstOgFisk)
             return this
         }
 

@@ -95,7 +95,12 @@ class Periode(val env: Environment) : Service() {
                 ulidGenerator.nextULID(),
                 ulidGenerator.nextULID(),
                 REGELIDENTIFIKATOR,
-                finnPeriode(behov.getAvtjentVerneplikt(), behov.getInntekt(), behov.getSenesteInntektsmåned())))
+                finnPeriode(
+                    behov.getAvtjentVerneplikt(),
+                    behov.getInntekt(),
+                    behov.getSenesteInntektsmåned(),
+                    behov.getBruktInntektsPeriode(),
+                    behov.hasFangstOgFisk())))
         return behov
     }
 }
@@ -104,7 +109,8 @@ fun finnPeriode(
     verneplikt: Boolean,
     inntekt: Inntekt,
     senesteInntektsmåned: YearMonth,
-    bruktInntektsPeriode: InntektsPeriode? = null
+    bruktInntektsPeriode: InntektsPeriode? = null,
+    fangstOgFisk: Boolean
 ): Int {
 
     val inntektsListe = bruktInntektsPeriode?.let {
@@ -112,21 +118,31 @@ fun finnPeriode(
     } ?: inntekt.inntektsListe
 
     val enG = BigDecimal(96883)
-    val inntektSiste12 = sumArbeidsInntekt(inntektsListe, senesteInntektsmåned, 11)
-    val inntektSiste36 = sumArbeidsInntekt(inntektsListe, senesteInntektsmåned, 35)
-    val inntektSnittSiste36 = inntektSiste36 / BigDecimal(3)
+    var inntektSiste12 = sumInntektIkkeFangstOgFisk(inntektsListe, senesteInntektsmåned, 11)
+    var inntektSiste36 = sumInntektIkkeFangstOgFisk(inntektsListe, senesteInntektsmåned, 35)
+
+    var arbeidsInntektSiste12 = sumArbeidInntekt(inntektsListe, senesteInntektsmåned, 11)
+    var arbeidsInntektSiste36 = sumArbeidInntekt(inntektsListe, senesteInntektsmåned, 35)
+
+    if (fangstOgFisk) {
+        arbeidsInntektSiste12 += sumNæringsInntekt(inntektsListe, senesteInntektsmåned, 11)
+        arbeidsInntektSiste36 += sumNæringsInntekt(inntektsListe, senesteInntektsmåned, 35)
+        inntektSiste12 += sumFangstOgFiskInntekt(inntektsListe, senesteInntektsmåned, 11)
+        inntektSiste36 += sumFangstOgFiskInntekt(inntektsListe, senesteInntektsmåned, 35)
+    }
+    val årligSnittInntektSiste36 = inntektSiste36 / BigDecimal(3)
 
     var harTjentNok = false
-    if (inntektSiste12 > (enG.times(BigDecimal(1.5))) || inntektSiste36 > (enG.times(BigDecimal(3)))) {
+    if (arbeidsInntektSiste12 > (enG.times(BigDecimal(1.5))) || arbeidsInntektSiste36 > (enG.times(BigDecimal(3)))) {
         harTjentNok = true
     }
 
     if (harTjentNok) {
-        if (inntektSiste12 > enG.times(BigDecimal(2)) || inntektSnittSiste36 > enG.times(BigDecimal(2))) {
+        if (inntektSiste12 > enG.times(BigDecimal(2)) || årligSnittInntektSiste36 > enG.times(BigDecimal(2))) {
             return 104
         }
 
-        if (inntektSiste12 < enG.times(BigDecimal(2)) || inntektSnittSiste36 < enG.times(BigDecimal(2))) {
+        if (inntektSiste12 < enG.times(BigDecimal(2)) || årligSnittInntektSiste36 < enG.times(BigDecimal(2))) {
             return 52
         }
     }
@@ -147,7 +163,7 @@ fun filterBruktInntekt(
     }
 }
 
-fun sumArbeidsInntekt(inntektsListe: List<KlassifisertInntektMåned>, fraMåned: YearMonth, lengde: Int): BigDecimal {
+fun sumArbeidInntekt(inntektsListe: List<KlassifisertInntektMåned>, fraMåned: YearMonth, lengde: Int): BigDecimal {
     val tidligsteMåned = finnTidligsteMåned(fraMåned, lengde)
 
     val gjeldendeMåneder = inntektsListe.filter { it.årMåned <= fraMåned && it.årMåned >= tidligsteMåned }
@@ -155,6 +171,50 @@ fun sumArbeidsInntekt(inntektsListe: List<KlassifisertInntektMåned>, fraMåned:
     val sumGjeldendeMåneder = gjeldendeMåneder
         .flatMap { it.klassifiserteInntekter
             .filter { it.inntektKlasse == InntektKlasse.ARBEIDSINNTEKT }
+            .map { it.beløp } }.fold(BigDecimal.ZERO, BigDecimal::add)
+
+    return sumGjeldendeMåneder
+}
+
+fun sumNæringsInntekt(inntektsListe: List<KlassifisertInntektMåned>, senesteMåned: YearMonth, lengde: Int): BigDecimal {
+    val tidligsteMåned = finnTidligsteMåned(senesteMåned, lengde)
+
+    val gjeldendeMåneder = inntektsListe.filter { it.årMåned <= senesteMåned && it.årMåned >= tidligsteMåned }
+
+    val sumGjeldendeMåneder = gjeldendeMåneder
+        .flatMap { it.klassifiserteInntekter
+            .filter { it.inntektKlasse == InntektKlasse.NÆRINGSINNTEKT }
+            .map { it.beløp } }.fold(BigDecimal.ZERO, BigDecimal::add)
+
+    return sumGjeldendeMåneder
+}
+
+fun sumInntektIkkeFangstOgFisk(inntektsListe: List<KlassifisertInntektMåned>, fraMåned: YearMonth, lengde: Int): BigDecimal {
+    val tidligsteMåned = finnTidligsteMåned(fraMåned, lengde)
+
+    val gjeldendeMåneder = inntektsListe.filter { it.årMåned <= fraMåned && it.årMåned >= tidligsteMåned }
+
+    val sumGjeldendeMåneder = gjeldendeMåneder
+        .flatMap { it.klassifiserteInntekter
+            .filter { it.inntektKlasse == InntektKlasse.ARBEIDSINNTEKT ||
+                it.inntektKlasse == InntektKlasse.DAGPENGER ||
+                it.inntektKlasse == InntektKlasse.SYKEPENGER ||
+                it.inntektKlasse == InntektKlasse.TILTAKSLØNN }
+            .map { it.beløp } }.fold(BigDecimal.ZERO, BigDecimal::add)
+
+    return sumGjeldendeMåneder
+}
+
+fun sumFangstOgFiskInntekt(inntektsListe: List<KlassifisertInntektMåned>, senesteMåned: YearMonth, lengde: Int): BigDecimal {
+    val tidligsteMåned = finnTidligsteMåned(senesteMåned, lengde)
+
+    val gjeldendeMåneder = inntektsListe.filter { it.årMåned <= senesteMåned && it.årMåned >= tidligsteMåned }
+
+    val sumGjeldendeMåneder = gjeldendeMåneder
+        .flatMap { it.klassifiserteInntekter
+            .filter { it.inntektKlasse == InntektKlasse.NÆRINGSINNTEKT ||
+                it.inntektKlasse == InntektKlasse.DAGPENGER_FANGST_FISKE ||
+                it.inntektKlasse == InntektKlasse.SYKEPENGER_FANGST_FISKE }
             .map { it.beløp } }.fold(BigDecimal.ZERO, BigDecimal::add)
 
     return sumGjeldendeMåneder
