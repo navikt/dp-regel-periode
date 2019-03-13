@@ -1,6 +1,3 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
     application
     kotlin("jvm") version "1.3.11"
@@ -47,7 +44,7 @@ val kafkaVersion = "2.0.1"
 val kotlinLoggingVersion = "1.4.9"
 val log4j2Version = "2.11.1"
 val jupiterVersion = "5.3.2"
-val confluentVersion = "5.0.0"
+val confluentVersion = "5.0.2"
 val prometheusVersion = "0.6.0"
 val ktorVersion = "1.0.0"
 val moshiVersion = "1.8.0"
