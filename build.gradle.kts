@@ -27,7 +27,7 @@ repositories {
 
 application {
     applicationName = "dp-regel-periode"
-    mainClassName = "no.nav.dagpenger.regel.periode.Periode"
+    mainClassName = "no.nav.dagpenger.regel.periode.PeriodeKt"
 }
 
 java {
@@ -56,7 +56,8 @@ val orgJsonVersion = "20180813"
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("no.nav.dagpenger:streams:0.3.0-SNAPSHOT")
+    implementation("no.nav.dagpenger:streams:0.3.1-SNAPSHOT")
+    implementation("no.nav.dagpenger:events:0.3.1-SNAPSHOT")
 
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
 
