@@ -65,7 +65,7 @@ class InnvilgetPeriodeTest {
                 listOf(
                     KlassifisertInntekt(
                         BigDecimal(14500),
-                        InntektKlasse.NÆRINGSINNTEKT)))
+                        InntektKlasse.FANGST_FISKE)))
         }
 
         val resultat = finnPeriode(
@@ -86,7 +86,7 @@ class InnvilgetPeriodeTest {
                 listOf(
                     KlassifisertInntekt(
                         BigDecimal(14500),
-                        InntektKlasse.NÆRINGSINNTEKT)))
+                        InntektKlasse.FANGST_FISKE)))
         }
 
         val resultat = finnPeriode(

@@ -183,7 +183,7 @@ fun sumNæringsInntekt(inntektsListe: List<KlassifisertInntektMåned>, senesteM�
     val sumGjeldendeMåneder = gjeldendeMåneder
         .flatMap {
             it.klassifiserteInntekter
-                .filter { it.inntektKlasse == InntektKlasse.NÆRINGSINNTEKT }
+                .filter { it.inntektKlasse == InntektKlasse.FANGST_FISKE }
                 .map { it.beløp }
         }.fold(BigDecimal.ZERO, BigDecimal::add)
 
@@ -227,7 +227,7 @@ fun sumFangstOgFiskInntekt(
         .flatMap {
             it.klassifiserteInntekter
                 .filter {
-                    it.inntektKlasse == InntektKlasse.NÆRINGSINNTEKT ||
+                    it.inntektKlasse == InntektKlasse.FANGST_FISKE ||
                         it.inntektKlasse == InntektKlasse.DAGPENGER_FANGST_FISKE ||
                         it.inntektKlasse == InntektKlasse.SYKEPENGER_FANGST_FISKE
                 }
