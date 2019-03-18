@@ -1,12 +1,16 @@
 package no.nav.dagpenger.regel.periode
 
-import no.nav.dagpenger.streams.Topics
-import org.apache.kafka.common.serialization.Serdes
+import no.nav.dagpenger.events.Packet
+import no.nav.dagpenger.events.inntekt.v1.Inntekt
+import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
+import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
+import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
+import no.nav.dagpenger.streams.Topics.DAGPENGER_BEHOV_PACKET_EVENT
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 import java.time.YearMonth
 import java.util.Properties
 import kotlin.test.assertTrue
@@ -14,74 +18,91 @@ import kotlin.test.assertTrue
 class PeriodeTopologyTest {
 
     companion object {
-        val factory = ConsumerRecordFactory<String, String>(
-            Topics.DAGPENGER_BEHOV_EVENT.name,
-            Serdes.String().serializer(),
-            Serdes.String().serializer()
+        val factory = ConsumerRecordFactory<String, Packet>(
+            DAGPENGER_BEHOV_PACKET_EVENT.name,
+            DAGPENGER_BEHOV_PACKET_EVENT.keySerde.serializer(),
+            DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.serializer()
         )
 
         val config = Properties().apply {
             this[StreamsConfig.APPLICATION_ID_CONFIG] = "test"
             this[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "dummy:1234"
         }
+        val inntektAdapter = moshiInstance.adapter<Inntekt>(Inntekt::class.java)
     }
 
     @Test
-    fun ` Should add inntekt task to subsumsjonsBehov without inntekt `() {
+    fun ` Dagpenger behov without inntekt and "senesteInntektsmåned" should not be processed `() {
         val periode = Periode(
-                Environment(
-                        username = "bogus",
-                        password = "bogus"
-                )
+            Environment(
+                username = "bogus",
+                password = "bogus"
+            )
         )
-
-        val behov = SubsumsjonsBehov.Builder()
-            .build()
+        val emptyjsonBehov = """
+            {}
+            """.trimIndent()
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(behov.jsonObject.toString())
+            val inputRecord = factory.create(Packet(emptyjsonBehov))
             topologyTestDriver.pipeInput(inputRecord)
 
             val ut = topologyTestDriver.readOutput(
-                Topics.DAGPENGER_BEHOV_EVENT.name,
-                Serdes.String().deserializer(),
-                Serdes.String().deserializer()
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
             )
 
-            val utBehov = SubsumsjonsBehov(JSONObject(ut.value()))
-
-            assertTrue { utBehov.hasTasks() }
-            assertTrue { utBehov.hasHentInntektTask() }
+            assertTrue { null == ut }
         }
     }
 
     @Test
-    fun ` Should add PeriodeSubsumsjon to subsumsjonsBehov with inntekt `() {
+    fun ` Should add PeriodeSubsumsjon `() {
         val periode = Periode(
-                Environment(
-                        username = "bogus",
-                        password = "bogus"
-                )
+            Environment(
+                username = "bogus",
+                password = "bogus"
+            )
         )
 
-        val behov = SubsumsjonsBehov.Builder()
-            .inntekt(Inntekt("123", emptyList()))
-            .senesteInntektsMåned(YearMonth.now())
-            .build()
+        val inntekt: Inntekt = Inntekt(
+            inntektsId = "12345",
+            inntektsListe = listOf(
+                KlassifisertInntektMåned(
+                    årMåned = YearMonth.of(2019, 2),
+                    klassifiserteInntekter = listOf(
+                        KlassifisertInntekt(
+                            beløp = BigDecimal(25000),
+                            inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
+                        )
+                    )
 
+                )
+            )
+        )
+
+        val json = """
+        {
+            "senesteInntektsmåned":"2018-03"
+            }
+            """.trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", inntekt, inntektAdapter::toJson)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(behov.jsonObject.toString())
+            val inputRecord = factory.create(packet)
             topologyTestDriver.pipeInput(inputRecord)
 
             val ut = topologyTestDriver.readOutput(
-                Topics.DAGPENGER_BEHOV_EVENT.name,
-                Serdes.String().deserializer(),
-                Serdes.String().deserializer()
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
             )
 
-            val utBehov = SubsumsjonsBehov(JSONObject(ut.value()))
+            val result = ut.value()
 
-            assertTrue { utBehov.hasPeriodeSubsumsjon() }
+            assertTrue { result.hasField("periodeResultat") }
         }
     }
 }

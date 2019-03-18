@@ -1,5 +1,8 @@
 package no.nav.dagpenger.regel.periode
 
+import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
+import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
+import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.YearMonth
@@ -14,7 +17,8 @@ class SumInntekterTest {
                 YearMonth.now().minusMonths(it.toLong()),
                 listOf(
                     KlassifisertInntekt(BigDecimal(1000),
-                    InntektKlasse.ARBEIDSINNTEKT)))
+                    InntektKlasse.ARBEIDSINNTEKT)
+                ))
         }
     }
 
