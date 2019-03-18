@@ -2,18 +2,18 @@ package no.nav.dagpenger.regel.periode
 
 import de.huxhorn.sulky.ulid.ULID
 import mu.KotlinLogging
+import no.nav.dagpenger.events.Packet
+import no.nav.dagpenger.events.inntekt.v1.Inntekt
+import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
+import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.streams.KafkaCredential
-import no.nav.dagpenger.streams.Service
+import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.Topic
 import no.nav.dagpenger.streams.Topics
-import no.nav.dagpenger.streams.kbranch
 import no.nav.dagpenger.streams.streamConfig
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Produced
-import org.json.JSONObject
+import org.apache.kafka.streams.kstream.Predicate
+import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 import java.time.YearMonth
 import java.util.Properties
@@ -26,11 +26,41 @@ val dagpengerBehovTopic = Topic(
     Serdes.serdeFrom(JsonSerializer(), JsonDeserializer())
 )
 
-class Periode(val env: Environment) : Service() {
+class Periode(val env: Environment) : River() {
+
+    override fun filterPredicates(): List<Predicate<String, Packet>> {
+        return listOf(
+            Predicate { _, packet -> packet.hasField(INNTEKT)},
+            Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT)},
+            Predicate { _, packet -> packet.hasField(SENESTE_INNTEKTSMÅNED)})
+    }
+
+    override fun onPacket(packet: Packet): Packet {
+
+        val verneplikt = packet.getNullableBoolean(AVTJENT_VERNEPLIKT) ?: false
+        val inntekt = packet.getObjectValue(INNTEKT, inntektAdapter::fromJson) ?: throw IllegalArgumentException("No inntekt")
+        val senesteInntektsmåned = YearMonth.parse(packet.getStringValue(SENESTE_INNTEKTSMÅNED))
+        val bruktInntektsPeriode = packet.getNullableObjectValue(BRUKT_INNTEKTSPERIODE, jsonAdapterInntektsPeriode::fromJson)
+        val fangstOgFisk = packet.getNullableBoolean(FANGST_OG_FISK) ?: false
+
+        val periodeResultat = finnPeriode(verneplikt, inntekt, senesteInntektsmåned, bruktInntektsPeriode, fangstOgFisk)
+
+        val subsumsjon = PeriodeSubsumsjon(ulidGenerator.nextULID(),
+            ulidGenerator.nextULID(),
+            REGELIDENTIFIKATOR,
+            periodeResultat)
+
+        packet.putValue(PERIODE_RESULTAT, subsumsjon.build())
+
+        return packet
+    }
+
+    private val inntektAdapter = moshiInstance.adapter<no.nav.dagpenger.events.inntekt.v1.Inntekt>(no.nav.dagpenger.events.inntekt.v1.Inntekt::class.java)
+    private val jsonAdapterInntektsPeriode = moshiInstance.adapter(InntektsPeriode::class.java)
+
     override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
     override val HTTP_PORT: Int = env.httpPort ?: super.HTTP_PORT
     val ulidGenerator = ULID()
-    val REGELIDENTIFIKATOR = "Periode.v1"
 
     companion object {
         @JvmStatic
@@ -38,34 +68,14 @@ class Periode(val env: Environment) : Service() {
             val service = Periode(Environment())
             service.start()
         }
-    }
-
-    override fun buildTopology(): Topology {
-        val builder = StreamsBuilder()
-
-        val stream = builder.stream(
-            dagpengerBehovTopic.name,
-            Consumed.with(dagpengerBehovTopic.keySerde, dagpengerBehovTopic.valueSerde)
-        )
-
-        val (needsInntekt, needsSubsumsjon) = stream
-            .peek { key, value -> LOGGER.info("Processing ${value.javaClass} with key $key") }
-            .mapValues { value: JSONObject -> SubsumsjonsBehov(value) }
-            .filter { _, behov -> shouldBeProcessed(behov) }
-            .kbranch(
-                { _, behov: SubsumsjonsBehov -> behov.needsHentInntektsTask() },
-                { _, behov: SubsumsjonsBehov -> behov.needsPeriodeSubsumsjon() })
-
-        needsInntekt.mapValues(this::addInntektTask)
-        needsSubsumsjon.mapValues(this::addRegelresultat)
-
-        needsInntekt.merge(needsSubsumsjon)
-            .peek { key, value -> LOGGER.info("Producing ${value.javaClass} with key $key") }
-            .mapValues { _, behov -> behov.jsonObject }
-            .to(dagpengerBehovTopic.name, Produced.with(dagpengerBehovTopic.keySerde, dagpengerBehovTopic.valueSerde))
-
-        return builder.build()
-    }
+        val REGELIDENTIFIKATOR = "Periode.v1"
+        val PERIODE_RESULTAT = "periodeResultat"
+        val INNTEKT = "inntektV1"
+        val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
+        val FANGST_OG_FISK = "fangstOgFisk"
+        val SENESTE_INNTEKTSMÅNED = "senesteInntektsmåned"
+        val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
+}
 
     override fun getConfig(): Properties {
         val props = streamConfig(
@@ -74,31 +84,6 @@ class Periode(val env: Environment) : Service() {
             credential = KafkaCredential(env.username, env.password)
         )
         return props
-    }
-
-    private fun addInntektTask(behov: SubsumsjonsBehov): SubsumsjonsBehov {
-
-        behov.addTask("hentInntekt")
-
-        return behov
-    }
-
-    private fun addRegelresultat(behov: SubsumsjonsBehov): SubsumsjonsBehov {
-        behov.addPeriodeSubsumsjon(
-            PeriodeSubsumsjon(
-                ulidGenerator.nextULID(),
-                ulidGenerator.nextULID(),
-                REGELIDENTIFIKATOR,
-                finnPeriode(
-                    behov.getAvtjentVerneplikt(),
-                    behov.getInntekt(),
-                    behov.getSenesteInntektsmåned(),
-                    behov.getBruktInntektsPeriode(),
-                    behov.hasFangstOgFisk()
-                )
-            )
-        )
-        return behov
     }
 }
 
@@ -240,12 +225,4 @@ fun sumFangstOgFiskInntekt(
 fun finnTidligsteMåned(fraMåned: YearMonth, lengde: Int): YearMonth {
 
     return fraMåned.minusMonths(lengde.toLong())
-}
-
-fun shouldBeProcessed(behov: SubsumsjonsBehov): Boolean {
-    return when {
-        behov.needsHentInntektsTask() -> true
-        behov.needsPeriodeSubsumsjon() -> true
-        else -> false
-    }
 }
