@@ -59,7 +59,6 @@ class Periode(val env: Environment) : River() {
         )
 
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
-
         return packet
     }
 

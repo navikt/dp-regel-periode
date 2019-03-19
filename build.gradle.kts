@@ -57,7 +57,7 @@ val orgJsonVersion = "20180813"
 dependencies {
     implementation(kotlin("stdlib"))
     implementation("no.nav.dagpenger:streams:0.3.1-SNAPSHOT")
-    implementation("no.nav.dagpenger:events:0.3.1-SNAPSHOT")
+    implementation("no.nav.dagpenger:events:0.3.2-SNAPSHOT")
 
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
 
@@ -65,6 +65,8 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
     implementation("com.squareup.moshi:moshi:$moshiVersion")
     implementation("com.ryanharter.ktor:ktor-moshi:$ktorMoshiVersion")
+
+    implementation("no.nav:nare:13785ff")
 
     compile("io.prometheus:simpleclient_common:$prometheusVersion")
     compile("io.prometheus:simpleclient_hotspot:$prometheusVersion")
