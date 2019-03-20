@@ -1,6 +1,7 @@
 package no.nav.dagpenger.regel.periode
 
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
+import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import java.math.BigDecimal
 import java.time.YearMonth
 
@@ -12,13 +13,12 @@ data class Fakta(
     val fangstOgFisk: Boolean,
     val grunnbeløp: BigDecimal = BigDecimal(96883)
 ) {
-    val inntektsListe = bruktInntektsPeriode?.let {
-        filterBruktInntekt(inntekt.inntektsListe, bruktInntektsPeriode)
-    } ?: inntekt.inntektsListe
 
-    val arbeidsinntektSiste12 = sumArbeidInntekt(inntektsListe, senesteInntektsmåned, 11)
-    val arbeidsinntektSiste36 = sumArbeidInntekt(inntektsListe, senesteInntektsmåned, 35)
+    val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode -> inntekt.filterPeriod(inntektsPeriode.førsteMåned, inntektsPeriode.sisteMåned) } ?: inntekt
 
-    val inntektSiste12inkludertFangstOgFiske = arbeidsinntektSiste12 + sumNæringsInntekt(inntektsListe, senesteInntektsmåned, 11)
-    val inntektSiste36inkludertFangstOgFiske = arbeidsinntektSiste36 + sumNæringsInntekt(inntektsListe, senesteInntektsmåned, 35)
+    val arbeidsinntektSiste12 = filtrertInntekt.sumInntektLast12Months(listOf(InntektKlasse.ARBEIDSINNTEKT), senesteInntektsmåned)
+    val arbeidsinntektSiste36 = filtrertInntekt.sumInntektLast36Months(listOf(InntektKlasse.ARBEIDSINNTEKT), senesteInntektsmåned)
+
+    val inntektSiste12inkludertFangstOgFiske = arbeidsinntektSiste12 + filtrertInntekt.sumInntektLast12Months(listOf(InntektKlasse.FANGST_FISKE), senesteInntektsmåned)
+    val inntektSiste36inkludertFangstOgFiske = arbeidsinntektSiste36 + filtrertInntekt.sumInntektLast12Months(listOf(InntektKlasse.FANGST_FISKE), senesteInntektsmåned)
 }
