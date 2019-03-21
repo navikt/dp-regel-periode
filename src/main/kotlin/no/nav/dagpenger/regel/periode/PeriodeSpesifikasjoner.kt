@@ -9,9 +9,9 @@ val verneplikt26Uker = Spesifikasjon<Fakta>(
     identitet = "VERNEPLIKT",
     implementasjon = { fakta ->
         if (fakta.verneplikt) {
-            Evaluering.ja("Periode på 26 uker ihht § 4-19")
+            Evaluering.ja("26")
         } else {
-            Evaluering.nei("Ikke periode på 26 uker ihht § 4-19")
+            Evaluering.nei("0")
         }
     }
 )
@@ -21,9 +21,9 @@ val ordinærSiste12Måneder104Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_12_104",
     implementasjon = { fakta ->
         if (fakta.arbeidsinntektSiste12 >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 104 uker ihht § 4-15, siste 12 mnd")
+            Evaluering.ja("104")
         } else {
-            Evaluering.nei("Ikke periode på 104 uker ihht § 4-15, siste 12 mnd")
+            Evaluering.nei("0")
         }
     }
 )
@@ -33,9 +33,9 @@ val ordinærSiste36Måneder104Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_36_104",
     implementasjon = { fakta ->
         if (fakta.arbeidsinntektSiste36 >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 104 uker ihht § 4-15, siste 36 mnd")
+            Evaluering.ja("104")
         } else {
-            Evaluering.nei("Ikke periode på 104 uker ihht § 4-15, siste 36 mnd")
+            Evaluering.nei("0")
         }
     }
 )
@@ -45,9 +45,9 @@ val ordinærSiste12MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_12_104_FANGSTOGFISK",
     implementasjon = { fakta ->
         if (fakta.fangstOgFisk && fakta.inntektSiste12inkludertFangstOgFiske >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 104 uker ihht dagpengeforskriften § 8-1, siste 12 mnd")
+            Evaluering.ja("104")
         } else {
-            Evaluering.nei("Ikke periode på 104 uker ihht dagpengeforskriften § 8-1, siste 12 mnd")
+            Evaluering.nei("0")
         }
     }
 )
@@ -57,9 +57,9 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_36_104_FANGSTOGFISK",
     implementasjon = { fakta ->
         if (fakta.fangstOgFisk && fakta.inntektSiste36inkludertFangstOgFiske >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 104 uker ihht dagpengeforskriften § 8-1, siste 36 mnd")
+            Evaluering.ja("104")
         } else {
-            Evaluering.nei("Ikke periode på 104 uker ihht dagpengeforskriften § 8-1, siste 36 mnd")
+            Evaluering.nei("0")
         }
     }
 )
@@ -69,9 +69,9 @@ val ordinærSiste12Måneder52Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_12_52",
     implementasjon = { fakta ->
         if (fakta.arbeidsinntektSiste12 < (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 52 uker ihht § 4-15, siste 12 mnd")
+            Evaluering.ja("52")
         } else {
-            Evaluering.nei("Ikke periode på 52 uker ihht § 4-15, siste 12 mnd")
+            Evaluering.nei("0")
         }
     }
 )
@@ -81,9 +81,9 @@ val ordinærSiste36Måneder52Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_36_52",
     implementasjon = { fakta ->
         if (fakta.arbeidsinntektSiste36 < (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 52 uker ihht § 4-15, siste 36 mnd")
+            Evaluering.ja("52")
         } else {
-            Evaluering.nei("Ikke periode på 52 uker ihht § 4-15, siste 36 mnd")
+            Evaluering.nei("0")
         }
     }
 )
@@ -93,9 +93,9 @@ val ordinærSiste12MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_12_52_FANGSTOGFISK",
     implementasjon = { fakta ->
         if (fakta.fangstOgFisk && fakta.inntektSiste12inkludertFangstOgFiske < (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 52 uker ihht dagpengeforskriften § 8-1, siste 12 mnd")
+            Evaluering.ja("52")
         } else {
-            Evaluering.nei("Ikke periode på 52 uker ihht dagpengeforskriften § 8-1, siste 12 mnd")
+            Evaluering.nei("0")
         }
     }
 )
@@ -105,9 +105,9 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identitet = "ORDINÆR_36_52_FANGSTOGFISK",
     implementasjon = { fakta ->
         if (fakta.fangstOgFisk && fakta.inntektSiste36inkludertFangstOgFiske < (fakta.grunnbeløp.times(BigDecimal(2)))) {
-            Evaluering.ja("Periode på 52 uker ihht dagpengeforskriften § 8-1, siste 36 mnd")
+            Evaluering.ja("52")
         } else {
-            Evaluering.nei("Ikke periode på 52 uker ihht dagpengeforskriften § 8-1, siste 36 mnd")
+            Evaluering.nei("0")
         }
     }
 )

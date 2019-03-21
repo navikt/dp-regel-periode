@@ -3,10 +3,11 @@ package no.nav.dagpenger.regel.periode
 import de.huxhorn.sulky.ulid.ULID
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
-import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.streams.KafkaCredential
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
+import no.nav.nare.core.evaluations.Evaluering
+import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
 import java.time.YearMonth
 import java.util.Properties
@@ -49,13 +50,15 @@ class Periode(val env: Environment) : River() {
 
         val fakta = Fakta(inntekt, senesteInntektsmåned, bruktInntektsPeriode, verneplikt, fangstOgFisk)
 
-        val periodeResultat = finnPeriode(verneplikt, inntekt, senesteInntektsmåned, bruktInntektsPeriode, fangstOgFisk)
+        val evaluering = periode.evaluer(fakta)
+
+        val periodeResultat: Int? = evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapToInt(it) }.max()
 
         val subsumsjon = PeriodeSubsumsjon(
             ulidGenerator.nextULID(),
             ulidGenerator.nextULID(),
             REGELIDENTIFIKATOR,
-            periodeResultat
+            periodeResultat ?: 0
         )
 
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
@@ -72,70 +75,17 @@ class Periode(val env: Environment) : River() {
     }
 }
 
+fun mapToInt(it: Evaluering): List<Int> {
+    return if (it.children.isEmpty()) {
+        listOf(it.begrunnelse.toInt())
+
+    } else {
+        it.children.flatMap { mapToInt(it) }
+
+    }
+}
+
 fun main(args: Array<String>) {
     val service = Periode(Environment())
     service.start()
-}
-
-fun finnPeriode(
-    verneplikt: Boolean,
-    inntekt: Inntekt,
-    senesteInntektsmåned: YearMonth,
-    bruktInntektsPeriode: InntektsPeriode? = null,
-    fangstOgFisk: Boolean
-): Int {
-
-    /*val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode -> inntekt.filterPeriod(inntektsPeriode.førsteMåned, inntektsPeriode.sisteMåned) } ?: inntekt
-
-    val enG = BigDecimal(96883)
-
-    var inntektSiste12 = filtrertInntekt.sumInntektLast12Months(listOf(InntektKlasse.ARBEIDSINNTEKT, InntektKlasse.DAGPENGER, InntektKlasse.SYKEPENGER, InntektKlasse.TILTAKSLØNN), senesteInntektsmåned)
-    var inntektSiste36 = filtrertInntekt.sumInntektLast36Months(listOf(InntektKlasse.ARBEIDSINNTEKT, InntektKlasse.DAGPENGER, InntektKlasse.SYKEPENGER, InntektKlasse.TILTAKSLØNN), senesteInntektsmåned)
-
-    var arbeidsInntektSiste12 = filtrertInntekt.sumInntektLast12Months(listOf(InntektKlasse.ARBEIDSINNTEKT), senesteInntektsmåned)
-    var arbeidsInntektSiste36 = filtrertInntekt.sumInntektLast36Months(listOf(InntektKlasse.ARBEIDSINNTEKT), senesteInntektsmåned)
-
-    if (fangstOgFisk) {
-        arbeidsInntektSiste12 += filtrertInntekt.sumInntektLast12Months(listOf(InntektKlasse.FANGST_FISKE), senesteInntektsmåned)
-        arbeidsInntektSiste36 += filtrertInntekt.sumInntektLast36Months(listOf(InntektKlasse.FANGST_FISKE), senesteInntektsmåned)
-
-        inntektSiste12 += filtrertInntekt.sumInntektLast12Months(listOf(InntektKlasse.FANGST_FISKE, InntektKlasse.DAGPENGER_FANGST_FISKE, InntektKlasse.SYKEPENGER_FANGST_FISKE), senesteInntektsmåned)
-        inntektSiste36 += filtrertInntekt.sumInntektLast36Months(listOf(InntektKlasse.FANGST_FISKE, InntektKlasse.DAGPENGER_FANGST_FISKE, InntektKlasse.SYKEPENGER_FANGST_FISKE), senesteInntektsmåned)
-    }
-    val årligSnittInntektSiste36 = inntektSiste36 / BigDecimal(3)
-
-    var harTjentNok = false
-    if (arbeidsInntektSiste12 > (enG.times(BigDecimal(1.5))) || arbeidsInntektSiste36 > (enG.times(BigDecimal(3)))) {
-        harTjentNok = true
-    }
-
-    if (harTjentNok) {
-        if (inntektSiste12 > enG.times(BigDecimal(2)) || årligSnittInntektSiste36 > enG.times(BigDecimal(2))) {
-            return 104
-        }
-
-        if (inntektSiste12 < enG.times(BigDecimal(2)) || årligSnittInntektSiste36 < enG.times(BigDecimal(2))) {
-            return 52
-        }
-    }*/
-
-    return when (verneplikt) {
-        true -> 26
-        false -> 0
-    }
-}
-
-fun filterBruktInntekt(
-    inntektsListe: List<KlassifisertInntektMåned>,
-    bruktInntektsPeriode: InntektsPeriode
-): List<KlassifisertInntektMåned> {
-
-    return inntektsListe.filter {
-        it.årMåned.isBefore(bruktInntektsPeriode.førsteMåned) || it.årMåned.isAfter(bruktInntektsPeriode.sisteMåned)
-    }
-}
-
-fun finnTidligsteMåned(fraMåned: YearMonth, lengde: Int): YearMonth {
-
-    return fraMåned.minusMonths(lengde.toLong())
 }
