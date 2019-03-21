@@ -52,7 +52,7 @@ class Periode(val env: Environment) : River() {
 
         val evaluering = periode.evaluer(fakta)
 
-        val periodeResultat: Int? = evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapToInt(it) }.max()
+        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering)
 
         val subsumsjon = PeriodeSubsumsjon(
             ulidGenerator.nextULID(),
@@ -78,11 +78,15 @@ class Periode(val env: Environment) : River() {
 fun mapToInt(it: Evaluering): List<Int> {
     return if (it.children.isEmpty()) {
         listOf(it.begrunnelse.toInt())
-
     } else {
         it.children.flatMap { mapToInt(it) }
-
     }
+}
+
+fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering): Int? {
+    val periodeResultat: Int? =
+        evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapToInt(it) }.max()
+    return periodeResultat
 }
 
 fun main(args: Array<String>) {
