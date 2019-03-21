@@ -10,66 +10,66 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.YearMonth
 
-internal class Periode104UkerTest {
+internal class Periode52UkerTest {
 
     @Test
-    fun `Skal gi periode på 104 uker når man har arbeidsinntekt over 2 G siste 12 mnd`() {
+    fun `Skal ikke gi periode på 52 uker når man har arbeidsinntekt over 2 G siste 12 mnd`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generate12MånederArbeidsInntekt()),
+        val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..12, BigDecimal(50000))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false)
 
-        val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste12Måneder52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.JA, evaluering.resultat)
+        assertEquals(Resultat.NEI, evaluering.resultat)
     }
 
     @Test
-    fun `Skal gi periode på 104 uker når man har næringsinntekt over 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
+    fun `Skal ikke gi periode på 52 uker når man har næringsinntekt over 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generate12MånederFangstOgFiskInntekt()),
+        val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..12, BigDecimal(50000))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true)
 
-        val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.JA, evaluering.resultat)
+        assertEquals(Resultat.NEI, evaluering.resultat)
     }
 
     @Test
-    fun `Skal gi periode på 104 uker når man har arbeidsinntekt over 2 G i snitt de siste 36 mnd`() {
+    fun `Skal ikke gi periode på 52 uker når man har arbeidsinntekt over 2 G i snitt de siste 36 mnd`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generate36MånederArbeidsInntekt()),
+        val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..36, BigDecimal(50000))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false)
 
-        val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste36Måneder52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.JA, evaluering.resultat)
+        assertEquals(Resultat.NEI, evaluering.resultat)
     }
 
     @Test
-    fun `Skal gi periode på 104 uker når man har næringsinntekt over 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
+    fun `Skal ikke gi periode på 52 uker når man har næringsinntekt over 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generate36MånederFangstOgFiskInntekt()),
+        val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..12, BigDecimal(50000))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true)
 
-        val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.JA, evaluering.resultat)
+        assertEquals(Resultat.NEI, evaluering.resultat)
     }
 
     @Test
-    fun `Skal ikke gi periode på 104 uker når man har arbeidsinntekt under 2 G siste 12 mnd`() {
+    fun `Skal gi periode på 52 uker når man har arbeidsinntekt under 2 G siste 12 mnd`() {
 
         val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..12, BigDecimal(1))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
@@ -79,13 +79,13 @@ internal class Periode104UkerTest {
             grunnbeløp = BigDecimal(13)
         )
 
-        val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste12Måneder52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.NEI, evaluering.resultat)
+        assertEquals(Resultat.JA, evaluering.resultat)
     }
 
     @Test
-    fun `Skal ikke gi periode på 104 uker når man har næringsinntektinntekt under 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
+    fun `Skal gi periode på 52 uker når man har næringsinntektinntekt under 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
 
         val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..12, BigDecimal(1))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
@@ -95,13 +95,13 @@ internal class Periode104UkerTest {
             grunnbeløp = BigDecimal(13)
         )
 
-        val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.NEI, evaluering.resultat)
+        assertEquals(Resultat.JA, evaluering.resultat)
     }
 
     @Test
-    fun `Skal ikke gi periode på 104 uker når man har arbeidsinntekt under 2 G i snitt de siste 36 mnd`() {
+    fun `Skal gi periode på 52 uker når man har arbeidsinntekt under 2 G i snitt de siste 36 mnd`() {
 
         val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..36, BigDecimal(1))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
@@ -111,13 +111,13 @@ internal class Periode104UkerTest {
             grunnbeløp = BigDecimal(37)
         )
 
-        val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste36Måneder52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.NEI, evaluering.resultat)
+        assertEquals(Resultat.JA, evaluering.resultat)
     }
 
     @Test
-    fun `Skal ikke gi periode på 104 uker når man har næringsinntekt under 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
+    fun `Skal gi periode på 52 uker når man har næringsinntekt under 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
 
         val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..36, BigDecimal(1))),
             senesteInntektsmåned = YearMonth.of(2019, 4),
@@ -127,13 +127,13 @@ internal class Periode104UkerTest {
             grunnbeløp = BigDecimal(37)
         )
 
-        val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
-        assertEquals(Resultat.NEI, evaluering.resultat)
+        assertEquals(Resultat.JA, evaluering.resultat)
     }
 
     @Test
-    fun `Skal ikke gi periode på 104 uker når man har næringsinntektinntekt over 2 G siste 12 mnd men fangst og fisk er ikke oppfylt`() {
+    fun `Skal ikke gi periode på 52 uker når man har næringsinntektinntekt over 2 G siste 12 mnd men fangst og fisk er ikke oppfylt`() {
 
         val fakta = Fakta(inntekt = Inntekt("123", generate12MånederFangstOgFiskInntekt()),
             senesteInntektsmåned = YearMonth.of(2019, 4),
@@ -143,13 +143,13 @@ internal class Periode104UkerTest {
             grunnbeløp = BigDecimal(13)
         )
 
-        val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
         assertEquals(Resultat.NEI, evaluering.resultat)
     }
 
     @Test
-    fun `Skal ikke gi periode på 104 uker når man har næringsinntektinntekt over 2 G i snitt de siste 36 mnd men fangst og fisk er ikke oppfylt`() {
+    fun `Skal ikke gi periode på 52 uker når man har næringsinntektinntekt over 2 G i snitt de siste 36 mnd men fangst og fisk er ikke oppfylt`() {
 
         val fakta = Fakta(inntekt = Inntekt("123", generate36MånederFangstOgFiskInntekt()),
             senesteInntektsmåned = YearMonth.of(2019, 4),
@@ -159,7 +159,7 @@ internal class Periode104UkerTest {
             grunnbeløp = BigDecimal(13)
         )
 
-        val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
+        val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
         assertEquals(Resultat.NEI, evaluering.resultat)
     }
@@ -173,14 +173,6 @@ internal class Periode104UkerTest {
         }
     }
 
-    fun generate12MånederArbeidsInntekt(): List<KlassifisertInntektMåned> {
-        return generateArbeidsInntekt(1..12, BigDecimal(50000))
-    }
-
-    fun generate36MånederArbeidsInntekt(): List<KlassifisertInntektMåned> {
-        return generateArbeidsInntekt(1..36, BigDecimal(50000))
-    }
-
     fun generateFangstOgFiskInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
@@ -191,10 +183,10 @@ internal class Periode104UkerTest {
     }
 
     fun generate12MånederFangstOgFiskInntekt(): List<KlassifisertInntektMåned> {
-        return generateArbeidsInntekt(1..12, BigDecimal(50000))
+        return generateArbeidsInntekt(1..12, BigDecimal(1000))
     }
 
     fun generate36MånederFangstOgFiskInntekt(): List<KlassifisertInntektMåned> {
-        return generateArbeidsInntekt(1..36, BigDecimal(50000))
+        return generateArbeidsInntekt(1..36, BigDecimal(1000))
     }
 }

@@ -3,13 +3,11 @@ package no.nav.dagpenger.regel.periode
 import de.huxhorn.sulky.ulid.ULID
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
-import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.streams.KafkaCredential
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
 import org.apache.kafka.streams.kstream.Predicate
-import java.math.BigDecimal
 import java.time.YearMonth
 import java.util.Properties
 
@@ -49,6 +47,8 @@ class Periode(val env: Environment) : River() {
             packet.getNullableObjectValue(BRUKT_INNTEKTSPERIODE, jsonAdapterInntektsPeriode::fromJson)
         val fangstOgFisk = packet.getNullableBoolean(FANGST_OG_FISK) ?: false
 
+        val fakta = Fakta(inntekt, senesteInntektsmåned, bruktInntektsPeriode, verneplikt, fangstOgFisk)
+
         val periodeResultat = finnPeriode(verneplikt, inntekt, senesteInntektsmåned, bruktInntektsPeriode, fangstOgFisk)
 
         val subsumsjon = PeriodeSubsumsjon(
@@ -85,7 +85,7 @@ fun finnPeriode(
     fangstOgFisk: Boolean
 ): Int {
 
-    val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode -> inntekt.filterPeriod(inntektsPeriode.førsteMåned, inntektsPeriode.sisteMåned) } ?: inntekt
+    /*val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode -> inntekt.filterPeriod(inntektsPeriode.førsteMåned, inntektsPeriode.sisteMåned) } ?: inntekt
 
     val enG = BigDecimal(96883)
 
@@ -117,7 +117,7 @@ fun finnPeriode(
         if (inntektSiste12 < enG.times(BigDecimal(2)) || årligSnittInntektSiste36 < enG.times(BigDecimal(2))) {
             return 52
         }
-    }
+    }*/
 
     return when (verneplikt) {
         true -> 26
