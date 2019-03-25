@@ -87,17 +87,17 @@ class Periode(val env: Environment) : River() {
     }
 }
 
-fun mapToInt(it: Evaluering): List<Int> {
+fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
     return if (it.children.isEmpty()) {
         listOf(it.begrunnelse.toInt())
     } else {
-        it.children.flatMap { mapToInt(it) }
+        it.children.flatMap { mapEvalureringResultatToInt(it) }
     }
 }
 
 fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering): Int? {
     val periodeResultat: Int? =
-        evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapToInt(it) }.max()
+        evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
     return periodeResultat
 }
 
