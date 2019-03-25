@@ -44,8 +44,9 @@ class Periode(val env: Environment) : River() {
         val verneplikt = packet.getNullableBoolean(AVTJENT_VERNEPLIKT) ?: false
         val inntekt: Inntekt = packet.getObjectValue(INNTEKT) { requireNotNull(inntektAdapter.fromJson(it)) }
         val senesteInntektsmåned = YearMonth.parse(packet.getStringValue(SENESTE_INNTEKTSMÅNED))
-        val bruktInntektsPeriode =
-            packet.getNullableObjectValue(BRUKT_INNTEKTSPERIODE, jsonAdapterInntektsPeriode::fromJson)
+
+        val bruktInntektsPeriode = getInntektsPeriode(packet)
+
         val fangstOgFisk = packet.getNullableBoolean(FANGST_OG_FISK) ?: false
 
         val fakta = Fakta(inntekt, senesteInntektsmåned, bruktInntektsPeriode, verneplikt, fangstOgFisk)
@@ -63,6 +64,17 @@ class Periode(val env: Environment) : River() {
 
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
         return packet
+    }
+
+    private fun getInntektsPeriode(packet: Packet): InntektsPeriode? {
+        return if (packet.hasField(BRUKT_INNTEKTSPERIODE)) {
+            packet.getMapValue(BRUKT_INNTEKTSPERIODE).runCatching {
+                InntektsPeriode(
+                    førsteMåned = YearMonth.parse(this["førsteMåned"] as String),
+                    sisteMåned = YearMonth.parse(this["sisteMåned"] as String)
+                )
+            }.getOrNull()
+        } else null
     }
 
     override fun getConfig(): Properties {

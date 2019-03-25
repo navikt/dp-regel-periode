@@ -66,7 +66,7 @@ class PeriodeTopologyTest {
             )
         )
 
-        val inntekt: Inntekt = Inntekt(
+        val inntekt = Inntekt(
             inntektsId = "12345",
             inntektsListe = listOf(
                 KlassifisertInntektMåned(
@@ -83,8 +83,19 @@ class PeriodeTopologyTest {
         )
 
         val json = """
-        {
-            "senesteInntektsmåned":"2018-03"
+            {
+                "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
+                "aktørId":"1000052711564",
+                "vedtakId":3.1018297E7,
+                "beregningsDato":"2019-02-27",
+                "harAvtjentVerneplikt":false,
+                "senesteInntektsmåned":"2019-01",
+                "bruktInntektsPeriode":
+                    {
+                        "førsteMåned":"2016-02",
+                        "sisteMåned":"2016-11"
+                    }
+
             }
             """.trimIndent()
 
