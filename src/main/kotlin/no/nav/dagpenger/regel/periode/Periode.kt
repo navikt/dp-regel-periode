@@ -44,7 +44,7 @@ class Periode(val env: Environment) : River() {
         val inntekt: Inntekt = packet.getObjectValue(INNTEKT) { requireNotNull(inntektAdapter.fromJson(it)) }
         val senesteInntektsmåned = YearMonth.parse(packet.getStringValue(SENESTE_INNTEKTSMÅNED))
 
-        val bruktInntektsPeriode = getInntektsPeriode(packet)
+        val bruktInntektsPeriode = null // getInntektsPeriode(packet)
 
         val fangstOgFisk = packet.getNullableBoolean(FANGST_OG_FISK) ?: false
 
