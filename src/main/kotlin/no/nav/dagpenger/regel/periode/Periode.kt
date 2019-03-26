@@ -19,7 +19,6 @@ class Periode(val env: Environment) : River() {
 
     private val inntektAdapter =
         moshiInstance.adapter<no.nav.dagpenger.events.inntekt.v1.Inntekt>(no.nav.dagpenger.events.inntekt.v1.Inntekt::class.java)
-    private val jsonAdapterInntektsPeriode = moshiInstance.adapter(InntektsPeriode::class.java)
     private val ulidGenerator = ULID()
 
     companion object {
@@ -45,7 +44,7 @@ class Periode(val env: Environment) : River() {
         val inntekt: Inntekt = packet.getObjectValue(INNTEKT) { requireNotNull(inntektAdapter.fromJson(it)) }
         val senesteInntektsmåned = YearMonth.parse(packet.getStringValue(SENESTE_INNTEKTSMÅNED))
 
-        val bruktInntektsPeriode = null // getInntektsPeriode(packet)
+        val bruktInntektsPeriode = getInntektsPeriode(packet)
 
         val fangstOgFisk = packet.getNullableBoolean(FANGST_OG_FISK) ?: false
 
