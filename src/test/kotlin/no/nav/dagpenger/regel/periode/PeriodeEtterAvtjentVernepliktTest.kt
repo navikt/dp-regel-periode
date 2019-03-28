@@ -17,7 +17,8 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = true,
-            fangstOgFisk = false
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "bla"
         )
 
         // når
@@ -36,7 +37,8 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
-            fangstOgFisk = false
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "bla"
         )
 
         // når

@@ -1,8 +1,10 @@
 package no.nav.dagpenger.regel.periode
 
+import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Test
+import java.time.YearMonth
 import kotlin.test.assertEquals
 
 internal class PeriodeSpesifikasjonerTest {
@@ -39,7 +41,13 @@ internal class PeriodeSpesifikasjonerTest {
         val evaluering = listOf(Evaluering.ja("52"), Evaluering.ja("26"), Evaluering.nei("104"))
 
         val rotEvaluering = Evaluering(Resultat.JA, "52", children = evaluering)
+        val fakta = Fakta(
+            Inntekt("123", emptyList()), senesteInntektsmåned = YearMonth.of(2019, 4),
+            bruktInntektsPeriode = null,
+            verneplikt = false,
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "bla")
 
-        assertEquals(52, finnHøyestePeriodeFraEvaluering(rotEvaluering))
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(rotEvaluering, fakta))
     }
 }

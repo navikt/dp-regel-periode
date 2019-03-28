@@ -13,7 +13,8 @@ data class Fakta(
     val bruktInntektsPeriode: InntektsPeriode? = null,
     val verneplikt: Boolean,
     val fangstOgFisk: Boolean,
-    val grunnbeløp: BigDecimal = BigDecimal(96883)
+    val grunnbeløp: BigDecimal = BigDecimal(96883),
+    val grunnlagBeregningsregel: String
 ) {
 
     val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode -> inntekt.filterPeriod(inntektsPeriode.førsteMåned, inntektsPeriode.sisteMåned) } ?: inntekt

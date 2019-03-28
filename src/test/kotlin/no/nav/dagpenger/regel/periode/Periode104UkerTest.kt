@@ -19,7 +19,8 @@ internal class Periode104UkerTest {
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
-            fangstOgFisk = false)
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "bla")
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
 
@@ -33,7 +34,8 @@ internal class Periode104UkerTest {
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
-            fangstOgFisk = true)
+            fangstOgFisk = true,
+            grunnlagBeregningsregel = "bla")
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -47,7 +49,8 @@ internal class Periode104UkerTest {
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
-            fangstOgFisk = false)
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "bla")
 
         val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
 
@@ -61,7 +64,8 @@ internal class Periode104UkerTest {
             senesteInntektsmåned = YearMonth.of(2019, 4),
             bruktInntektsPeriode = null,
             verneplikt = false,
-            fangstOgFisk = true)
+            fangstOgFisk = true,
+            grunnlagBeregningsregel = "bla")
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -76,7 +80,8 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnbeløp = BigDecimal(13)
+            grunnbeløp = BigDecimal(13),
+            grunnlagBeregningsregel = "bla"
         )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
@@ -92,7 +97,8 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            grunnbeløp = BigDecimal(13)
+            grunnbeløp = BigDecimal(13),
+            grunnlagBeregningsregel = "bla"
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -108,7 +114,8 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnbeløp = BigDecimal(37)
+            grunnbeløp = BigDecimal(37),
+            grunnlagBeregningsregel = "bla"
         )
 
         val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
@@ -124,7 +131,8 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            grunnbeløp = BigDecimal(37)
+            grunnbeløp = BigDecimal(37),
+            grunnlagBeregningsregel = "bla"
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -140,7 +148,8 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnbeløp = BigDecimal(13)
+            grunnbeløp = BigDecimal(13),
+            grunnlagBeregningsregel = "bla"
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -156,7 +165,8 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnbeløp = BigDecimal(13)
+            grunnbeløp = BigDecimal(13),
+            grunnlagBeregningsregel = "bla"
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
