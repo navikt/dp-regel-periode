@@ -90,6 +90,10 @@ class PeriodeTopologyTest {
                 "beregningsDato":"2019-02-27",
                 "harAvtjentVerneplikt":false,
                 "senesteInntektsmåned":"2019-01",
+                "grunnlagResultat":
+                    {
+                        "beregningsregel":"BLA"
+                    },
                 "bruktInntektsPeriode":
                     {
                         "førsteMåned":"2016-02",

@@ -29,6 +29,8 @@ class Periode(val env: Environment) : River() {
         val FANGST_OG_FISK = "fangstOgFisk"
         val SENESTE_INNTEKTSMÅNED = "senesteInntektsmåned"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
+        val GRUNNLAG_RESULTAT = "grunnlagResultat"
+        val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
     }
 
     override fun filterPredicates(): List<Predicate<String, Packet>> {
@@ -48,11 +50,13 @@ class Periode(val env: Environment) : River() {
 
         val fangstOgFisk = packet.getNullableBoolean(FANGST_OG_FISK) ?: false
 
-        val fakta = Fakta(inntekt, senesteInntektsmåned, bruktInntektsPeriode, verneplikt, fangstOgFisk)
+        val grunnlagBeregningsregel = packet.getMapValue(GRUNNLAG_RESULTAT)[BEREGNINGS_REGEL_GRUNNLAG].toString()
+
+        val fakta = Fakta(inntekt, senesteInntektsmåned, bruktInntektsPeriode, verneplikt, fangstOgFisk, grunnlagBeregningsregel = grunnlagBeregningsregel)
 
         val evaluering = periode.evaluer(fakta)
 
-        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering)
+        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta)
 
         val subsumsjon = PeriodeSubsumsjon(
             ulidGenerator.nextULID(),
@@ -94,10 +98,15 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
     }
 }
 
-fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering): Int? {
-    val periodeResultat: Int? =
-        evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
-    return periodeResultat
+fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int? {
+
+    if (fakta.grunnlagBeregningsregel == "VERNEPLIKT") {
+        return 26
+    } else {
+        val periodeResultat: Int? =
+            evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
+        return periodeResultat
+    }
 }
 
 fun main(args: Array<String>) {
