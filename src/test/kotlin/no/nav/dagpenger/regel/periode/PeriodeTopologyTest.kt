@@ -17,6 +17,22 @@ import kotlin.test.assertTrue
 
 class PeriodeTopologyTest {
 
+    private val inntekt = Inntekt(
+        inntektsId = "12345",
+        inntektsListe = listOf(
+            KlassifisertInntektMåned(
+                årMåned = YearMonth.of(2019, 2),
+                klassifiserteInntekter = listOf(
+                    KlassifisertInntekt(
+                        beløp = BigDecimal(25000),
+                        inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
+                    )
+                )
+
+            )
+        )
+    )
+
     companion object {
         val factory = ConsumerRecordFactory<String, Packet>(
             DAGPENGER_BEHOV_PACKET_EVENT.name,
@@ -58,27 +74,43 @@ class PeriodeTopologyTest {
     }
 
     @Test
-    fun ` Should add PeriodeSubsumsjon `() {
+    fun ` Dagpenger behov without grunnlagResultat should not be processed `() {
         val periode = Periode(
             Environment(
                 username = "bogus",
                 password = "bogus"
             )
         )
+        val json = """
+            {
+            "senesteInntektsmåned":"2019-01"
 
-        val inntekt = Inntekt(
-            inntektsId = "12345",
-            inntektsListe = listOf(
-                KlassifisertInntektMåned(
-                    årMåned = YearMonth.of(2019, 2),
-                    klassifiserteInntekter = listOf(
-                        KlassifisertInntekt(
-                            beløp = BigDecimal(25000),
-                            inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
-                        )
-                    )
+            }
+            """.trimIndent()
 
-                )
+        val packet = Packet(json)
+        packet.putValue("inntektV1", inntekt, inntektAdapter::toJson)
+
+        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
+            val inputRecord = factory.create(packet)
+            topologyTestDriver.pipeInput(inputRecord)
+
+            val ut = topologyTestDriver.readOutput(
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+            )
+
+            assertTrue { null == ut }
+        }
+    }
+
+    @Test
+    fun ` Should add PeriodeSubsumsjon `() {
+        val periode = Periode(
+            Environment(
+                username = "bogus",
+                password = "bogus"
             )
         )
 
