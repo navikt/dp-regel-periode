@@ -19,6 +19,8 @@ class Periode(val env: Environment) : River() {
 
     private val inntektAdapter =
         moshiInstance.adapter<no.nav.dagpenger.events.inntekt.v1.Inntekt>(no.nav.dagpenger.events.inntekt.v1.Inntekt::class.java)
+
+    private val bruktInntektsPeriodeAdapter = moshiInstance.adapter<InntektsPeriode>(InntektsPeriode::class.java)
     private val ulidGenerator = ULID()
 
     companion object {
@@ -44,16 +46,24 @@ class Periode(val env: Environment) : River() {
     override fun onPacket(packet: Packet): Packet {
 
         val verneplikt = packet.getNullableBoolean(AVTJENT_VERNEPLIKT) ?: false
-        val inntekt: Inntekt = packet.getObjectValue(INNTEKT) { requireNotNull(inntektAdapter.fromJson(it)) }
+        val inntekt: Inntekt = packet.getObjectValue(INNTEKT) { inntektAdapter.fromJsonValue(it)!! }
         val senesteInntektsmåned = YearMonth.parse(packet.getStringValue(SENESTE_INNTEKTSMÅNED))
 
-        val bruktInntektsPeriode = null // getInntektsPeriode(packet)
+        val bruktInntektsPeriode =
+            packet.getNullableObjectValue(BRUKT_INNTEKTSPERIODE, bruktInntektsPeriodeAdapter::fromJsonValue)
 
         val fangstOgFisk = packet.getNullableBoolean(FANGST_OG_FISK) ?: false
 
         val grunnlagBeregningsregel = packet.getMapValue(GRUNNLAG_RESULTAT)[BEREGNINGS_REGEL_GRUNNLAG].toString()
 
-        val fakta = Fakta(inntekt, senesteInntektsmåned, bruktInntektsPeriode, verneplikt, fangstOgFisk, grunnlagBeregningsregel = grunnlagBeregningsregel)
+        val fakta = Fakta(
+            inntekt,
+            senesteInntektsmåned,
+            bruktInntektsPeriode,
+            verneplikt,
+            fangstOgFisk,
+            grunnlagBeregningsregel = grunnlagBeregningsregel
+        )
 
         val evaluering = periode.evaluer(fakta)
 
@@ -68,17 +78,6 @@ class Periode(val env: Environment) : River() {
 
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
         return packet
-    }
-
-    private fun getInntektsPeriode(packet: Packet): InntektsPeriode? {
-        return if (packet.hasField(BRUKT_INNTEKTSPERIODE)) {
-            packet.getMapValue(BRUKT_INNTEKTSPERIODE).runCatching {
-                InntektsPeriode(
-                    førsteMåned = YearMonth.parse(this["førsteMåned"] as String),
-                    sisteMåned = YearMonth.parse(this["sisteMåned"] as String)
-                )
-            }.getOrNull()
-        } else null
     }
 
     override fun getConfig(): Properties {

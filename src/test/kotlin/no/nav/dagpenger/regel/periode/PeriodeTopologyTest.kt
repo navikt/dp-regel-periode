@@ -15,7 +15,7 @@ import java.time.YearMonth
 import java.util.Properties
 import kotlin.test.assertTrue
 
-class PeriodeTopologyTest {
+internal class PeriodeTopologyTest {
 
     private val inntekt = Inntekt(
         inntektsId = "12345",
@@ -44,7 +44,6 @@ class PeriodeTopologyTest {
             this[StreamsConfig.APPLICATION_ID_CONFIG] = "test"
             this[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "dummy:1234"
         }
-        val inntektAdapter = moshiInstance.adapter<Inntekt>(Inntekt::class.java)
     }
 
     @Test
@@ -89,7 +88,7 @@ class PeriodeTopologyTest {
             """.trimIndent()
 
         val packet = Packet(json)
-        packet.putValue("inntektV1", inntekt, inntektAdapter::toJson)
+        packet.putValue("inntektV1", inntekt)
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
             val inputRecord = factory.create(packet)
@@ -136,7 +135,7 @@ class PeriodeTopologyTest {
             """.trimIndent()
 
         val packet = Packet(json)
-        packet.putValue("inntektV1", inntekt, inntektAdapter::toJson)
+        packet.putValue("inntektV1", inntekt)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
             val inputRecord = factory.create(packet)
             topologyTestDriver.pipeInput(inputRecord)
