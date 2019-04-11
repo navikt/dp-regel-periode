@@ -5,6 +5,9 @@ import no.nav.nare.core.specifications.Spesifikasjon
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+val scale = 20
+val roundingMode = RoundingMode.HALF_UP
+
 val verneplikt26Uker = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-19 Dagpenger etter avtjent verneplikt",
     identitet = "VERNEPLIKT",
@@ -33,7 +36,7 @@ val ordinærSiste36Måneder104Uker = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-15 Antall stønadsuker (stønadsperiode), siste 36 mnd, 104 uker",
     identitet = "ORDINÆR_36_104",
     implementasjon = { fakta ->
-        if (fakta.arbeidsinntektSiste36.divide(BigDecimal(3), 20, RoundingMode.HALF_UP) >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
+        if (fakta.arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
             Evaluering.ja("104")
         } else {
             Evaluering.nei("0")
@@ -57,7 +60,7 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-15 Antall stønadsuker (stønadsperiode), med fangst og fisk, siste 36 mnd, 104 uker",
     identitet = "ORDINÆR_36_104_FANGSTOGFISK",
     implementasjon = { fakta ->
-        if (fakta.fangstOgFisk && fakta.inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), 20, RoundingMode.HALF_UP) >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
+        if (fakta.fangstOgFisk && fakta.inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) >= (fakta.grunnbeløp.times(BigDecimal(2)))) {
             Evaluering.ja("104")
         } else {
             Evaluering.nei("0")
@@ -81,7 +84,7 @@ val ordinærSiste36Måneder52Uker = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-15 Antall stønadsuker (stønadsperiode, siste 36 mnd, 52 uker",
     identitet = "ORDINÆR_36_52",
     implementasjon = { fakta ->
-        if (fakta.arbeidsinntektSiste36.divide(BigDecimal(3), 20, RoundingMode.HALF_UP) < (fakta.grunnbeløp.times(BigDecimal(2)))) {
+        if (fakta.arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) < (fakta.grunnbeløp.times(BigDecimal(2)))) {
             Evaluering.ja("52")
         } else {
             Evaluering.nei("0")
@@ -105,7 +108,7 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-15 Antall stønadsuker (stønadsperiode), med fangst og fisk, siste 36 mnd, 52 uker",
     identitet = "ORDINÆR_36_52_FANGSTOGFISK",
     implementasjon = { fakta ->
-        if (fakta.fangstOgFisk && fakta.inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), 20, RoundingMode.HALF_UP) < (fakta.grunnbeløp.times(BigDecimal(2)))) {
+        if (fakta.fangstOgFisk && fakta.inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) < (fakta.grunnbeløp.times(BigDecimal(2)))) {
             Evaluering.ja("52")
         } else {
             Evaluering.nei("0")
