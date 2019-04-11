@@ -114,7 +114,7 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnbeløp = BigDecimal(37),
+            grunnbeløp = BigDecimal(6),
             grunnlagBeregningsregel = "bla"
         )
 
@@ -131,7 +131,7 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            grunnbeløp = BigDecimal(37),
+            grunnbeløp = BigDecimal(6),
             grunnlagBeregningsregel = "bla"
         )
 
