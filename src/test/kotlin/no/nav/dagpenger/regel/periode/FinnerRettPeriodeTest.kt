@@ -22,7 +22,7 @@ class FinnerRettPeriodeTest {
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "VERNEPLIKT")
+            grunnlagBeregningsregel = "Verneplikt")
 
         val resultat = periode.evaluer(fakta)
 
