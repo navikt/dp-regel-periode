@@ -100,12 +100,12 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
 
 fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int? {
 
-    if (fakta.grunnlagBeregningsregel == "VERNEPLIKT") {
-        return 26
+    return if (fakta.grunnlagBeregningsregel == "Verneplikt") {
+        26
     } else {
         val periodeResultat: Int? =
             evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
-        return periodeResultat
+        periodeResultat
     }
 }
 
