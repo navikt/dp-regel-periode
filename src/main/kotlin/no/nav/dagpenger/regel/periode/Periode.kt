@@ -28,7 +28,7 @@ class Periode(val env: Environment) : River() {
         val PERIODE_RESULTAT = "periodeResultat"
         val INNTEKT = "inntektV1"
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
-        val FANGST_OG_FISK = "fangstOgFisk"
+        val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
         val SENESTE_INNTEKTSMÅNED = "senesteInntektsmåned"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
         val GRUNNLAG_RESULTAT = "grunnlagResultat"
