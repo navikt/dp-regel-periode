@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.YearMonth
 import java.util.Properties
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 internal class PeriodeTopologyTest {
@@ -149,6 +150,71 @@ internal class PeriodeTopologyTest {
             val result = ut.value()
 
             assertTrue { result.hasField("periodeResultat") }
+        }
+    }
+
+    @Test
+    fun ` Should add PeriodeSubsumsjon with oppfyllerKravTilFangstOgFisk`() {
+        val periode = Periode(
+            Environment(
+                username = "bogus",
+                password = "bogus"
+            )
+        )
+
+        val inntekt: Inntekt = Inntekt(
+            inntektsId = "12345",
+            inntektsListe = listOf(
+                KlassifisertInntektMåned(
+                    årMåned = YearMonth.of(2018, 2),
+                    klassifiserteInntekter = listOf(
+                        KlassifisertInntekt(
+                            beløp = BigDecimal(99999),
+                            inntektKlasse = InntektKlasse.FANGST_FISKE
+                        )
+                    )
+
+                )
+            )
+        )
+
+        val json = """
+            {
+                "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
+                "aktørId":"1000052711564",
+                "vedtakId":3.1018297E7,
+                "beregningsDato":"2018-04-06",
+                "harAvtjentVerneplikt":false,
+                "senesteInntektsmåned":"2018-03",
+                "oppfyllerKravTilFangstOgFisk": true,
+                "grunnlagResultat":
+                    {
+                        "beregningsregel":"BLA"
+                    },
+                "bruktInntektsPeriode":
+                    {
+                        "førsteMåned":"2016-02",
+                        "sisteMåned":"2016-11"
+                    }
+            }
+            """.trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", inntekt)
+        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
+            val inputRecord = factory.create(packet)
+            topologyTestDriver.pipeInput(inputRecord)
+
+            val ut = topologyTestDriver.readOutput(
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+            )
+
+            val result = ut.value()
+
+            assertTrue { result.hasField("periodeResultat") }
+            assertEquals("52.0", result.getMapValue("periodeResultat")["periodeAntallUker"].toString())
         }
     }
 }
