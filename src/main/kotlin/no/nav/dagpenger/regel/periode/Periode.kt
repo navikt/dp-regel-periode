@@ -9,12 +9,10 @@ import no.nav.dagpenger.streams.streamConfig
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
-import org.apache.logging.log4j.LogManager
 import java.time.YearMonth
 import java.util.Properties
 
 class Periode(private val env: Environment) : River() {
-    private val logger = LogManager.getLogger()
 
     override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
     override val HTTP_PORT: Int = env.httpPort ?: super.HTTP_PORT
@@ -83,9 +81,6 @@ class Periode(private val env: Environment) : River() {
     }
 
     override fun getConfig(): Properties {
-
-        logger.info("USING ${env.password.substring(4)} to authenticate")
-
         val props = streamConfig(
             appId = SERVICE_APP_ID,
             bootStapServerUrl = env.bootstrapServersUrl,
