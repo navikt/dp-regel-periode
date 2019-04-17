@@ -4,7 +4,7 @@ metadata:
   name: dp-regel-periode
 spec:
   image: repo.adeo.no:5443/dp-regel-periode:latest
-  port: 8093
+  port: 8096
   liveness:
     path: /isAlive
   readiness:
