@@ -68,8 +68,9 @@ dependencies {
 
     implementation("no.nav:nare:13785ff")
 
-    compile("io.prometheus:simpleclient_common:$prometheusVersion")
-    compile("io.prometheus:simpleclient_hotspot:$prometheusVersion")
+    implementation("io.prometheus:simpleclient_common:$prometheusVersion")
+    implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
+    implementation("io.prometheus:simpleclient_log4j2:$prometheusVersion")
     compile("io.ktor:ktor-server-netty:$ktorVersion")
 
     compile("org.apache.kafka:kafka-clients:$kafkaVersion")
