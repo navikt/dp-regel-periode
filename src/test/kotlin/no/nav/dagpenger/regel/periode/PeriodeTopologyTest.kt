@@ -9,8 +9,10 @@ import no.nav.dagpenger.streams.Topics.DAGPENGER_BEHOV_PACKET_EVENT
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
+import java.net.URI
 import java.time.YearMonth
 import java.util.Properties
 import kotlin.test.assertEquals
@@ -215,6 +217,38 @@ internal class PeriodeTopologyTest {
 
             assertTrue { result.hasField("periodeResultat") }
             assertEquals("52.0", result.getMapValue("periodeResultat")["periodeAntallUker"].toString())
+        }
+    }
+
+    @Test
+    fun ` Should add problem on failure`() {
+        val minsteinntekt = Periode(
+            Environment(
+                username = "bogus",
+                password = "bogus"
+            )
+        )
+
+        val inntekt = Inntekt(inntektsId = "12345", inntektsListe = emptyList())
+
+        val packet = Packet()
+        packet.putValue("senesteInntektsmåned", "ERROR")
+        packet.putValue("inntektV1", inntekt)
+        packet.putValue("grunnlagResultat", "ERROR")
+
+        TopologyTestDriver(minsteinntekt.buildTopology(), config).use { topologyTestDriver ->
+            val inputRecord = factory.create(packet)
+            topologyTestDriver.pipeInput(inputRecord)
+
+            val ut = topologyTestDriver.readOutput(
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+            )
+
+            assert(ut.value().hasProblem())
+            Assertions.assertEquals(URI("urn:dp:error:regel"), ut.value().getProblem()!!.type)
+            Assertions.assertEquals(URI("urn:dp:regel:periode"), ut.value().getProblem()!!.instance)
         }
     }
 }

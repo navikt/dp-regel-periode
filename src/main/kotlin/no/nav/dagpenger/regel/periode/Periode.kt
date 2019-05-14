@@ -2,12 +2,14 @@ package no.nav.dagpenger.regel.periode
 
 import de.huxhorn.sulky.ulid.ULID
 import no.nav.dagpenger.events.Packet
+import no.nav.dagpenger.events.Problem
 import no.nav.dagpenger.streams.KafkaCredential
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
+import java.net.URI
 import java.util.Properties
 
 class Periode(private val env: Environment) : River() {
@@ -63,6 +65,17 @@ class Periode(private val env: Environment) : River() {
             credential = KafkaCredential(env.username, env.password)
         )
         return props
+    }
+
+    override fun onFailure(packet: Packet): Packet {
+        packet.addProblem(
+            Problem(
+                type = URI("urn:dp:error:regel"),
+                title = "Ukjent feil ved bruk av perioderegel",
+                instance = URI("urn:dp:regel:periode")
+            )
+        )
+        return packet
     }
 }
 
