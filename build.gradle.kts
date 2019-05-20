@@ -20,6 +20,7 @@ apply {
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://dl.bintray.com/kittinunf/maven")
     maven("http://packages.confluent.io/maven/")
@@ -56,8 +57,8 @@ val orgJsonVersion = "20180813"
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("no.nav.dagpenger:streams:0.3.5-SNAPSHOT")
-    implementation("no.nav.dagpenger:events:0.3.11-SNAPSHOT")
+    api("com.github.navikt:dagpenger-streams:2019.05.20-12.02.83ff2b7cb7f6")
+    api("com.github.navikt:dagpenger-events:2019.05.20-11.56.33cd4c73a439")
 
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
 

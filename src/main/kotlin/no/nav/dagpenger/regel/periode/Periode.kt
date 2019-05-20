@@ -67,7 +67,7 @@ class Periode(private val env: Environment) : River() {
         return props
     }
 
-    override fun onFailure(packet: Packet): Packet {
+    override fun onFailure(packet: Packet, error: Throwable?): Packet {
         packet.addProblem(
             Problem(
                 type = URI("urn:dp:error:regel"),
