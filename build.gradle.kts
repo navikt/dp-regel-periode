@@ -20,10 +20,10 @@ apply {
 
 repositories {
     mavenCentral()
-    maven("https://jitpack.io")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://dl.bintray.com/kittinunf/maven")
     maven("http://packages.confluent.io/maven/")
+    maven("https://jitpack.io")
 }
 
 application {
@@ -50,15 +50,15 @@ val log4j2Version = "2.11.1"
 val jupiterVersion = "5.3.2"
 val confluentVersion = "5.0.2"
 val prometheusVersion = "0.6.0"
-val ktorVersion = "1.0.0"
+val ktorVersion = "1.2.0"
 val moshiVersion = "1.8.0"
 val ktorMoshiVersion = "1.0.1"
 val orgJsonVersion = "20180813"
 
 dependencies {
     implementation(kotlin("stdlib"))
-    api("com.github.navikt:dagpenger-streams:2019.05.20-12.02.83ff2b7cb7f6")
-    api("com.github.navikt:dagpenger-events:2019.05.20-11.56.33cd4c73a439")
+    implementation("com.github.navikt:dagpenger-streams:2019.05.20-12.02.83ff2b7cb7f6")
+    implementation("com.github.navikt:dagpenger-events:2019.05.20-11.56.33cd4c73a439")
 
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
 
