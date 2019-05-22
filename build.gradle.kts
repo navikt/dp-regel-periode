@@ -67,7 +67,8 @@ dependencies {
     implementation("com.squareup.moshi:moshi:$moshiVersion")
     implementation("com.ryanharter.ktor:ktor-moshi:$ktorMoshiVersion")
 
-    implementation("no.nav:nare:13785ff")
+    implementation("no.nav:nare:768ae37")
+    implementation("no.nav:nare-prometheus:0b41ab4")
 
     implementation("io.prometheus:simpleclient_common:$prometheusVersion")
     implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
