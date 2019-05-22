@@ -1,6 +1,8 @@
 package no.nav.dagpenger.regel.periode
 
 import de.huxhorn.sulky.ulid.ULID
+import io.prometheus.client.CollectorRegistry
+import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
 import no.nav.dagpenger.streams.KafkaCredential
@@ -11,6 +13,8 @@ import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
 import java.net.URI
 import java.util.Properties
+
+private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
 
 class Periode(private val env: Environment) : River() {
 
@@ -43,7 +47,7 @@ class Periode(private val env: Environment) : River() {
 
         val fakta = packetToFakta(packet)
 
-        val evaluering = periode.evaluer(fakta)
+        val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
 
         val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta)
 
