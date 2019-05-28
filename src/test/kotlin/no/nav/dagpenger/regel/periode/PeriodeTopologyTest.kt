@@ -33,7 +33,8 @@ internal class PeriodeTopologyTest {
                 )
 
             )
-        )
+        ),
+        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 2)
     )
 
     companion object {
@@ -177,7 +178,8 @@ internal class PeriodeTopologyTest {
                     )
 
                 )
-            )
+            ),
+            sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3)
         )
 
         val json = """
@@ -187,7 +189,6 @@ internal class PeriodeTopologyTest {
                 "vedtakId":3.1018297E7,
                 "beregningsDato":"2018-04-06",
                 "harAvtjentVerneplikt":false,
-                "senesteInntektsmåned":"2018-03",
                 "oppfyllerKravTilFangstOgFisk": true,
                 "grunnlagResultat":
                     {
@@ -229,10 +230,13 @@ internal class PeriodeTopologyTest {
             )
         )
 
-        val inntekt = Inntekt(inntektsId = "12345", inntektsListe = emptyList())
+        val inntekt = Inntekt(
+            inntektsId = "12345",
+            inntektsListe = emptyList(),
+            sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3)
+        )
 
         val packet = Packet()
-        packet.putValue("senesteInntektsmåned", "ERROR")
         packet.putValue("inntektV1", inntekt)
         packet.putValue("grunnlagResultat", "ERROR")
 

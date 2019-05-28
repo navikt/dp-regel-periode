@@ -14,15 +14,20 @@ class FinnerRettPeriodeTest {
     @Test
     fun ` Skal returnere 26 uker periode dersom beregningsregelen fra grunnlag er verneplikt `() {
 
+        val inntektsListe = generateArbeidsInntekt(
+            1..12, BigDecimal(3000)
+        )
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
-                generateArbeidsInntekt(1..12, BigDecimal(3000))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+                inntektsListe, sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+
+            ),
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "Verneplikt")
+            grunnlagBeregningsregel = "Verneplikt"
+        )
 
         val resultat = periode.evaluer(fakta)
 
@@ -32,15 +37,18 @@ class FinnerRettPeriodeTest {
     @Test
     fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag er ikke er verneplikt og har tjent mindre enn 2G `() {
 
+        val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(3000))
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
-                generateArbeidsInntekt(1..12, BigDecimal(3000))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+                inntektsListe,
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "BLA")
+            grunnlagBeregningsregel = "BLA"
+        )
 
         val resultat = periode.evaluer(fakta)
 
@@ -50,15 +58,18 @@ class FinnerRettPeriodeTest {
     @Test
     fun ` Skal returnere 104 uker periode dersom beregningsregelen fra grunnlag er ikke er verneplikt og har tjent mer enn 2G `() {
 
+        val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
-                generateArbeidsInntekt(1..12, BigDecimal(30000))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+                inntektsListe,
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "BLA")
+            grunnlagBeregningsregel = "BLA"
+        )
 
         val resultat = periode.evaluer(fakta)
 
@@ -70,8 +81,10 @@ class FinnerRettPeriodeTest {
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
                     KlassifisertInntekt(
-                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT)
-                ))
+                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                    )
+                )
+            )
         }
     }
 }

@@ -5,11 +5,9 @@ import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.all
 import no.nav.dagpenger.events.inntekt.v1.sumInntekt
 import java.math.BigDecimal
-import java.time.YearMonth
 
 data class Fakta(
     val inntekt: Inntekt,
-    val senesteInntektsmåned: YearMonth,
     val bruktInntektsPeriode: InntektsPeriode? = null,
     val verneplikt: Boolean,
     val fangstOgFisk: Boolean,
@@ -19,7 +17,7 @@ data class Fakta(
 
     val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode -> inntekt.filterPeriod(inntektsPeriode.førsteMåned, inntektsPeriode.sisteMåned) } ?: inntekt
 
-    val splitInntekt = filtrertInntekt.splitIntoInntektsPerioder(senesteInntektsmåned)
+    val splitInntekt = filtrertInntekt.splitIntoInntektsPerioder()
 
     val arbeidsinntektSiste12 = splitInntekt.first.sumInntekt(listOf(InntektKlasse.ARBEIDSINNTEKT))
     val arbeidsinntektSiste36 = splitInntekt.all().sumInntekt(listOf(InntektKlasse.ARBEIDSINNTEKT))
