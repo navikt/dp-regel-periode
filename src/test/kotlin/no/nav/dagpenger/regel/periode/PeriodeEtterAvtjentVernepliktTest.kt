@@ -13,8 +13,7 @@ internal class PeriodeEtterAvtjentVernepliktTest {
 
         // gitt fakta
         val fakta = Fakta(
-            inntekt = Inntekt("123", emptyList()),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+            inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
@@ -33,8 +32,7 @@ internal class PeriodeEtterAvtjentVernepliktTest {
 
         // gitt fakta
         val fakta = Fakta(
-            inntekt = Inntekt("123", emptyList()),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+            inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,

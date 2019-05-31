@@ -15,12 +15,17 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal ikke gi periode på 52 uker når man har arbeidsinntekt over 2 G siste 12 mnd`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..12, BigDecimal(50000))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateArbeidsInntekt(1..12, BigDecimal(50000)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "bla")
+            grunnlagBeregningsregel = "bla"
+        )
 
         val evaluering = ordinærSiste12Måneder52Uker.evaluer(fakta)
 
@@ -30,12 +35,17 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal ikke gi periode på 52 uker når man har næringsinntekt over 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..12, BigDecimal(50000))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateFangstOgFiskInntekt(1..12, BigDecimal(50000)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            grunnlagBeregningsregel = "bla")
+            grunnlagBeregningsregel = "bla"
+        )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
@@ -45,12 +55,17 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal ikke gi periode på 52 uker når man har arbeidsinntekt over 2 G i snitt de siste 36 mnd`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..36, BigDecimal(50000))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateArbeidsInntekt(1..36, BigDecimal(50000)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "bla")
+            grunnlagBeregningsregel = "bla"
+        )
 
         val evaluering = ordinærSiste36Måneder52Uker.evaluer(fakta)
 
@@ -60,12 +75,17 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal ikke gi periode på 52 uker når man har næringsinntekt over 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..12, BigDecimal(50000))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateFangstOgFiskInntekt(1..12, BigDecimal(50000)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            grunnlagBeregningsregel = "bla")
+            grunnlagBeregningsregel = "bla"
+        )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
@@ -75,8 +95,12 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal gi periode på 52 uker når man har arbeidsinntekt under 2 G siste 12 mnd`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..12, BigDecimal(1))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateArbeidsInntekt(1..12, BigDecimal(1)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
@@ -92,8 +116,12 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal gi periode på 52 uker når man har næringsinntektinntekt under 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..12, BigDecimal(1))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateFangstOgFiskInntekt(1..12, BigDecimal(1)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
@@ -109,8 +137,12 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal gi periode på 52 uker når man har arbeidsinntekt under 2 G i snitt de siste 36 mnd`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateArbeidsInntekt(1..36, BigDecimal(1))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateArbeidsInntekt(1..36, BigDecimal(1)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
@@ -126,8 +158,12 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal gi periode på 52 uker når man har næringsinntekt under 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generateFangstOgFiskInntekt(1..36, BigDecimal(1))),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generateFangstOgFiskInntekt(1..36, BigDecimal(1)),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
@@ -143,8 +179,12 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal ikke gi periode på 52 uker når man har næringsinntektinntekt over 2 G siste 12 mnd men fangst og fisk er ikke oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generate12MånederFangstOgFiskInntekt()),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generate12MånederFangstOgFiskInntekt(),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
@@ -160,8 +200,12 @@ internal class Periode52UkerTest {
     @Test
     fun `Skal ikke gi periode på 52 uker når man har næringsinntektinntekt over 2 G i snitt de siste 36 mnd men fangst og fisk er ikke oppfylt`() {
 
-        val fakta = Fakta(inntekt = Inntekt("123", generate36MånederFangstOgFiskInntekt()),
-            senesteInntektsmåned = YearMonth.of(2019, 4),
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                generate36MånederFangstOgFiskInntekt(),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
@@ -176,19 +220,25 @@ internal class Periode52UkerTest {
 
     fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
-            KlassifisertInntektMåned(YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
-                KlassifisertInntekt(
-                    beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT)
-            ))
+            KlassifisertInntektMåned(
+                YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
+                    KlassifisertInntekt(
+                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                    )
+                )
+            )
         }
     }
 
     fun generateFangstOgFiskInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
-            KlassifisertInntektMåned(YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
-                KlassifisertInntekt(
-                    beløpPerMnd, InntektKlasse.FANGST_FISKE)
-            ))
+            KlassifisertInntektMåned(
+                YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
+                    KlassifisertInntekt(
+                        beløpPerMnd, InntektKlasse.FANGST_FISKE
+                    )
+                )
+            )
         }
     }
 

@@ -29,7 +29,6 @@ class Periode(private val env: Environment) : River() {
         val INNTEKT = "inntektV1"
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
         val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
-        val SENESTE_INNTEKTSMÅNED = "senesteInntektsmåned"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
         val GRUNNLAG_RESULTAT = "grunnlagResultat"
         val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
@@ -38,7 +37,6 @@ class Periode(private val env: Environment) : River() {
     override fun filterPredicates(): List<Predicate<String, Packet>> {
         return listOf(
             Predicate { _, packet -> packet.hasField(INNTEKT) },
-            Predicate { _, packet -> packet.hasField(SENESTE_INNTEKTSMÅNED) },
             Predicate { _, packet -> packet.hasField(GRUNNLAG_RESULTAT) },
             Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) })
     }
