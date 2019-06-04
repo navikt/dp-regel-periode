@@ -4,14 +4,16 @@ import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.all
 import no.nav.dagpenger.events.inntekt.v1.sumInntekt
+import no.nav.dagpenger.grunnbelop.getGrunnbeløpForDato
 import java.math.BigDecimal
+import java.time.LocalDate
 
 data class Fakta(
     val inntekt: Inntekt,
     val bruktInntektsPeriode: InntektsPeriode? = null,
     val verneplikt: Boolean,
     val fangstOgFisk: Boolean,
-    val grunnbeløp: BigDecimal = BigDecimal(96883),
+    val grunnbeløp: BigDecimal = getGrunnbeløpForDato(LocalDate.now()).verdi,
     val grunnlagBeregningsregel: String
 ) {
 
