@@ -8,6 +8,7 @@ import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.time.YearMonth
 
 internal class Periode52UkerTest {
@@ -24,7 +25,8 @@ internal class Periode52UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste12Måneder52Uker.evaluer(fakta)
@@ -44,7 +46,8 @@ internal class Periode52UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
@@ -64,7 +67,8 @@ internal class Periode52UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste36Måneder52Uker.evaluer(fakta)
@@ -84,7 +88,8 @@ internal class Periode52UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)
@@ -105,7 +110,8 @@ internal class Periode52UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste12Måneder52Uker.evaluer(fakta)
@@ -126,7 +132,8 @@ internal class Periode52UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
@@ -147,7 +154,8 @@ internal class Periode52UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             grunnbeløp = BigDecimal(37),
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste36Måneder52Uker.evaluer(fakta)
@@ -168,7 +176,8 @@ internal class Periode52UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             grunnbeløp = BigDecimal(37),
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)
@@ -189,7 +198,8 @@ internal class Periode52UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
@@ -210,7 +220,8 @@ internal class Periode52UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)

@@ -32,6 +32,7 @@ class Periode(private val env: Environment) : River() {
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
         val GRUNNLAG_RESULTAT = "grunnlagResultat"
         val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
+        val BEREGNINGSDATO = "beregningsDato"
     }
 
     override fun filterPredicates(): List<Predicate<String, Packet>> {

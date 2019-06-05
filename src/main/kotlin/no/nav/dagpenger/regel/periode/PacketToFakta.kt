@@ -11,6 +11,7 @@ private val bruktInntektsPeriodeAdapter = moshiInstance.adapter<InntektsPeriode>
 internal fun packetToFakta(packet: Packet): Fakta {
     val verneplikt = packet.getNullableBoolean(Periode.AVTJENT_VERNEPLIKT) ?: false
     val inntekt: Inntekt = packet.getObjectValue(Periode.INNTEKT) { inntektAdapter.fromJsonValue(it)!! }
+    val beregningsDato = packet.getLocalDate(Periode.BEREGNINGSDATO)
 
     val bruktInntektsPeriode =
         packet.getNullableObjectValue(Periode.BRUKT_INNTEKTSPERIODE, bruktInntektsPeriodeAdapter::fromJsonValue)
@@ -24,6 +25,7 @@ internal fun packetToFakta(packet: Packet): Fakta {
         bruktInntektsPeriode,
         verneplikt,
         fangstOgFisk,
-        grunnlagBeregningsregel = grunnlagBeregningsregel
+        grunnlagBeregningsregel = grunnlagBeregningsregel,
+        beregningsDato = beregningsDato
     )
 }
