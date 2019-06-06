@@ -58,12 +58,14 @@ internal class PeriodeTopologyTest {
                 password = "bogus"
             )
         )
-        val emptyjsonBehov = """
-            {}
+        val json = """
+            {
+                "beregningsDato": "2019-05-20"
+            }
             """.trimIndent()
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(Packet(emptyjsonBehov))
+            val inputRecord = factory.create(Packet(json))
             topologyTestDriver.pipeInput(inputRecord)
 
             val ut = topologyTestDriver.readOutput(
@@ -86,11 +88,46 @@ internal class PeriodeTopologyTest {
         )
         val json = """
             {
-
+                "beregningsDato": "2019-05-20"
             }
             """.trimIndent()
 
         val packet = Packet(json)
+        packet.putValue("inntektV1", inntekt)
+
+        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
+            val inputRecord = factory.create(packet)
+            topologyTestDriver.pipeInput(inputRecord)
+
+            val ut = topologyTestDriver.readOutput(
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+            )
+
+            assertTrue { null == ut }
+        }
+    }
+
+    @Test
+    fun ` dagpengebehov without beregningsDato should not be processed`() {
+        val periode = Periode(
+            Environment(
+                username = "bogus",
+                password = "bogus"
+            )
+        )
+
+        val emptyjsonBehov = """
+            {
+                "grunnlagResultat":
+                    {
+                        "beregningsregel":"BLA"
+                    }
+            }
+            """.trimIndent()
+
+        val packet = Packet(emptyjsonBehov)
         packet.putValue("inntektV1", inntekt)
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
@@ -234,7 +271,13 @@ internal class PeriodeTopologyTest {
             sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3)
         )
 
-        val packet = Packet()
+        val json = """
+            {
+                "beregningsDato": "2019-05-20"
+            }
+            """.trimIndent()
+
+        val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
         packet.putValue("grunnlagResultat", "ERROR")
 

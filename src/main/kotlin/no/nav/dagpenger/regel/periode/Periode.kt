@@ -39,6 +39,7 @@ class Periode(private val env: Environment) : River() {
         return listOf(
             Predicate { _, packet -> packet.hasField(INNTEKT) },
             Predicate { _, packet -> packet.hasField(GRUNNLAG_RESULTAT) },
+            Predicate { _, packet -> packet.hasField(BEREGNINGSDATO) },
             Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) })
     }
 
