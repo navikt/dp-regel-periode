@@ -4,6 +4,7 @@ import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import java.time.YearMonth
 
 internal class PeriodeEtterAvtjentVernepliktTest {
@@ -17,7 +18,8 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         // når
@@ -36,7 +38,8 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            grunnlagBeregningsregel = "bla"
+            grunnlagBeregningsregel = "bla",
+            beregningsDato = LocalDate.of(2019, 5, 20)
         )
 
         // når

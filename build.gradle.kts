@@ -59,6 +59,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("com.github.navikt:dagpenger-streams:2019.06.03-21.15.cf80ca7a33d5")
     implementation("com.github.navikt:dagpenger-events:2019.05.28-13.44.ab5008b3ee50")
+    implementation("com.github.navikt.dp-biblioteker:grunnbelop:2019.06.04-12.10.8df531d0e3b3")
 
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
 

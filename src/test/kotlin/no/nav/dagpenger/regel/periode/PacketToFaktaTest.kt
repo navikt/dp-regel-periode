@@ -5,6 +5,7 @@ import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import java.time.YearMonth
 
 class PacketToFaktaTest {
@@ -22,7 +23,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "grunnlagResultat":{"beregningsregel": "test"},
-            "oppfyllerKravTilFangstOgFisk": true
+            "oppfyllerKravTilFangstOgFisk": true,
+            "beregningsDato": "2019-05-20"
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -38,7 +40,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "grunnlagResultat":{"beregningsregel": "test"},
-            "harAvtjentVerneplikt": true
+            "harAvtjentVerneplikt": true,
+            "beregningsDato": "2019-05-20"
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -50,11 +53,46 @@ class PacketToFaktaTest {
     }
 
     @Test
+    fun ` should map beregningsdato from packet to Fakta `() {
+        val json = """
+        {
+            "grunnlagResultat":{"beregningsregel": "test"},
+            "harAvtjentVerneplikt": true,
+            "beregningsDato": "2019-05-20"
+        }""".trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
+
+        val fakta = packetToFakta(packet)
+
+        assertEquals(LocalDate.of(2019, 5, 20), fakta.beregningsDato)
+    }
+
+    @Test
+    fun ` should get correct grunnbelop to Fakta `() {
+        val json = """
+        {
+            "grunnlagResultat":{"beregningsregel": "test"},
+            "harAvtjentVerneplikt": true,
+            "beregningsDato": "2019-05-20"
+        }""".trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
+
+        val fakta = packetToFakta(packet)
+
+        assertEquals(99858.toBigDecimal(), fakta.grunnbeløp)
+    }
+
+    @Test
     fun ` should map brukt_inntektsperiode from packet to Fakta `() {
         val json = """
         {
             "grunnlagResultat":{"beregningsregel": "test"},
-            "bruktInntektsPeriode": {"førsteMåned":"2019-02", "sisteMåned":"2019-03"}
+            "bruktInntektsPeriode": {"førsteMåned":"2019-02", "sisteMåned":"2019-03"},
+            "beregningsDato": "2019-05-20"
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -70,7 +108,8 @@ class PacketToFaktaTest {
     fun ` should map inntekt from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"}
+            "grunnlagResultat":{"beregningsregel": "test"},
+            "beregningsDato": "2019-05-20"
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -85,7 +124,8 @@ class PacketToFaktaTest {
     fun ` should map grunnlag_beregningsregel from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "regel"}
+            "grunnlagResultat":{"beregningsregel": "regel"},
+            "beregningsDato": "2019-05-20"
         }""".trimIndent()
 
         val packet = Packet(json)
