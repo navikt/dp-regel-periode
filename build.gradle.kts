@@ -57,7 +57,7 @@ val orgJsonVersion = "20180813"
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("com.github.navikt:dagpenger-streams:2019.06.21-11.13.27b0917e56b9")
+    implementation("com.github.navikt:dagpenger-streams:2019.06.26-13.26.a2b2819d7440")
     implementation("com.github.navikt.dp-biblioteker:grunnbelop:2019.06.04-12.10.8df531d0e3b3")
     implementation("com.github.navikt:dagpenger-events:2019.06.12-14.01.4b1e1a663635")
 
