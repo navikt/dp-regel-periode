@@ -2,6 +2,7 @@ package no.nav.dagpenger.regel.periode
 
 import de.huxhorn.sulky.ulid.ULID
 import io.prometheus.client.CollectorRegistry
+import io.prometheus.client.Counter
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
@@ -15,9 +16,13 @@ import java.net.URI
 import java.util.Properties
 
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
+private val periodeGittCounter = Counter.build()
+    .name("utfall_dagpengeperiode")
+    .labelNames("periode")
+    .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
+    .register()
 
 class Periode(private val env: Environment) : River() {
-
     override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
     override val HTTP_PORT: Int = env.httpPort ?: super.HTTP_PORT
 
@@ -44,7 +49,6 @@ class Periode(private val env: Environment) : River() {
     }
 
     override fun onPacket(packet: Packet): Packet {
-
         val fakta = packetToFakta(packet)
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
@@ -58,8 +62,14 @@ class Periode(private val env: Environment) : River() {
             periodeResultat ?: 0
         )
 
+        tellHvilkenPeriodeSomBleGitt(periodeResultat)
+
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
         return packet
+    }
+
+    private fun tellHvilkenPeriodeSomBleGitt(periodeResultat: Int?) {
+        periodeGittCounter.labels(periodeResultat.toString()).inc()
     }
 
     override fun getConfig(): Properties {
