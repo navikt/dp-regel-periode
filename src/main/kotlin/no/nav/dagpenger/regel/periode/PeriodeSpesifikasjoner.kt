@@ -5,7 +5,7 @@ import no.nav.nare.core.specifications.Spesifikasjon
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-val scale = 20
+const val scale = 20
 val roundingMode = RoundingMode.HALF_UP
 
 val verneplikt26Uker = Spesifikasjon<Fakta>(
@@ -115,4 +115,7 @@ val ordinær104: Spesifikasjon<Fakta> =
 
 val ordinær: Spesifikasjon<Fakta> = ordinær52 eller ordinær104
 
-val periode: Spesifikasjon<Fakta> = ordinær eller verneplikt26Uker
+val periode: Spesifikasjon<Fakta> = ordinær eller verneplikt26Uker.med(
+    identifikator = "PERIODE",
+    beskrivelse = "Antall uker som gis i dagpengeperiode"
+)
