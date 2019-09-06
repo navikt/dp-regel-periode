@@ -103,3 +103,7 @@ tasks.withType<Test> {
         events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     }
 }
+
+tasks.named("compileKotlin") {
+    dependsOn("spotlessKotlinCheck")
+}
