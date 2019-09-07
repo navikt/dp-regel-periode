@@ -70,12 +70,29 @@ class PacketToFaktaTest {
     }
 
     @Test
-    fun ` should get correct grunnbelop to Fakta `() {
+    fun ` should get correct grunnbelop before new G`() {
         val json = """
         {
             "grunnlagResultat":{"beregningsregel": "test"},
             "harAvtjentVerneplikt": true,
             "beregningsDato": "2019-05-20"
+        }""".trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
+
+        val fakta = packetToFakta(packet)
+
+        assertEquals(96883.toBigDecimal(), fakta.grunnbeløp)
+    }
+
+    @Test
+    fun ` should get correct grunnbelop after new G`() {
+        val json = """
+        {
+            "grunnlagResultat":{"beregningsregel": "test"},
+            "harAvtjentVerneplikt": true,
+            "beregningsDato": "2019-05-27"
         }""".trimIndent()
 
         val packet = Packet(json)
