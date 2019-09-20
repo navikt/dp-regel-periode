@@ -37,7 +37,29 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag er ikke er verneplikt og har tjent mindre enn 2G `() {
+    fun ` Skal returnere 26 uker periode dersom beregningsregelen fra grunnlag er verneplikt og har minus i inntektsum `() {
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                getMinusInntekt(),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
+            bruktInntektsPeriode = null,
+            verneplikt = true,
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "Verneplikt",
+            beregningsDato = LocalDate.of(2019, 5, 20)
+        )
+
+        assertEquals((-950000.toBigDecimal()), fakta.arbeidsinntektSiste12)
+
+        val resultat = periode.evaluer(fakta)
+
+        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+    }
+
+    @Test
+    fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har tjent mindre enn 2G `() {
 
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(3000))
         val fakta = Fakta(
@@ -59,7 +81,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 104 uker periode dersom beregningsregelen fra grunnlag er ikke er verneplikt og har tjent mer enn 2G `() {
+    fun ` Skal returnere 104 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har tjent mer enn 2G `() {
 
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))
         val fakta = Fakta(
@@ -80,6 +102,65 @@ class FinnerRettPeriodeTest {
         assertEquals(104, finnHøyestePeriodeFraEvaluering(resultat, fakta))
     }
 
+    @Test
+    fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har tjent mindre enn 2G pga minusinntekt `() {
+        val inntekt = listOf(
+            KlassifisertInntektMåned(
+                YearMonth.of(2019, 3), klassifiserteInntekter = listOf(
+                    KlassifisertInntekt(
+                        beløp = BigDecimal(1000000),
+                        inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
+                    ),
+                    KlassifisertInntekt(
+                        beløp = BigDecimal(-950000),
+                        inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
+                    )
+                )
+            )
+        )
+
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                inntekt,
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
+            bruktInntektsPeriode = null,
+            verneplikt = false,
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "BLA",
+            beregningsDato = LocalDate.of(2019, 5, 20)
+        )
+
+        assertEquals(50000.toBigDecimal(), fakta.arbeidsinntektSiste12)
+
+        val resultat = periode.evaluer(fakta)
+
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+    }
+
+    @Test
+    fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har minus i inntektsum `() {
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                getMinusInntekt(),
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
+            bruktInntektsPeriode = null,
+            verneplikt = true,
+            fangstOgFisk = false,
+            grunnlagBeregningsregel = "BLA",
+            beregningsDato = LocalDate.of(2019, 5, 20)
+        )
+
+        assertEquals((-950000.toBigDecimal()), fakta.arbeidsinntektSiste12)
+
+        val resultat = periode.evaluer(fakta)
+
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+    }
+
     fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
@@ -90,5 +171,23 @@ class FinnerRettPeriodeTest {
                 )
             )
         }
+    }
+
+    fun getMinusInntekt(): List<KlassifisertInntektMåned> {
+        return listOf(
+            KlassifisertInntektMåned(
+                YearMonth.of(2019, 3),
+                klassifiserteInntekter = listOf(
+                    KlassifisertInntekt(
+                        beløp = BigDecimal(1000000),
+                        inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
+                    ),
+                    KlassifisertInntekt(
+                        beløp = BigDecimal(-1950000),
+                        inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
+                    )
+                )
+            )
+        )
     }
 }
