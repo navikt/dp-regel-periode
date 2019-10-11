@@ -1,5 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
+import com.squareup.moshi.JsonAdapter
 import de.huxhorn.sulky.ulid.ULID
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
@@ -27,9 +28,12 @@ class Periode(private val config: Configuration) : River() {
 
     private val ulidGenerator = ULID()
 
+    val jsonAdapterEvaluering: JsonAdapter<Evaluering> = moshiInstance.adapter(Evaluering::class.java)
+
     companion object {
         val REGELIDENTIFIKATOR = "Periode.v1"
         val PERIODE_RESULTAT = "periodeResultat"
+        val PERIODE_NARE_EVALUERING = "periodeNareEvaluering"
         val INNTEKT = "inntektV1"
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
         val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
@@ -63,6 +67,7 @@ class Periode(private val config: Configuration) : River() {
 
         tellHvilkenPeriodeSomBleGitt(periodeResultat)
 
+        packet.putValue(PERIODE_NARE_EVALUERING, jsonAdapterEvaluering.toJson(evaluering))
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
         return packet
     }

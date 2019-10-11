@@ -6,6 +6,7 @@ import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.streams.Topics.DAGPENGER_BEHOV_PACKET_EVENT
+import no.nav.nare.core.evaluations.Evaluering
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
@@ -222,6 +223,58 @@ internal class PeriodeTopologyTest {
 
             assertTrue { result.hasField("periodeResultat") }
             assertEquals("52.0", result.getMapValue("periodeResultat")["periodeAntallUker"].toString())
+        }
+    }
+
+    @Test
+    fun ` should add nare evaluation`() {
+        val periode = Periode(
+            Environment(
+                username = "bogus",
+                password = "bogus"
+            )
+        )
+
+        val json = """
+            {
+                "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
+                "aktørId":"1000052711564",
+                "vedtakId":3.1018297E7,
+                "beregningsDato":"2019-02-27",
+                "harAvtjentVerneplikt":false,
+                "grunnlagResultat":
+                    {
+                        "beregningsregel":"BLA"
+                    },
+                "bruktInntektsPeriode":
+                    {
+                        "førsteMåned":"2016-02",
+                        "sisteMåned":"2016-11"
+                    }
+
+            }
+            """.trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", inntekt)
+        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
+            val inputRecord = factory.create(packet)
+            topologyTestDriver.pipeInput(inputRecord)
+
+            val ut = topologyTestDriver.readOutput(
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+            )
+
+            assertTrue { ut.value().hasField(Periode.PERIODE_NARE_EVALUERING) }
+
+            val nareEvaluering = periode.jsonAdapterEvaluering.fromJson(
+                ut.value().getStringValue(
+                    Periode.PERIODE_NARE_EVALUERING
+            ))
+
+            assertTrue { nareEvaluering is Evaluering }
         }
     }
 
