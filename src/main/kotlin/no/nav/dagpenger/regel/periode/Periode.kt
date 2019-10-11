@@ -111,7 +111,9 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int?
     }
 }
 
+internal val configuration = Configuration()
+
 fun main() {
-    val service = Periode(Configuration())
+    val service = Periode(configuration)
     service.start()
 }
