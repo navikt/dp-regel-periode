@@ -43,7 +43,7 @@ internal class PeriodeTopologyTest {
             DAGPENGER_BEHOV_PACKET_EVENT.keySerde.serializer(),
             DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.serializer()
         )
-
+        val periode = Periode(Configuration())
         val config = Properties().apply {
             this[StreamsConfig.APPLICATION_ID_CONFIG] = "test"
             this[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "dummy:1234"
@@ -52,12 +52,6 @@ internal class PeriodeTopologyTest {
 
     @Test
     fun ` Dagpenger behov without inntekt should not be processed `() {
-        val periode = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
-        )
         val json = """
             {
                 "beregningsDato": "2019-05-20"
@@ -80,12 +74,6 @@ internal class PeriodeTopologyTest {
 
     @Test
     fun ` Dagpenger behov without grunnlagResultat should not be processed `() {
-        val periode = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
-        )
         val json = """
             {
                 "beregningsDato": "2019-05-20"
@@ -111,12 +99,6 @@ internal class PeriodeTopologyTest {
 
     @Test
     fun ` dagpengebehov without beregningsDato should not be processed`() {
-        val periode = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
-        )
 
         val emptyjsonBehov = """
             {
@@ -146,13 +128,6 @@ internal class PeriodeTopologyTest {
 
     @Test
     fun ` Should add PeriodeSubsumsjon `() {
-        val periode = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
-        )
-
         val json = """
             {
                 "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
@@ -193,14 +168,8 @@ internal class PeriodeTopologyTest {
 
     @Test
     fun ` Should add PeriodeSubsumsjon with oppfyllerKravTilFangstOgFisk`() {
-        val periode = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
-        )
 
-        val inntekt: Inntekt = Inntekt(
+        val inntekt = Inntekt(
             inntektsId = "12345",
             inntektsListe = listOf(
                 KlassifisertInntektMåned(
@@ -258,13 +227,6 @@ internal class PeriodeTopologyTest {
 
     @Test
     fun ` Should add problem on failure`() {
-        val minsteinntekt = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
-        )
-
         val inntekt = Inntekt(
             inntektsId = "12345",
             inntektsListe = emptyList(),
@@ -281,7 +243,7 @@ internal class PeriodeTopologyTest {
         packet.putValue("inntektV1", inntekt)
         packet.putValue("grunnlagResultat", "ERROR")
 
-        TopologyTestDriver(minsteinntekt.buildTopology(), config).use { topologyTestDriver ->
+        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
             val inputRecord = factory.create(packet)
             topologyTestDriver.pipeInput(inputRecord)
 

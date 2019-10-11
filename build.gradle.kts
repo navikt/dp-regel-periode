@@ -64,7 +64,7 @@ dependencies {
     implementation(Nare.nare)
 
     implementation(Ktor.serverNetty)
-
+    implementation(Konfig.konfig)
     implementation(Kafka.clients)
     implementation(Kafka.streams)
 
