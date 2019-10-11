@@ -43,7 +43,8 @@ private fun config() = when (System.getenv("NAIS_CLUSTER_NAME") ?: System.getPro
 
 data class Configuration(
     val kafka: Kafka = Kafka(),
-    val application: Application = Application()
+    val application: Application = Application(),
+    val features: Features = Features()
 ) {
     data class Kafka(
         val brokers: String = config()[Key("kafka.bootstrap.servers", stringType)],
@@ -62,9 +63,9 @@ data class Configuration(
         val httpPort: Int = config()[Key("application.httpPort", intType)]
     )
 
-    val features = mapOf(
-        "gjustering" to config().getOrElse(Key("feature.gjustering", booleanType), false)
-    )
+    class Features {
+        fun gjustering() = config().getOrElse(Key("feature.gjustering", booleanType), false)
+    }
 }
 
 enum class Profile {
