@@ -7,7 +7,6 @@ import io.prometheus.client.Counter
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
-import no.nav.dagpenger.streams.KafkaCredential
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
 import no.nav.nare.core.evaluations.Evaluering
@@ -23,9 +22,9 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class Periode(private val env: Environment) : River() {
+class Periode(private val config: Configuration) : River() {
     override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
-    override val HTTP_PORT: Int = env.httpPort ?: super.HTTP_PORT
+    override val HTTP_PORT: Int = config.application.httpPort
 
     private val ulidGenerator = ULID()
 
@@ -80,8 +79,8 @@ class Periode(private val env: Environment) : River() {
     override fun getConfig(): Properties {
         val props = streamConfig(
             appId = SERVICE_APP_ID,
-            bootStapServerUrl = env.bootstrapServersUrl,
-            credential = KafkaCredential(env.username, env.password)
+            bootStapServerUrl = config.kafka.brokers,
+            credential = config.kafka.credential()
         )
         return props
     }
@@ -117,7 +116,7 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int?
     }
 }
 
-fun main(args: Array<String>) {
-    val service = Periode(Environment())
+fun main() {
+    val service = Periode(Configuration())
     service.start()
 }
