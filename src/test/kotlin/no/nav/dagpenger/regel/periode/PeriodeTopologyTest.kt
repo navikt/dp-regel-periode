@@ -228,12 +228,6 @@ internal class PeriodeTopologyTest {
 
     @Test
     fun ` should add nare evaluation`() {
-        val periode = Periode(
-            Environment(
-                username = "bogus",
-                password = "bogus"
-            )
-        )
 
         val json = """
             {
@@ -272,7 +266,7 @@ internal class PeriodeTopologyTest {
             val nareEvaluering = periode.jsonAdapterEvaluering.fromJson(
                 ut.value().getStringValue(
                     Periode.PERIODE_NARE_EVALUERING
-            ))
+                ))
 
             assertTrue { nareEvaluering is Evaluering }
         }
