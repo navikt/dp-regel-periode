@@ -21,7 +21,6 @@ internal class GjusteringTest {
         }
     }
 
-
     @Test
     fun `Skal få periode på 104 uker dersom inntekt siste 12 måned er under 2G`() {
 
@@ -43,7 +42,6 @@ internal class GjusteringTest {
         assertEquals(Resultat.JA, evaluering.resultat)
     }
 
-
     @Test
     fun `Skal få periode på 52 uker dersom inntekt siste 12 måned er under 2G`() {
         withGjustering {
@@ -64,9 +62,7 @@ internal class GjusteringTest {
 
             assertEquals(Resultat.NEI, evaluering.resultat)
         }
-
     }
-
 
     fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
@@ -79,5 +75,4 @@ internal class GjusteringTest {
             )
         }
     }
-
 }
