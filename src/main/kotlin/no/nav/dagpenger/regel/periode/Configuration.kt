@@ -68,6 +68,7 @@ data class Configuration(
     }
 
     data class Application(
+        val id: String = config().getOrElse(Key("application.id", stringType), "dagpenger-regel-periode"),
         val profile: Profile = config()[Key("application.profile", stringType)].let { Profile.valueOf(it) },
         val httpPort: Int = config()[Key("application.httpPort", intType)]
     )

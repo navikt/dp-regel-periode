@@ -23,7 +23,7 @@ private val periodeGittCounter = Counter.build()
     .register()
 
 class Periode(private val config: Configuration) : River(config.behovTopic) {
-    override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
+    override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
 
     private val ulidGenerator = ULID()
