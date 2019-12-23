@@ -8,7 +8,6 @@ import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
 import no.nav.dagpenger.streams.River
-import no.nav.dagpenger.streams.Topics
 import no.nav.dagpenger.streams.streamConfig
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
@@ -23,8 +22,8 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class Periode(private val config: Configuration) : River(Topics.DAGPENGER_BEHOV_PACKET_EVENT) {
-    override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
+class Periode(private val config: Configuration) : River(config.behovTopic) {
+    override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
 
     private val ulidGenerator = ULID()

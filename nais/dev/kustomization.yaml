@@ -1,5 +1,2 @@
 bases:
   - ../base
-
-patchesStrategicMerge:
-  - nais.yaml
