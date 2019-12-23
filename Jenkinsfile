@@ -94,6 +94,7 @@ pipeline {
             sh label: 'Deploy with kubectl', script: """
           kubectl config use-context dev-${env.ZONE}
           kubectl apply  -f ./nais/nais-dev-q2-deploy.yaml --wait
+          sleep 5
           kubectl rollout status -w deployment/${APPLICATION_NAME} -n q2
         """
 
