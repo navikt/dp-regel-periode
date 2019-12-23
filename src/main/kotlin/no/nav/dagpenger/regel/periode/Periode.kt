@@ -23,7 +23,7 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class Periode(private val config: Configuration) : River(Topics.DAGPENGER_BEHOV_PACKET_EVENT) {
+class Periode(private val config: Configuration) : River(config.behovTopic) {
     override val SERVICE_APP_ID: String = "dagpenger-regel-periode"
     override val HTTP_PORT: Int = config.application.httpPort
 
