@@ -1,12 +1,12 @@
 package no.nav.dagpenger.regel.periode
 
+import java.time.LocalDate
+import java.time.YearMonth
+import kotlin.test.assertEquals
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
-import java.time.YearMonth
-import kotlin.test.assertEquals
 
 internal class PeriodeSpesifikasjonerTest {
 

@@ -1,12 +1,12 @@
 package no.nav.dagpenger.regel.periode
 
+import java.time.LocalDate
+import java.time.YearMonth
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
-import java.time.YearMonth
 
 class PacketToFaktaTest {
 

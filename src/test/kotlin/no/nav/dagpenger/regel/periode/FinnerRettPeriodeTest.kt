@@ -1,14 +1,14 @@
 package no.nav.dagpenger.regel.periode
 
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.YearMonth
+import kotlin.test.assertEquals
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.YearMonth
-import kotlin.test.assertEquals
 
 class FinnerRettPeriodeTest {
 

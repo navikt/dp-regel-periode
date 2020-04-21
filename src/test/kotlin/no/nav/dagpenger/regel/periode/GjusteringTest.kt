@@ -1,5 +1,8 @@
 package no.nav.dagpenger.regel.periode
 
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.YearMonth
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
@@ -7,9 +10,6 @@ import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.YearMonth
 
 internal class GjusteringTest {
     fun withGjustering(test: () -> Unit) {

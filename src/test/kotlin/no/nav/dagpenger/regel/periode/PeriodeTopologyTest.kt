@@ -1,5 +1,11 @@
 package no.nav.dagpenger.regel.periode
 
+import java.math.BigDecimal
+import java.net.URI
+import java.time.YearMonth
+import java.util.Properties
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
@@ -12,12 +18,6 @@ import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
-import java.net.URI
-import java.time.YearMonth
-import java.util.Properties
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 internal class PeriodeTopologyTest {
 

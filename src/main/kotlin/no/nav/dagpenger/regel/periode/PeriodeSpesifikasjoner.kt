@@ -1,9 +1,9 @@
 package no.nav.dagpenger.regel.periode
 
-import no.nav.nare.core.evaluations.Evaluering
-import no.nav.nare.core.specifications.Spesifikasjon
 import java.math.BigDecimal
 import java.math.RoundingMode
+import no.nav.nare.core.evaluations.Evaluering
+import no.nav.nare.core.specifications.Spesifikasjon
 
 const val scale = 20
 val roundingMode = RoundingMode.HALF_UP

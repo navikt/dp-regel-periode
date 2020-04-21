@@ -4,6 +4,8 @@ import com.squareup.moshi.JsonAdapter
 import de.huxhorn.sulky.ulid.ULID
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
+import java.net.URI
+import java.util.Properties
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
@@ -12,8 +14,6 @@ import no.nav.dagpenger.streams.streamConfig
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
-import java.net.URI
-import java.util.Properties
 
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
 private val periodeGittCounter = Counter.build()
