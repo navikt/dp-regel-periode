@@ -50,6 +50,17 @@ internal class PeriodeSpesifikasjonerTest {
     }
 
     @Test
+    fun `Særregel består av verneplikt eller lærling`() {
+
+        val expectedIdentifikatorer = setOf<String>(
+            "VERNEPLIKT",
+            "LÆRLING"
+        )
+        val identifikatorer = identifikatorer(særregel.children)
+        assertEquals(expectedIdentifikatorer, identifikatorer)
+    }
+
+    @Test
     fun `Skal returnere 52 som antall uker`() {
         val evaluering = Evaluering.ja("52")
 

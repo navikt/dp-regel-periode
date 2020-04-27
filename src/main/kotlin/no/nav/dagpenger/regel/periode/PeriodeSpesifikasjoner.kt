@@ -127,8 +127,10 @@ val ordinær52: Spesifikasjon<Fakta> =
 val ordinær104: Spesifikasjon<Fakta> =
     (ordinærSiste12Måneder104Uker eller ordinærSiste36Måneder104Uker) eller (ordinærSiste12MånederMedFangstOgFiske104Uker eller ordinærSiste36MånederMedFangstOgFiske104Uker)
 
+val særregel = vernepiktPeriode eller lærlingPeriode
+
 val ordinær: Spesifikasjon<Fakta> = ordinær52 eller ordinær104
 
-val periode: Spesifikasjon<Fakta> = (ordinær eller vernepiktPeriode eller lærlingPeriode).med(
+val periode: Spesifikasjon<Fakta> = (ordinær eller særregel).med(
     identifikator = "PERIODE",
     beskrivelse = "Antall uker som gis i dagpengeperiode")
