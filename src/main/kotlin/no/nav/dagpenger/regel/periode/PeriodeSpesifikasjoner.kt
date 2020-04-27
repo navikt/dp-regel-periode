@@ -9,7 +9,7 @@ import no.nav.nare.core.specifications.Spesifikasjon
 const val scale = 20
 val roundingMode = RoundingMode.HALF_UP
 
-val verneplikt26Uker = Spesifikasjon<Fakta>(
+val vernepiktPeriode = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-19 Dagpenger etter avtjent verneplikt",
     identifikator = "VERNEPLIKT",
     implementasjon = {
@@ -25,7 +25,7 @@ val ordinærSiste12Måneder104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_104",
     implementasjon = {
         when {
-            erIkkeSærRegel() && arbeidsinntektSiste12 >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            erIkkeSærregel() && arbeidsinntektSiste12 >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -36,7 +36,7 @@ val ordinærSiste36Måneder104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_104",
     implementasjon = {
         when {
-            erIkkeSærRegel() && arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            erIkkeSærregel() && arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -47,7 +47,7 @@ val ordinærSiste12MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærRegel() && fangstOgFisk && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            erIkkeSærregel() && fangstOgFisk && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -58,7 +58,7 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærRegel() && fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            erIkkeSærregel() && fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -69,7 +69,7 @@ val ordinærSiste12Måneder52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_52",
     implementasjon = {
         when {
-            erIkkeSærRegel() && arbeidsinntektSiste12 < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            erIkkeSærregel() && arbeidsinntektSiste12 < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -80,7 +80,7 @@ val ordinærSiste36Måneder52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_52",
     implementasjon = {
         when {
-            erIkkeSærRegel() && arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            erIkkeSærregel() && arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -91,7 +91,7 @@ val ordinærSiste12MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærRegel() && fangstOgFisk && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            erIkkeSærregel() && fangstOgFisk && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -102,7 +102,7 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærRegel() && fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            erIkkeSærregel() && fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -129,6 +129,6 @@ val ordinær104: Spesifikasjon<Fakta> =
 
 val ordinær: Spesifikasjon<Fakta> = ordinær52 eller ordinær104
 
-val periode: Spesifikasjon<Fakta> = (ordinær eller verneplikt26Uker eller lærlingPeriode).med(
+val periode: Spesifikasjon<Fakta> = (ordinær eller vernepiktPeriode eller lærlingPeriode).med(
     identifikator = "PERIODE",
     beskrivelse = "Antall uker som gis i dagpengeperiode")

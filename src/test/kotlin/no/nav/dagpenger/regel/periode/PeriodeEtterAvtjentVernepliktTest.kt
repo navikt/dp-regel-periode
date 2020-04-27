@@ -24,7 +24,7 @@ internal class PeriodeEtterAvtjentVernepliktTest {
         )
 
         // når
-        val evaluering = verneplikt26Uker.evaluer(fakta)
+        val evaluering = vernepiktPeriode.evaluer(fakta)
 
         // så
         Assertions.assertEquals(Resultat.JA, evaluering.resultat)
@@ -45,7 +45,7 @@ internal class PeriodeEtterAvtjentVernepliktTest {
         )
 
         // når
-        val evaluering = verneplikt26Uker.evaluer(fakta)
+        val evaluering = vernepiktPeriode.evaluer(fakta)
 
         // så
         Assertions.assertEquals(Resultat.NEI, evaluering.resultat)

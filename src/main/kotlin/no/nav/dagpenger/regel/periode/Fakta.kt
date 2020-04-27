@@ -41,7 +41,7 @@ data class Fakta(
     val inntektSiste36inkludertFangstOgFiske =
         arbeidsinntektSiste36 + splitInntekt.all().sumInntekt(listOf(InntektKlasse.FANGST_FISKE))
 
-    fun erIkkeSærRegel(): Boolean = !lærling && !verneplikt
+    fun erIkkeSærregel(): Boolean = !lærling && !verneplikt
 }
 
 internal fun isThisGjusteringTest(
