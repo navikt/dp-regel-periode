@@ -31,6 +31,7 @@ class Periode(private val config: Configuration) : River(config.behovTopic) {
     val jsonAdapterEvaluering: JsonAdapter<Evaluering> = moshiInstance.adapter(Evaluering::class.java)
 
     companion object {
+        val LÆRLING = "lærling"
         val REGELIDENTIFIKATOR = "Periode.v1"
         val PERIODE_RESULTAT = "periodeResultat"
         val PERIODE_NARE_EVALUERING = "periodeNareEvaluering"
@@ -106,14 +107,7 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
 }
 
 fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int? {
-
-    return if (fakta.grunnlagBeregningsregel == "Verneplikt") {
-        26
-    } else {
-        val periodeResultat: Int? =
-            evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
-        periodeResultat
-    }
+    return evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
 }
 
 internal val configuration = Configuration()

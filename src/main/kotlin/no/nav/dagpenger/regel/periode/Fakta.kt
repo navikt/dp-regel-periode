@@ -21,7 +21,8 @@ data class Fakta(
         isThisGjusteringTest(beregningsDato) -> Grunnbeløp.GjusteringsTest.verdi
         else -> getGrunnbeløpForRegel(Regel.Minsteinntekt).forDato(beregningsDato).verdi
     },
-    val grunnlagBeregningsregel: String
+    val grunnlagBeregningsregel: String,
+    val lærling: Boolean
 ) {
     val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode ->
         inntekt.filterPeriod(
@@ -39,6 +40,8 @@ data class Fakta(
         arbeidsinntektSiste12 + splitInntekt.first.sumInntekt(listOf(InntektKlasse.FANGST_FISKE))
     val inntektSiste36inkludertFangstOgFiske =
         arbeidsinntektSiste36 + splitInntekt.all().sumInntekt(listOf(InntektKlasse.FANGST_FISKE))
+
+    fun erIkkeSærRegel(): Boolean = !lærling && !verneplikt
 }
 
 internal fun isThisGjusteringTest(

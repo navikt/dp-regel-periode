@@ -18,8 +18,9 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         // når
@@ -38,8 +39,9 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         // når
