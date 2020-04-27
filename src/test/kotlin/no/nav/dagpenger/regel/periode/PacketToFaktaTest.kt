@@ -152,4 +152,21 @@ class PacketToFaktaTest {
 
         assertEquals("regel", fakta.grunnlagBeregningsregel)
     }
+
+    @Test
+    fun ` should map lærling from packet to Fakta `() {
+        val json = """
+        {
+            "grunnlagResultat":{"beregningsregel": "regel"},
+            "beregningsDato": "2019-05-20",
+            "lærling": "true"
+        }""".trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
+
+        val fakta = packetToFakta(packet)
+
+        assertTrue(fakta.lærling)
+    }
 }

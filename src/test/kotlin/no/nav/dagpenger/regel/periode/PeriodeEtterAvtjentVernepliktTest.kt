@@ -18,12 +18,13 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         // når
-        val evaluering = verneplikt26Uker.evaluer(fakta)
+        val evaluering = vernepiktPeriode.evaluer(fakta)
 
         // så
         Assertions.assertEquals(Resultat.JA, evaluering.resultat)
@@ -38,12 +39,13 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         // når
-        val evaluering = verneplikt26Uker.evaluer(fakta)
+        val evaluering = vernepiktPeriode.evaluer(fakta)
 
         // så
         Assertions.assertEquals(Resultat.NEI, evaluering.resultat)

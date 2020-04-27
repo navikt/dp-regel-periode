@@ -33,8 +33,9 @@ internal class GjusteringTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 10, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 10, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
@@ -54,8 +55,9 @@ internal class GjusteringTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2019, 10, 20),
                 grunnlagBeregningsregel = "bla",
-                beregningsDato = LocalDate.of(2019, 10, 20)
+                lærling = false
             )
 
             val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)

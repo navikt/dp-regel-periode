@@ -12,6 +12,7 @@ internal fun packetToFakta(packet: Packet): Fakta {
     val verneplikt = packet.getNullableBoolean(Periode.AVTJENT_VERNEPLIKT) ?: false
     val inntekt: Inntekt = packet.getObjectValue(Periode.INNTEKT) { inntektAdapter.fromJsonValue(it)!! }
     val beregningsDato = packet.getLocalDate(Periode.BEREGNINGSDATO)
+    val lærling = packet.getNullableBoolean(Periode.LÆRLING) == true
 
     val bruktInntektsPeriode =
         packet.getNullableObjectValue(Periode.BRUKT_INNTEKTSPERIODE, bruktInntektsPeriodeAdapter::fromJsonValue)
@@ -21,11 +22,12 @@ internal fun packetToFakta(packet: Packet): Fakta {
     val grunnlagBeregningsregel = packet.getMapValue(Periode.GRUNNLAG_RESULTAT)[Periode.BEREGNINGS_REGEL_GRUNNLAG].toString()
 
     return Fakta(
-        inntekt,
-        bruktInntektsPeriode,
-        verneplikt,
-        fangstOgFisk,
+        inntekt = inntekt,
+        bruktInntektsPeriode = bruktInntektsPeriode,
+        verneplikt = verneplikt,
+        fangstOgFisk = fangstOgFisk,
         grunnlagBeregningsregel = grunnlagBeregningsregel,
-        beregningsDato = beregningsDato
+        beregningsDato = beregningsDato,
+        lærling = lærling
     )
 }

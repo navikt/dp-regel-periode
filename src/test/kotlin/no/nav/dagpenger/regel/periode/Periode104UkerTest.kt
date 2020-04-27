@@ -25,8 +25,9 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
@@ -46,8 +47,9 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -67,8 +69,9 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
@@ -88,8 +91,9 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -109,9 +113,10 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
@@ -131,9 +136,10 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -153,9 +159,10 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(6),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
@@ -175,9 +182,10 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(6),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -197,9 +205,10 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -219,9 +228,10 @@ internal class Periode104UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             grunnlagBeregningsregel = "bla",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)

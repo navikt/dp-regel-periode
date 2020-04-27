@@ -27,8 +27,9 @@ class FinnerRettPeriodeTest {
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "Verneplikt",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val resultat = periode.evaluer(fakta)
@@ -47,8 +48,9 @@ class FinnerRettPeriodeTest {
             bruktInntektsPeriode = null,
             verneplikt = true,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "Verneplikt",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         assertEquals((-950000.toBigDecimal()), fakta.arbeidsinntektSiste12)
@@ -69,10 +71,11 @@ class FinnerRettPeriodeTest {
                 sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
             ),
             bruktInntektsPeriode = null,
-            verneplikt = true,
+            verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "BLA",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val resultat = periode.evaluer(fakta)
@@ -91,10 +94,11 @@ class FinnerRettPeriodeTest {
                 sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
             ),
             bruktInntektsPeriode = null,
-            verneplikt = true,
+            verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "BLA",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         val resultat = periode.evaluer(fakta)
@@ -128,8 +132,9 @@ class FinnerRettPeriodeTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "BLA",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         assertEquals(50000.toBigDecimal(), fakta.arbeidsinntektSiste12)
@@ -148,10 +153,11 @@ class FinnerRettPeriodeTest {
                 sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
             ),
             bruktInntektsPeriode = null,
-            verneplikt = true,
+            verneplikt = false,
             fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2019, 5, 20),
             grunnlagBeregningsregel = "BLA",
-            beregningsDato = LocalDate.of(2019, 5, 20)
+            lærling = false
         )
 
         assertEquals((-950000.toBigDecimal()), fakta.arbeidsinntektSiste12)
