@@ -25,7 +25,10 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class Application(private val config: Configuration) : River(config.behovTopic) {
+class Application(
+    private val config: Configuration,
+    public override val healthChecks: List<HealthCheck> = listOf()
+) : River(config.behovTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
 
@@ -114,7 +117,7 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int?
 internal val configuration = Configuration()
 
 fun main() {
-    val service = Application(configuration)
+    val service = Application(configuration, healthChecks = listOf(RapidHealthCheck))
     service.start()
 
     RapidApplication.create(
