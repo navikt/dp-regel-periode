@@ -8,8 +8,12 @@ import java.util.Properties
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
+import no.nav.dagpenger.streams.HealthCheck
+import no.nav.dagpenger.streams.HealthStatus
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
+import no.nav.helse.rapids_rivers.RapidApplication
+import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
@@ -112,4 +116,39 @@ internal val configuration = Configuration()
 fun main() {
     val service = Application(configuration)
     service.start()
+
+    RapidApplication.create(
+        configuration.kafka.rapidApplication
+    ).apply {
+        LøsningService(
+            this
+        )
+    }.also {
+        it.register(RapidHealthCheck)
+    }.start()
+}
+
+object RapidHealthCheck : RapidsConnection.StatusListener, HealthCheck {
+    var healthy: Boolean = false
+
+    override fun onStartup(rapidsConnection: RapidsConnection) {
+        healthy = true
+    }
+
+    override fun onReady(rapidsConnection: RapidsConnection) {
+        healthy = true
+    }
+
+    override fun onNotReady(rapidsConnection: RapidsConnection) {
+        healthy = false
+    }
+
+    override fun onShutdown(rapidsConnection: RapidsConnection) {
+        healthy = false
+    }
+
+    override fun status(): HealthStatus = when (healthy) {
+        true -> HealthStatus.UP
+        false -> HealthStatus.DOWN
+    }
 }
