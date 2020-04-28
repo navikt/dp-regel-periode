@@ -22,8 +22,8 @@ class LøsningService(
 
     init {
         River(rapidsConnection).apply {
-            validate { it.requireAll("@behov", listOf(PERIODE_BEHOV)) }
-            validate { it.forbid("@løsning") }
+            validate { it.demandAll("@behov", listOf(PERIODE_BEHOV)) }
+            validate { it.rejectKey("@løsning") }
             validate {
                 it.requireKey(
                     "@id",

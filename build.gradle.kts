@@ -27,7 +27,7 @@ repositories {
 
 application {
     applicationName = "dp-regel-periode"
-    mainClassName = "no.nav.dagpenger.regel.periode.PeriodeKt"
+    mainClassName = "no.nav.dagpenger.regel.periode.ApplicationKt"
 }
 
 java {
