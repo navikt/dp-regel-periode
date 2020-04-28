@@ -18,18 +18,18 @@ private val inntektAdapter =
 private val bruktInntektsPeriodeAdapter = moshiInstance.adapter<InntektsPeriode>(InntektsPeriode::class.java)
 
 internal fun packetToFakta(packet: Packet): Fakta {
-    val verneplikt = packet.getNullableBoolean(Periode.AVTJENT_VERNEPLIKT) ?: false
-    val inntekt: Inntekt = packet.getObjectValue(Periode.INNTEKT) { inntektAdapter.fromJsonValue(it)!! }
-    val beregningsDato = packet.getLocalDate(Periode.BEREGNINGSDATO)
-    val lærling = packet.getNullableBoolean(Periode.LÆRLING) == true
+    val verneplikt = packet.getNullableBoolean(Application.AVTJENT_VERNEPLIKT) ?: false
+    val inntekt: Inntekt = packet.getObjectValue(Application.INNTEKT) { inntektAdapter.fromJsonValue(it)!! }
+    val beregningsDato = packet.getLocalDate(Application.BEREGNINGSDATO)
+    val lærling = packet.getNullableBoolean(Application.LÆRLING) == true
 
     val bruktInntektsPeriode =
-        packet.getNullableObjectValue(Periode.BRUKT_INNTEKTSPERIODE, bruktInntektsPeriodeAdapter::fromJsonValue)
+        packet.getNullableObjectValue(Application.BRUKT_INNTEKTSPERIODE, bruktInntektsPeriodeAdapter::fromJsonValue)
 
-    val fangstOgFisk = packet.getNullableBoolean(Periode.FANGST_OG_FISK) ?: false
+    val fangstOgFisk = packet.getNullableBoolean(Application.FANGST_OG_FISK) ?: false
 
     val grunnlagBeregningsregel =
-        packet.getMapValue(Periode.GRUNNLAG_RESULTAT)[Periode.BEREGNINGS_REGEL_GRUNNLAG].toString()
+        packet.getMapValue(Application.GRUNNLAG_RESULTAT)[Application.BEREGNINGS_REGEL_GRUNNLAG].toString()
 
     return Fakta(
         inntekt = inntekt,
@@ -43,19 +43,19 @@ internal fun packetToFakta(packet: Packet): Fakta {
 }
 
 internal fun JsonMessage.toFakta(): Fakta {
-    val inntekt: Inntekt = this[Periode.INNTEKT].asInntekt()
-    val verneplikt = this[Periode.AVTJENT_VERNEPLIKT].asBoolean(false)
+    val inntekt: Inntekt = this[Application.INNTEKT].asInntekt()
+    val verneplikt = this[Application.AVTJENT_VERNEPLIKT].asBoolean(false)
     val beregningsDato = this[BEREGNINGSDATO_NY_SRKIVEMÅTE].asLocalDate()
-    val lærling = this[Periode.LÆRLING].asBoolean(false)
-    val bruktInntektsPeriode = this[Periode.BRUKT_INNTEKTSPERIODE].let {
+    val lærling = this[Application.LÆRLING].asBoolean(false)
+    val bruktInntektsPeriode = this[Application.BRUKT_INNTEKTSPERIODE].let {
         InntektsPeriode(
             førsteMåned = it["førsteMåned"].asYearMonth(),
             sisteMåned = it["sisteMåned"].asYearMonth()
         )
     }
-    val fangstOgFisk = this[Periode.FANGST_OG_FISK].asBoolean(false)
+    val fangstOgFisk = this[Application.FANGST_OG_FISK].asBoolean(false)
 
-    val grunnlagBeregningsregel = this[Periode.GRUNNLAG_RESULTAT][Periode.BEREGNINGS_REGEL_GRUNNLAG].asText()
+    val grunnlagBeregningsregel = this[Application.GRUNNLAG_RESULTAT][Application.BEREGNINGS_REGEL_GRUNNLAG].asText()
 
     return Fakta(
         inntekt = inntekt,

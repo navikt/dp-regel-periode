@@ -21,7 +21,7 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class Periode(private val config: Configuration) : River(config.behovTopic) {
+class Application(private val config: Configuration) : River(config.behovTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
 
@@ -110,6 +110,6 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int?
 internal val configuration = Configuration()
 
 fun main() {
-    val service = Periode(configuration)
+    val service = Application(configuration)
     service.start()
 }

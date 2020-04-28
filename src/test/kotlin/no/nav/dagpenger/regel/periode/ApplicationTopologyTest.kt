@@ -19,7 +19,7 @@ import org.apache.kafka.streams.test.ConsumerRecordFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-internal class PeriodeTopologyTest {
+internal class ApplicationTopologyTest {
 
     private val inntekt = Inntekt(
         inntektsId = "12345",
@@ -44,7 +44,7 @@ internal class PeriodeTopologyTest {
             DAGPENGER_BEHOV_PACKET_EVENT.keySerde.serializer(),
             DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.serializer()
         )
-        val periode = Periode(Configuration())
+        val periode = Application(Configuration())
         val config = Properties().apply {
             this[StreamsConfig.APPLICATION_ID_CONFIG] = "test"
             this[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "dummy:1234"
@@ -261,11 +261,11 @@ internal class PeriodeTopologyTest {
                 DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
             )
 
-            assertTrue { ut.value().hasField(Periode.PERIODE_NARE_EVALUERING) }
+            assertTrue { ut.value().hasField(Application.PERIODE_NARE_EVALUERING) }
 
             val nareEvaluering = periode.jsonAdapterEvaluering.fromJson(
                 ut.value().getStringValue(
-                    Periode.PERIODE_NARE_EVALUERING
+                    Application.PERIODE_NARE_EVALUERING
                 ))
 
             assertTrue { nareEvaluering is Evaluering }

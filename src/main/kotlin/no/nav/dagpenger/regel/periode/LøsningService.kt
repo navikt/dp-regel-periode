@@ -2,12 +2,12 @@ package no.nav.dagpenger.regel.periode
 
 import mu.KotlinLogging
 import mu.withLoggingContext
-import no.nav.dagpenger.regel.periode.Periode.Companion.AVTJENT_VERNEPLIKT
-import no.nav.dagpenger.regel.periode.Periode.Companion.BRUKT_INNTEKTSPERIODE
-import no.nav.dagpenger.regel.periode.Periode.Companion.FANGST_OG_FISK
-import no.nav.dagpenger.regel.periode.Periode.Companion.GRUNNLAG_RESULTAT
-import no.nav.dagpenger.regel.periode.Periode.Companion.INNTEKT
-import no.nav.dagpenger.regel.periode.Periode.Companion.LÆRLING
+import no.nav.dagpenger.regel.periode.Application.Companion.AVTJENT_VERNEPLIKT
+import no.nav.dagpenger.regel.periode.Application.Companion.BRUKT_INNTEKTSPERIODE
+import no.nav.dagpenger.regel.periode.Application.Companion.FANGST_OG_FISK
+import no.nav.dagpenger.regel.periode.Application.Companion.GRUNNLAG_RESULTAT
+import no.nav.dagpenger.regel.periode.Application.Companion.INNTEKT
+import no.nav.dagpenger.regel.periode.Application.Companion.LÆRLING
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageProblems
 import no.nav.helse.rapids_rivers.RapidsConnection
@@ -55,13 +55,13 @@ class LøsningService(
             val subsumsjon = PeriodeSubsumsjon(
                 ulidGenerator.nextULID(),
                 ulidGenerator.nextULID(),
-                Periode.REGELIDENTIFIKATOR,
+                Application.REGELIDENTIFIKATOR,
                 periodeResultat ?: 0
             )
 
             packet["@løsning"] = mapOf<String, Any>(
-                Periode.PERIODE_NARE_EVALUERING to evaluering,
-                Periode.PERIODE_RESULTAT to subsumsjon.toMap()
+                Application.PERIODE_NARE_EVALUERING to evaluering,
+                Application.PERIODE_RESULTAT to subsumsjon.toMap()
             )
 
             context.send(packet.toJson())
