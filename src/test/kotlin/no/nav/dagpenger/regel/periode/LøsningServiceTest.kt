@@ -23,8 +23,8 @@ internal class LøsningServiceTest {
         val inspektør = rapid.inspektør
         inspektør.size shouldBeExactly 1
         inspektør.field(0, "@behov").map(JsonNode::asText).shouldContain("Periode")
-        inspektør.field(0, "@løsning")["periodeNareEvaluering"] shouldNotBe null
-        inspektør.field(0, "@løsning")["periodeResultat"] shouldNotBe null
+        inspektør.field(0, "@løsning")["Periode"]["periodeNareEvaluering"] shouldNotBe null
+        inspektør.field(0, "@løsning")["Periode"]["periodeResultat"] shouldNotBe null
     }
 
     @Language("JSON")

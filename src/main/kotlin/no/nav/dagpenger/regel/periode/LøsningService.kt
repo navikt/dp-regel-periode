@@ -59,10 +59,11 @@ class LøsningService(
                 periodeResultat ?: 0
             )
 
-            packet["@løsning"] = mapOf<String, Any>(
+            packet["@løsning"] = mapOf(
+                PERIODE_BEHOV to mapOf(
                 Application.PERIODE_NARE_EVALUERING to evaluering,
                 Application.PERIODE_RESULTAT to subsumsjon.toMap()
-            )
+            ))
 
             context.send(packet.toJson())
         }
