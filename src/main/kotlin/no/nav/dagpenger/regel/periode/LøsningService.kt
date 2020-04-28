@@ -12,6 +12,7 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageProblems
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
+import no.nav.nare.core.evaluations.Evaluering
 
 class LøsningService(
     rapidsConnection: RapidsConnection
@@ -47,7 +48,22 @@ class LøsningService(
         ) {
             val fakta = packet.toFakta()
 
-            packet["@løsning"] = mapOf("removeme" to "dead") // fixme
+            val evaluering: Evaluering = periode.evaluer(fakta)
+
+            val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta)
+
+            val subsumsjon = PeriodeSubsumsjon(
+                ulidGenerator.nextULID(),
+                ulidGenerator.nextULID(),
+                Periode.REGELIDENTIFIKATOR,
+                periodeResultat ?: 0
+            )
+
+            packet["@løsning"] = mapOf<String, Any>(
+                Periode.PERIODE_NARE_EVALUERING to evaluering,
+                Periode.PERIODE_RESULTAT to subsumsjon.toMap()
+            )
+
             context.send(packet.toJson())
         }
     }

@@ -3,6 +3,7 @@ package no.nav.dagpenger.regel.periode
 import com.fasterxml.jackson.databind.JsonNode
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeExactly
+import io.kotest.matchers.shouldNotBe
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
@@ -22,7 +23,8 @@ internal class LøsningServiceTest {
         val inspektør = rapid.inspektør
         inspektør.size shouldBeExactly 1
         inspektør.field(0, "@behov").map(JsonNode::asText).shouldContain("Periode")
-        /*inspektør.field(0, "@løsning")["Periode"].shouldHave("")*/
+        inspektør.field(0, "@løsning")["periodeNareEvaluering"] shouldNotBe null
+        inspektør.field(0, "@løsning")["periodeResultat"] shouldNotBe null
     }
 
     @Language("JSON")

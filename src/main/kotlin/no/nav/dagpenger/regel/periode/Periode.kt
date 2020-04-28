@@ -1,7 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
 import com.squareup.moshi.JsonAdapter
-import de.huxhorn.sulky.ulid.ULID
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
 import java.net.URI
@@ -25,8 +24,6 @@ private val periodeGittCounter = Counter.build()
 class Periode(private val config: Configuration) : River(config.behovTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
-
-    private val ulidGenerator = ULID()
 
     val jsonAdapterEvaluering: JsonAdapter<Evaluering> = moshiInstance.adapter(Evaluering::class.java)
 
