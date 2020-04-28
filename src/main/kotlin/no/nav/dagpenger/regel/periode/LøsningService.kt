@@ -2,9 +2,12 @@ package no.nav.dagpenger.regel.periode
 
 import mu.KotlinLogging
 import mu.withLoggingContext
+import no.nav.dagpenger.regel.periode.Periode.Companion.AVTJENT_VERNEPLIKT
 import no.nav.dagpenger.regel.periode.Periode.Companion.BRUKT_INNTEKTSPERIODE
+import no.nav.dagpenger.regel.periode.Periode.Companion.FANGST_OG_FISK
 import no.nav.dagpenger.regel.periode.Periode.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.Periode.Companion.INNTEKT
+import no.nav.dagpenger.regel.periode.Periode.Companion.LÆRLING
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageProblems
 import no.nav.helse.rapids_rivers.RapidsConnection
@@ -29,6 +32,7 @@ class LøsningService(
                     INNTEKT
                 )
             }
+            validate { it.interestedIn(AVTJENT_VERNEPLIKT, FANGST_OG_FISK, LÆRLING) }
         }.register(this)
     }
 
@@ -41,7 +45,9 @@ class LøsningService(
         withLoggingContext(
             "behovId" to packet["@id"].asText()
         ) {
-            packet["@løsning"] = mapOf("removeme" to "dead")
+            val fakta = packet.toFakta()
+
+            packet["@løsning"] = mapOf("removeme" to "dead") // fixme
             context.send(packet.toJson())
         }
     }

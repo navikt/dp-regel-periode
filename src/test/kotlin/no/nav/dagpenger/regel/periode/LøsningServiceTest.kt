@@ -35,7 +35,7 @@ internal class LøsningServiceTest {
               "@id": "123",
               "beregningsdato": "2020-04-01",
               "grunnlagResultat": {
-                "beregningsRegel": "ORDINAER"
+                "beregningsregel": "ORDINAER"
               },
               "bruktInntektsPeriode": {
                 "førsteMåned": "2019-12",
@@ -43,6 +43,7 @@ internal class LøsningServiceTest {
               },
               "inntektV1": {
                 "inntektsId": "BLA",
+                "manueltRedigert": false,
                 "sisteAvsluttendeKalenderMåned": "2020-04",
                 "inntektsListe": [
                   {
