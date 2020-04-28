@@ -42,6 +42,7 @@ private val prodProperties = ConfigurationMap(
     mapOf(
         "kafka.bootstrap.servers" to "a01apvl00145.adeo.no:8443,a01apvl00146.adeo.no:8443,a01apvl00147.adeo.no:8443,a01apvl00148.adeo.no:8443,a01apvl00149.adeo.no:8443,a01apvl00150.adeo.no:8443",
         "kafka.topic" to TOPIC,
+        "kafka.reset.policy" to "earliest",
         "application.profile" to Profile.PROD.toString(),
         "application.httpPort" to "8096",
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name
