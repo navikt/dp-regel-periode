@@ -62,6 +62,8 @@ dependencies {
     implementation(Prometheus.log4j2)
     implementation(Prometheus.Nare.prometheus)
 
+    implementation(RapidAndRivers)
+
     implementation(Nare.nare)
 
     implementation(Ktor.serverNetty)
@@ -69,16 +71,17 @@ dependencies {
     implementation(Kafka.clients)
     implementation(Kafka.streams)
 
-    implementation(Log4j2.api)
-    implementation(Log4j2.core)
-    implementation(Log4j2.slf4j)
-    implementation(Log4j2.Logstash.logstashLayout)
+    // logback (brought in by rapid-rivers)
+    implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation(Kotlin.Logging.kotlinLogging)
 
     testImplementation(kotlin("test"))
     testImplementation(Junit5.api)
     testRuntimeOnly(Junit5.engine)
-    testRuntimeOnly(Junit5.vintageEngine)
+
+    testImplementation(KoTest.runner)
+    testImplementation(KoTest.assertions)
+
     testImplementation(Kafka.streamTestUtils)
     testImplementation(KafkaEmbedded.env)
     testImplementation(Wiremock.standalone)

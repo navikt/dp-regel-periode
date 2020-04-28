@@ -1,7 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
 import com.squareup.moshi.JsonAdapter
-import de.huxhorn.sulky.ulid.ULID
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
 import java.net.URI
@@ -9,8 +8,12 @@ import java.util.Properties
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
+import no.nav.dagpenger.streams.HealthCheck
+import no.nav.dagpenger.streams.HealthStatus
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
+import no.nav.helse.rapids_rivers.RapidApplication
+import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
@@ -22,11 +25,9 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class Periode(private val config: Configuration) : River(config.behovTopic) {
+class Application(private val config: Configuration) : River(config.behovTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
-
-    private val ulidGenerator = ULID()
 
     val jsonAdapterEvaluering: JsonAdapter<Evaluering> = moshiInstance.adapter(Evaluering::class.java)
 
@@ -113,6 +114,41 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int?
 internal val configuration = Configuration()
 
 fun main() {
-    val service = Periode(configuration)
+    val service = Application(configuration)
     service.start()
+
+    RapidApplication.create(
+        configuration.kafka.rapidApplication
+    ).apply {
+        LøsningService(
+            this
+        )
+    }.also {
+        it.register(RapidHealthCheck)
+    }.start()
+}
+
+object RapidHealthCheck : RapidsConnection.StatusListener, HealthCheck {
+    var healthy: Boolean = false
+
+    override fun onStartup(rapidsConnection: RapidsConnection) {
+        healthy = true
+    }
+
+    override fun onReady(rapidsConnection: RapidsConnection) {
+        healthy = true
+    }
+
+    override fun onNotReady(rapidsConnection: RapidsConnection) {
+        healthy = false
+    }
+
+    override fun onShutdown(rapidsConnection: RapidsConnection) {
+        healthy = false
+    }
+
+    override fun status(): HealthStatus = when (healthy) {
+        true -> HealthStatus.UP
+        false -> HealthStatus.DOWN
+    }
 }
