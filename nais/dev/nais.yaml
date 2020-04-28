@@ -7,3 +7,5 @@ spec:
     paths:
       - mountPath: /var/run/secrets/nais.io/service_user
         kvPath: /serviceuser/data/dev/srvdp-regel-periode
+  secureLogs:
+    enabled: true
