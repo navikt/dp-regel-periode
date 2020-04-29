@@ -61,7 +61,7 @@ class Application(
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
 
-        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta)
+        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering)
 
         val subsumsjon = PeriodeSubsumsjon(
             ulidGenerator.nextULID(),
@@ -110,7 +110,7 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
     }
 }
 
-fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, fakta: Fakta): Int? {
+fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering): Int? {
     return evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
 }
 
