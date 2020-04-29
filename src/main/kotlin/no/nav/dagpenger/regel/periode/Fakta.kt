@@ -42,7 +42,7 @@ data class Fakta(
         arbeidsinntektSiste36 + splitInntekt.all().sumInntekt(listOf(InntektKlasse.FANGST_FISKE))
 
     fun erSærregel(): Boolean = verneplikt || erlærling()
-    private fun erlærling() = lærling && beregningsDato.erKoronaPeriode()
+    fun erlærling() = lærling && beregningsDato.erKoronaPeriode()
 }
 
 internal fun isThisGjusteringTest(

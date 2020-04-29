@@ -50,7 +50,7 @@ class LøsningService(
 
             val evaluering: Evaluering = periode.evaluer(fakta)
 
-            val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta)
+            val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering)
 
             val subsumsjon = PeriodeSubsumsjon(
                 ulidGenerator.nextULID(),

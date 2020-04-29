@@ -34,7 +34,7 @@ class FinnerRettPeriodeTest {
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat))
     }
 
     @Test
@@ -57,7 +57,7 @@ class FinnerRettPeriodeTest {
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat))
     }
 
     @Test
@@ -80,7 +80,7 @@ class FinnerRettPeriodeTest {
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat))
     }
 
     @Test
@@ -103,7 +103,7 @@ class FinnerRettPeriodeTest {
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(104, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+        assertEquals(104, finnHøyestePeriodeFraEvaluering(resultat))
     }
 
     @Test
@@ -141,7 +141,7 @@ class FinnerRettPeriodeTest {
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat))
     }
 
     @Test
@@ -164,7 +164,7 @@ class FinnerRettPeriodeTest {
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, fakta))
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat))
     }
 
     fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {

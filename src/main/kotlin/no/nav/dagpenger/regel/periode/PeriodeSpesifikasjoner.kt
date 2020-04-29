@@ -129,7 +129,7 @@ val lærlingPeriode = Spesifikasjon<Fakta>(
     identifikator = "LÆRLING",
     implementasjon = {
         when {
-            lærling && beregningsDato.erKoronaPeriode() -> Evaluering.ja("52")
+            erlærling() -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
