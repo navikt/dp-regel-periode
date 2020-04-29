@@ -11,25 +11,6 @@ import org.junit.jupiter.api.Test
 
 internal class PeriodeSpesifikasjonerTest {
 
-    @Test
-    fun `Periode består av ordinær`() {
-
-        val expectedIdentifikatorer = setOf<String>(
-            "ORDINÆR_12_52",
-            "ORDINÆR_36_52",
-            "ORDINÆR_12_52_FANGSTOGFISK",
-            "ORDINÆR_36_52_FANGSTOGFISK",
-            "ORDINÆR_12_104",
-            "ORDINÆR_36_104",
-            "ORDINÆR_12_104_FANGSTOGFISK",
-            "ORDINÆR_36_104_FANGSTOGFISK",
-            "VERNEPLIKT",
-            "LÆRLING"
-        )
-        val identifikatorer = identifikatorer(periode.children)
-        assertEquals(expectedIdentifikatorer, identifikatorer)
-    }
-
     fun identifikatorer(spesifikasjoner: List<Spesifikasjon<Fakta>>): Set<String> = (spesifikasjoner.map { it.identifikator }.toSet() + spesifikasjoner.flatMap { identifikatorer(it.children) }).toSet()
 
     @Test

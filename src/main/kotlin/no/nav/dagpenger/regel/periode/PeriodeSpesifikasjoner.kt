@@ -25,7 +25,7 @@ val ordinærSiste12Måneder104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_104",
     implementasjon = {
         when {
-            erIkkeSærregel() && arbeidsinntektSiste12 >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            arbeidsinntektSiste12 >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -36,7 +36,11 @@ val ordinærSiste36Måneder104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_104",
     implementasjon = {
         when {
-            erIkkeSærregel() && arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            arbeidsinntektSiste36.divide(
+                BigDecimal(3),
+                scale,
+                roundingMode
+            ) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -47,7 +51,7 @@ val ordinærSiste12MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærregel() && fangstOgFisk && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            fangstOgFisk && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -58,7 +62,11 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærregel() && fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(
+                BigDecimal(3),
+                scale,
+                roundingMode
+            ) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -69,7 +77,7 @@ val ordinærSiste12Måneder52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_52",
     implementasjon = {
         when {
-            erIkkeSærregel() && arbeidsinntektSiste12 < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            arbeidsinntektSiste12 < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -80,7 +88,11 @@ val ordinærSiste36Måneder52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_52",
     implementasjon = {
         when {
-            erIkkeSærregel() && arbeidsinntektSiste36.divide(BigDecimal(3), scale, roundingMode) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            arbeidsinntektSiste36.divide(
+                BigDecimal(3),
+                scale,
+                roundingMode
+            ) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -91,7 +103,7 @@ val ordinærSiste12MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærregel() && fangstOgFisk && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            fangstOgFisk && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -102,7 +114,11 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            erIkkeSærregel() && fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(BigDecimal(3), scale, roundingMode) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(
+                BigDecimal(3),
+                scale,
+                roundingMode
+            ) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -131,6 +147,13 @@ val særregel = vernepiktPeriode eller lærlingPeriode
 
 val ordinær: Spesifikasjon<Fakta> = ordinær52 eller ordinær104
 
-val periode: Spesifikasjon<Fakta> = (ordinær eller særregel).med(
+val periode: Spesifikasjon<Fakta> = Spesifikasjon(
     identifikator = "PERIODE",
-    beskrivelse = "Antall uker som gis i dagpengeperiode")
+    beskrivelse = "Antall uker som gis i dagpengeperiode",
+    implementasjon = {
+        when (erSærregel()) {
+            true -> særregel.evaluer(this)
+            false -> ordinær.evaluer(this)
+        }
+    }
+)
