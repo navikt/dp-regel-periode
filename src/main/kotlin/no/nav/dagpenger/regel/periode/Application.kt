@@ -122,11 +122,11 @@ fun main() {
     val service = Application(configuration, healthChecks = listOf(RapidHealthCheck))
     service.start()
 
-    val apiKeyVerifier = ApiKeyVerifier(configuration.application.inntektGprcApiSecret)
-    val apiKey = apiKeyVerifier.generate(configuration.application.inntektGprcApiKey)
+    val apiKeyVerifier = ApiKeyVerifier(configuration.application.inntektgrpcApiSecret)
+    val apiKey = apiKeyVerifier.generate(configuration.application.inntektgrpcApiKey)
 
     val inntektClient = InntektHenterWrapper(
-        serveraddress = configuration.application.inntektGprcAddress,
+        serveraddress = configuration.application.inntektgrpcAddress,
         apiKey = apiKey
     )
 

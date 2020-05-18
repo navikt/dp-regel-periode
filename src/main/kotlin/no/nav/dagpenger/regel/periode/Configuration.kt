@@ -25,9 +25,9 @@ private val localProperties = ConfigurationMap(
         "nav.truststore.path" to "",
         "nav.truststore.password" to "changeme",
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
-        "inntekt.gprc.address" to "localhost",
-        "inntekt.gprc.api.key" to "apikey",
-        "inntekt.gprc.api.secret" to "secret"
+        "inntekt.grpc.address" to "localhost",
+        "inntekt.grpc.api.key" to "apikey",
+        "inntekt.grpc.api.secret" to "secret"
     )
 )
 private val devProperties = ConfigurationMap(
@@ -39,7 +39,7 @@ private val devProperties = ConfigurationMap(
         "application.httpPort" to "8096",
         "feature.gjustering" to false.toString(),
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
-        "inntekt.gprc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
+        "inntekt.grpc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
     )
 )
 private val prodProperties = ConfigurationMap(
@@ -50,7 +50,7 @@ private val prodProperties = ConfigurationMap(
         "application.profile" to Profile.PROD.toString(),
         "application.httpPort" to "8096",
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
-        "inntekt.gprc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
+        "inntekt.grpc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
     )
 )
 
@@ -94,9 +94,9 @@ data class Configuration(
         val id: String = config().getOrElse(Key("application.id", stringType), "dagpenger-regel-periode"),
         val profile: Profile = config()[Key("application.profile", stringType)].let { Profile.valueOf(it) },
         val httpPort: Int = config()[Key("application.httpPort", intType)],
-        val inntektGprcAddress: String = config()[Key("inntekt.gprc.address", stringType)],
-        val inntektGprcApiKey: String = config()[Key("inntekt.gprc.api.key", stringType)],
-        val inntektGprcApiSecret: String = config()[Key("inntekt.gprc.api.secret", stringType)]
+        val inntektgrpcAddress: String = config()[Key("inntekt.grpc.address", stringType)],
+        val inntektgrpcApiKey: String = config()[Key("inntekt.grpc.api.key", stringType)],
+        val inntektgrpcApiSecret: String = config()[Key("inntekt.grpc.api.secret", stringType)]
     )
 
     class Features {
