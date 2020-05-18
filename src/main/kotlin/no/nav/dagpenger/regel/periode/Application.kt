@@ -130,6 +130,10 @@ fun main() {
         apiKey = apiKey
     )
 
+    Runtime.getRuntime().addShutdownHook(Thread {
+        inntektClient.close()
+    })
+
     RapidApplication.create(
         configuration.kafka.rapidApplication
     ).apply {

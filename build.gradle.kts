@@ -47,7 +47,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // grpc client and api key generation (ktorUtils)
-    implementation("com.github.navikt:dp-inntekt:2020.05.14-11.18.58cca42efd41")
+    implementation("com.github.navikt:dp-inntekt:2020.05.18-11.33.279ab2f32a2c")
     implementation(Dagpenger.Biblioteker.ktorUtils)
 
     implementation(Dagpenger.Streams)
