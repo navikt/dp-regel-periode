@@ -8,6 +8,8 @@ import java.util.Properties
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
+import no.nav.dagpenger.inntekt.rpc.InntektHenterWrapper
+import no.nav.dagpenger.ktor.auth.ApiKeyVerifier
 import no.nav.dagpenger.streams.HealthCheck
 import no.nav.dagpenger.streams.HealthStatus
 import no.nav.dagpenger.streams.River
@@ -120,11 +122,19 @@ fun main() {
     val service = Application(configuration, healthChecks = listOf(RapidHealthCheck))
     service.start()
 
+    val apiKeyVerifier = ApiKeyVerifier(configuration.application.inntektGprcApiSecret)
+    val apiKey = apiKeyVerifier.generate(configuration.application.inntektGprcApiKey)
+
+    val inntektClient = InntektHenterWrapper(
+        serveraddress = configuration.application.inntektGprcAddress,
+        apiKey = apiKey
+    )
+
     RapidApplication.create(
         configuration.kafka.rapidApplication
     ).apply {
         LøsningService(
-            this
+            this, inntektClient
         )
     }.also {
         it.register(RapidHealthCheck)

@@ -1,17 +1,49 @@
 package no.nav.dagpenger.regel.periode
 
 import com.fasterxml.jackson.databind.JsonNode
+import de.huxhorn.sulky.ulid.ULID
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.shouldNotBe
+import io.mockk.every
+import io.mockk.mockk
+import java.math.BigDecimal
+import java.time.YearMonth
+import kotlinx.coroutines.runBlocking
+import no.nav.dagpenger.events.inntekt.v1.Inntekt
+import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
+import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
+import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
+import no.nav.dagpenger.inntekt.rpc.InntektHenter
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 
 internal class LøsningServiceTest {
 
+    private val inntekt = Inntekt(
+        inntektsId = "12345",
+        inntektsListe = listOf(
+            KlassifisertInntektMåned(
+                årMåned = YearMonth.of(2018, 2),
+                klassifiserteInntekter = listOf(
+                    KlassifisertInntekt(
+                        beløp = BigDecimal(25000),
+                        inntektKlasse = InntektKlasse.ARBEIDSINNTEKT
+                    )
+                )
+
+            )
+        ),
+        sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 2)
+    )
+
+    private val inntektHenter = mockk<InntektHenter>().also {
+        every { runBlocking { it.hentKlassifisertInntekt(any()) } } returns inntekt
+    }
+
     private val rapid = TestRapid().apply {
-        LøsningService(this)
+        LøsningService(this, inntektHenter)
     }
 
     @Test
@@ -43,22 +75,7 @@ internal class LøsningServiceTest {
                 "førsteMåned": "2019-12",
                 "sisteMåned": "2020-04"
               },
-              "inntektV1": {
-                "inntektsId": "BLA",
-                "manueltRedigert": false,
-                "sisteAvsluttendeKalenderMåned": "2020-04",
-                "inntektsListe": [
-                  {
-                    "årMåned": "2020-01",
-                    "klassifiserteInntekter": [
-                      {
-                        "beløp": 100000,
-                        "inntektKlasse": "ARBEIDSINNTEKT"
-                      }
-                    ]
-                  }
-                ]
-              }
+              "InntektId": "${ULID().nextULID()}"
            }
             """.trimIndent()
 }
