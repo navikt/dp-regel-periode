@@ -31,6 +31,7 @@ class LøsningService(
                     GRUNNLAG_RESULTAT,
                     BRUKT_INNTEKTSPERIODE,
                     BEREGNINGSDATO_NY_SRKIVEMÅTE,
+                    VEDTAK_ID,
                     INNTEKT_ID
                 )
             }
@@ -42,11 +43,13 @@ class LøsningService(
         const val BEREGNINGSDATO_NY_SRKIVEMÅTE = "beregningsdato"
         const val PERIODE_BEHOV = "Periode"
         const val INNTEKT_ID = "InntektId"
+        const val VEDTAK_ID = "vedtakId"
     }
 
     override fun onPacket(packet: JsonMessage, context: RapidsConnection.MessageContext) {
         withLoggingContext(
-            "behovId" to packet["@id"].asText()
+            "behovId" to packet["@id"].asText(),
+        "vedtakId" to packet[VEDTAK_ID].asText()
         ) {
             val fakta = packet.toFakta(inntektHenter)
 
