@@ -48,7 +48,7 @@ internal fun packetToFakta(packet: Packet): Fakta {
 fun JsonNode.asULID(): ULID.Value = asText().let { ULID.parseULID(it) }
 
 internal fun JsonMessage.toFakta(inntektHenter: InntektHenter): Fakta {
-    val inntekt = this["InntektId"].asULID().let { runBlocking { inntektHenter.hentKlassifisertInntekt(it.toString()) } }
+    val inntekt = this["inntektId"].asULID().let { runBlocking { inntektHenter.hentKlassifisertInntekt(it.toString()) } }
     val verneplikt = this[Application.AVTJENT_VERNEPLIKT].asBoolean(false)
     val beregningsDato = this[BEREGNINGSDATO_NY_SRKIVEMÅTE].asLocalDate()
     val lærling = this[Application.LÆRLING].asBoolean(false)

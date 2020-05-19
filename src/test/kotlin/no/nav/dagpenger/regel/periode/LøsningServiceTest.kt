@@ -76,7 +76,7 @@ internal class LøsningServiceTest {
                 "sisteMåned": "2020-04"
               },
               "vedtakId": "abc",
-              "InntektId": "${ULID().nextULID()}"
+              "inntektId": "${ULID().nextULID()}"
            }
             """.trimIndent()
 }

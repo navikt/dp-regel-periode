@@ -42,7 +42,7 @@ class LøsningService(
     companion object {
         const val BEREGNINGSDATO_NY_SRKIVEMÅTE = "beregningsdato"
         const val PERIODE_BEHOV = "Periode"
-        const val INNTEKT_ID = "InntektId"
+        const val INNTEKT_ID = "inntektId"
         const val VEDTAK_ID = "vedtakId"
     }
 
