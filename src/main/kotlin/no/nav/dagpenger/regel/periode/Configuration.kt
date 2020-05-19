@@ -68,20 +68,21 @@ data class Configuration(
     val features: Features = Features(),
     val behovTopic: Topic<String, Packet> = Topics.DAGPENGER_BEHOV_PACKET_EVENT.copy(
         name = config()[Key("behov.topic", stringType)]
+    ),
+    val rapidApplication: Map<String, String> = mapOf(
+        "RAPID_APP_NAME" to application.id,
+        "KAFKA_BOOTSTRAP_SERVERS" to config()[Key("kafka.bootstrap.servers", stringType)],
+        "KAFKA_CONSUMER_GROUP_ID" to "dp-regel-periode-rapid",
+        "KAFKA_RAPID_TOPIC" to config()[Key("kafka.topic", stringType)],
+        "KAFKA_RESET_POLICY" to config()[Key("kafka.reset.policy", stringType)],
+        "NAV_TRUSTSTORE_PATH" to config()[Key("nav.truststore.path", stringType)],
+        "NAV_TRUSTSTORE_PASSWORD" to config()[Key("nav.truststore.password", stringType)]
     )
 ) {
     data class Kafka(
         val brokers: String = config()[Key("kafka.bootstrap.servers", stringType)],
         val user: String? = config().getOrNull(Key("srvdp.regel.periode.username", stringType)),
-        val password: String? = config().getOrNull(Key("srvdp.regel.periode.password", stringType)),
-        val rapidApplication: Map<String, String> = mapOf(
-            "KAFKA_BOOTSTRAP_SERVERS" to config()[Key("kafka.bootstrap.servers", stringType)],
-            "KAFKA_CONSUMER_GROUP_ID" to "dp-regel-periode-rapid",
-            "KAFKA_RAPID_TOPIC" to config()[Key("kafka.topic", stringType)],
-            "KAFKA_RESET_POLICY" to config()[Key("kafka.reset.policy", stringType)],
-            "NAV_TRUSTSTORE_PATH" to config()[Key("nav.truststore.path", stringType)],
-            "NAV_TRUSTSTORE_PASSWORD" to config()[Key("nav.truststore.password", stringType)]
-        )
+        val password: String? = config().getOrNull(Key("srvdp.regel.periode.password", stringType))
     ) {
         fun credential(): KafkaCredential? {
             return if (user != null && password != null) {

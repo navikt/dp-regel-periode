@@ -135,7 +135,7 @@ fun main() {
     })
 
     RapidApplication.create(
-        configuration.kafka.rapidApplication
+        configuration.rapidApplication
     ).apply {
         LøsningService(
             this, inntektClient
