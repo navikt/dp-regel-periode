@@ -77,7 +77,7 @@ data class Configuration(
         "KAFKA_RESET_POLICY" to config()[Key("kafka.reset.policy", stringType)],
         "NAV_TRUSTSTORE_PATH" to config()[Key("nav.truststore.path", stringType)],
         "NAV_TRUSTSTORE_PASSWORD" to config()[Key("nav.truststore.password", stringType)]
-    )
+    ) + System.getenv().filter { it.key.startsWith("NAIS_") }
 ) {
     data class Kafka(
         val brokers: String = config()[Key("kafka.bootstrap.servers", stringType)],
