@@ -59,7 +59,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom kravet til verneplikt er oppfylt og har tjent mindre enn 2G `() {
+    fun ` Skal returnere 52 uker periode dersom kravet til verneplikt ikke er oppfylt og har tjent mindre enn 2G `() {
 
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(3000))
         val fakta = Fakta(
