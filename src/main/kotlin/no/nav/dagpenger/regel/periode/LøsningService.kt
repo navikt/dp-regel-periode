@@ -81,10 +81,13 @@ internal fun JsonNode.asULID(): ULID.Value = asText().let { ULID.parseULID(it) }
 private fun JsonMessage.toFakta(inntektHenter: InntektHenter): Fakta = Fakta(
     inntekt = this["inntektId"].asULID().let { runBlocking { inntektHenter.hentKlassifisertInntekt(it.toString()) } },
     bruktInntektsPeriode = this[BRUKT_INNTEKTSPERIODE].let {
-        InntektsPeriode(
-            førsteMåned = it["førsteMåned"].asYearMonth(),
-            sisteMåned = it["sisteMåned"].asYearMonth()
-        )
+        when (!it.hasNonNull("førsteMåned")) {
+            true -> null
+            false -> InntektsPeriode(
+                førsteMåned = it["førsteMåned"].asYearMonth(),
+                sisteMåned = it["sisteMåned"].asYearMonth()
+            )
+        }
     },
     verneplikt = this[AVTJENT_VERNEPLIKT].asBoolean(false),
     fangstOgFisk = this[FANGST_OG_FISK].asBoolean(false),

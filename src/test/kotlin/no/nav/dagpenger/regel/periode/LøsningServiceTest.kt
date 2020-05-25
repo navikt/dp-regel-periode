@@ -69,8 +69,6 @@ internal class LøsningServiceTest {
               "@id": "123",
               "beregningsdato": "2020-04-01",
               "bruktInntektsPeriode": {
-                "førsteMåned": "2019-12",
-                "sisteMåned": "2020-04"
               },
               "vedtakId": "abc",
               "inntektId": "${ULID().nextULID()}"
