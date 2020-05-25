@@ -34,7 +34,6 @@ internal class GjusteringTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 10, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -56,7 +55,6 @@ internal class GjusteringTest {
                 verneplikt = false,
                 fangstOgFisk = false,
                 beregningsDato = LocalDate.of(2019, 10, 20),
-                grunnlagBeregningsregel = "bla",
                 lærling = false
             )
 
@@ -70,10 +68,10 @@ internal class GjusteringTest {
         return (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
-                KlassifisertInntekt(
-                    beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                    KlassifisertInntekt(
+                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                    )
                 )
-            )
             )
         }
     }

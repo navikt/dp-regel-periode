@@ -2,20 +2,13 @@ package no.nav.dagpenger.regel.periode
 
 import com.fasterxml.jackson.databind.JsonNode
 import de.huxhorn.sulky.ulid.ULID
-import java.math.BigDecimal
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import mu.withLoggingContext
-import no.nav.dagpenger.events.inntekt.v1.Inntekt
-import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
-import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
-import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.inntekt.rpc.InntektHenter
 import no.nav.dagpenger.regel.periode.Application.Companion.AVTJENT_VERNEPLIKT
-import no.nav.dagpenger.regel.periode.Application.Companion.BEREGNINGS_REGEL_GRUNNLAG
 import no.nav.dagpenger.regel.periode.Application.Companion.BRUKT_INNTEKTSPERIODE
 import no.nav.dagpenger.regel.periode.Application.Companion.FANGST_OG_FISK
-import no.nav.dagpenger.regel.periode.Application.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.Application.Companion.LÆRLING
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageProblems
@@ -39,14 +32,19 @@ class LøsningService(
             validate {
                 it.requireKey(
                     "@id",
-                    GRUNNLAG_RESULTAT,
-                    BRUKT_INNTEKTSPERIODE,
                     "beregningsdato",
                     "vedtakId",
                     "inntektId"
                 )
             }
-            validate { it.interestedIn(AVTJENT_VERNEPLIKT, FANGST_OG_FISK, LÆRLING) }
+            validate {
+                it.interestedIn(
+                    AVTJENT_VERNEPLIKT,
+                    BRUKT_INNTEKTSPERIODE,
+                    FANGST_OG_FISK,
+                    LÆRLING
+                )
+            }
         }.register(this)
     }
 
@@ -90,25 +88,6 @@ private fun JsonMessage.toFakta(inntektHenter: InntektHenter): Fakta = Fakta(
     },
     verneplikt = this[AVTJENT_VERNEPLIKT].asBoolean(false),
     fangstOgFisk = this[FANGST_OG_FISK].asBoolean(false),
-    grunnlagBeregningsregel = this[GRUNNLAG_RESULTAT][BEREGNINGS_REGEL_GRUNNLAG].asText(),
     beregningsDato = this["beregningsdato"].asLocalDate(),
     lærling = this[LÆRLING].asBoolean(false)
 )
-
-private fun JsonNode.asInntekt() = Inntekt(
-    inntektsId = this["inntektsId"].asText(),
-    inntektsListe = this["inntektsListe"].map { it.asKlassifisertInntektMåned() },
-    manueltRedigert = this["manueltRedigert"].asBoolean(false),
-    sisteAvsluttendeKalenderMåned = this["sisteAvsluttendeKalenderMåned"].asYearMonth()
-)
-
-private fun JsonNode.asKlassifisertInntektMåned() =
-    KlassifisertInntektMåned(
-        årMåned = this["årMåned"].asYearMonth(),
-        klassifiserteInntekter = this["klassifiserteInntekter"].map {
-            KlassifisertInntekt(
-                beløp = BigDecimal(
-                    it["beløp"].asInt()
-                ), inntektKlasse = InntektKlasse.valueOf(it["inntektKlasse"].asText())
-            )
-        })

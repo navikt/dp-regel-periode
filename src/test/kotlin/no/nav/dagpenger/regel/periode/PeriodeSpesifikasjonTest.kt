@@ -18,7 +18,9 @@ import org.junit.jupiter.api.Test
 
 internal class PeriodeSpesifikasjonTest {
 
-    fun identifikatorer(spesifikasjoner: List<Spesifikasjon<Fakta>>): Set<String> = (spesifikasjoner.map { it.identifikator }.toSet() + spesifikasjoner.flatMap { identifikatorer(it.children) }).toSet()
+    fun identifikatorer(spesifikasjoner: List<Spesifikasjon<Fakta>>): Set<String> =
+        (spesifikasjoner.map { it.identifikator }
+            .toSet() + spesifikasjoner.flatMap { identifikatorer(it.children) }).toSet()
 
     @Test
     fun `Ordinær består av ordinær`() {
@@ -75,7 +77,6 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -94,7 +95,6 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = true
         )
         val evaluering = periode.evaluer(fakta)
@@ -118,7 +118,6 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 1),
-            grunnlagBeregningsregel = "bla",
             lærling = true
         )
 
@@ -143,7 +142,6 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
         val evaluering = periode.evaluer(fakta)
@@ -167,7 +165,6 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
         val evaluering = periode.evaluer(fakta)

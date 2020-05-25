@@ -68,9 +68,6 @@ internal class LøsningServiceTest {
               ],
               "@id": "123",
               "beregningsdato": "2020-04-01",
-              "grunnlagResultat": {
-                "beregningsregel": "ORDINAER"
-              },
               "bruktInntektsPeriode": {
                 "førsteMåned": "2019-12",
                 "sisteMåned": "2020-04"
