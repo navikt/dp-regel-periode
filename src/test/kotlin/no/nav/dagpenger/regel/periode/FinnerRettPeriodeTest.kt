@@ -53,7 +53,7 @@ class FinnerRettPeriodeTest {
             lærling = false
         )
 
-        assertEquals((-950000.toBigDecimal()), fakta.arbeidsinntektSiste12)
+        assertEquals(expected = (-950000).toBigDecimal(), actual = fakta.arbeidsinntektSiste12)
 
         val resultat = periode.evaluer(fakta)
 

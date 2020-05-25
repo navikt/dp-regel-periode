@@ -113,7 +113,11 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
 }
 
 fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering): Int? {
-    return evaluering.children.filter { it.resultat == Resultat.JA }.flatMap { mapEvalureringResultatToInt(it) }.max()
+    return evaluering
+        .children
+        .filter { it.resultat == Resultat.JA }
+        .flatMap { mapEvalureringResultatToInt(it) }
+        .max()
 }
 
 internal val configuration = Configuration()

@@ -52,11 +52,11 @@ internal class LøsningServiceTest {
         rapid.sendTestMessage("sldjjfnqaolsdjcb")
         rapid.sendTestMessage(json)
 
-        val inspektør = rapid.inspektør
-        inspektør.size shouldBeExactly 1
-        inspektør.field(0, "@behov").map(JsonNode::asText).shouldContain("Periode")
-        inspektør.field(0, "@løsning")["Periode"]["periodeNareEvaluering"] shouldNotBe null
-        inspektør.field(0, "@løsning")["Periode"]["periodeResultat"] shouldNotBe null
+        with(rapid.inspektør) {
+            size shouldBeExactly 1
+            field(0, "@behov").map(JsonNode::asText).shouldContain("Periode")
+            field(0, "@løsning")["Periode"]["periodeAntallUker"] shouldNotBe null
+        }
     }
 
     @Language("JSON")
