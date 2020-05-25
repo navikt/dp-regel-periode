@@ -5,10 +5,6 @@ import de.huxhorn.sulky.ulid.ULID
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import mu.withLoggingContext
-import no.nav.dagpenger.events.inntekt.v1.Inntekt
-import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
-import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
-import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.inntekt.rpc.InntektHenter
 import no.nav.dagpenger.regel.periode.Application.Companion.AVTJENT_VERNEPLIKT
 import no.nav.dagpenger.regel.periode.Application.Companion.BRUKT_INNTEKTSPERIODE
@@ -21,7 +17,6 @@ import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.asLocalDate
 import no.nav.helse.rapids_rivers.asYearMonth
 import no.nav.nare.core.evaluations.Evaluering
-import java.math.BigDecimal
 
 class LøsningService(
     rapidsConnection: RapidsConnection,
@@ -96,21 +91,3 @@ private fun JsonMessage.toFakta(inntektHenter: InntektHenter): Fakta = Fakta(
     beregningsDato = this["beregningsdato"].asLocalDate(),
     lærling = this[LÆRLING].asBoolean(false)
 )
-
-private fun JsonNode.asInntekt() = Inntekt(
-    inntektsId = this["inntektsId"].asText(),
-    inntektsListe = this["inntektsListe"].map { it.asKlassifisertInntektMåned() },
-    manueltRedigert = this["manueltRedigert"].asBoolean(false),
-    sisteAvsluttendeKalenderMåned = this["sisteAvsluttendeKalenderMåned"].asYearMonth()
-)
-
-private fun JsonNode.asKlassifisertInntektMåned() =
-    KlassifisertInntektMåned(
-        årMåned = this["årMåned"].asYearMonth(),
-        klassifiserteInntekter = this["klassifiserteInntekter"].map {
-            KlassifisertInntekt(
-                beløp = BigDecimal(
-                    it["beløp"].asInt()
-                ), inntektKlasse = InntektKlasse.valueOf(it["inntektKlasse"].asText())
-            )
-        })
