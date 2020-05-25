@@ -26,7 +26,6 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -48,7 +47,6 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -70,7 +68,6 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -92,7 +89,6 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -115,7 +111,6 @@ internal class Periode104UkerTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -138,7 +133,6 @@ internal class Periode104UkerTest {
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -161,7 +155,6 @@ internal class Periode104UkerTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(6),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -184,7 +177,6 @@ internal class Periode104UkerTest {
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(6),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -207,7 +199,6 @@ internal class Periode104UkerTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 
@@ -230,7 +221,6 @@ internal class Periode104UkerTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
-            grunnlagBeregningsregel = "bla",
             lærling = false
         )
 

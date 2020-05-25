@@ -19,15 +19,11 @@ internal fun packetToFakta(packet: Packet): Fakta {
 
     val fangstOgFisk = packet.getNullableBoolean(Application.FANGST_OG_FISK) ?: false
 
-    val grunnlagBeregningsregel =
-        packet.getMapValue(Application.GRUNNLAG_RESULTAT)[Application.BEREGNINGS_REGEL_GRUNNLAG].toString()
-
     return Fakta(
         inntekt = inntekt,
         bruktInntektsPeriode = bruktInntektsPeriode,
         verneplikt = verneplikt,
         fangstOgFisk = fangstOgFisk,
-        grunnlagBeregningsregel = grunnlagBeregningsregel,
         beregningsDato = beregningsDato,
         lærling = lærling
     )

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class FinnerRettPeriodeTest {
 
     @Test
-    fun ` Skal returnere 26 uker periode dersom beregningsregelen fra grunnlag er verneplikt `() {
+    fun ` Skal returnere 26 uker periode dersom kravet til verneplikt er oppfylt`() {
 
         val inntektsListe = generateArbeidsInntekt(
             1..12, BigDecimal(3000)
@@ -28,7 +28,6 @@ class FinnerRettPeriodeTest {
             verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "Verneplikt",
             lærling = false
         )
 
@@ -38,7 +37,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 26 uker periode dersom beregningsregelen fra grunnlag er verneplikt og har minus i inntektsum `() {
+    fun ` Skal returnere 26 uker periode dersom kravet til verneplikt er oppfylt og har minus i inntektsum `() {
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
@@ -49,7 +48,6 @@ class FinnerRettPeriodeTest {
             verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "Verneplikt",
             lærling = false
         )
 
@@ -61,7 +59,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har tjent mindre enn 2G `() {
+    fun ` Skal returnere 52 uker periode dersom kravet til verneplikt er oppfylt og har tjent mindre enn 2G `() {
 
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(3000))
         val fakta = Fakta(
@@ -74,7 +72,6 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "BLA",
             lærling = false
         )
 
@@ -84,7 +81,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 104 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har tjent mer enn 2G `() {
+    fun ` Skal returnere 104 uker periode dersom kravet til verneplikt er oppfylt og har tjent mer enn 2G `() {
 
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))
         val fakta = Fakta(
@@ -97,7 +94,6 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "BLA",
             lærling = false
         )
 
@@ -107,7 +103,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har tjent mindre enn 2G pga minusinntekt `() {
+    fun ` Skal returnere 52 uker periode dersom kravet til verneplikt er oppfylt og har tjent mindre enn 2G pga minusinntekt `() {
         val inntekt = listOf(
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 3), klassifiserteInntekter = listOf(
@@ -133,7 +129,6 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "BLA",
             lærling = false
         )
 
@@ -145,7 +140,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom beregningsregelen fra grunnlag ikke er verneplikt og har minus i inntektsum `() {
+    fun ` Skal returnere 52 uker periode dersom kravet til verneplikt er oppfylt og har minus i inntektsum `() {
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
@@ -156,7 +151,6 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            grunnlagBeregningsregel = "BLA",
             lærling = false
         )
 

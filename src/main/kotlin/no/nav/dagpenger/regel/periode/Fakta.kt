@@ -21,7 +21,6 @@ data class Fakta(
         isThisGjusteringTest(beregningsDato) -> Grunnbeløp.GjusteringsTest.verdi
         else -> getGrunnbeløpForRegel(Regel.Minsteinntekt).forDato(beregningsDato).verdi
     },
-    val grunnlagBeregningsregel: String,
     val lærling: Boolean
 ) {
     val filtrertInntekt = bruktInntektsPeriode?.let { inntektsPeriode ->

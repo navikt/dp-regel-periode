@@ -22,7 +22,6 @@ class PacketToFaktaTest {
     fun ` should map fangst_og_fisk from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"},
             "oppfyllerKravTilFangstOgFisk": true,
             "beregningsDato": "2019-05-20"
         }""".trimIndent()
@@ -39,7 +38,6 @@ class PacketToFaktaTest {
     fun ` should map avtjent_verneplikt from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"},
             "harAvtjentVerneplikt": true,
             "beregningsDato": "2019-05-20"
         }""".trimIndent()
@@ -56,7 +54,6 @@ class PacketToFaktaTest {
     fun ` should map beregningsdato from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"},
             "harAvtjentVerneplikt": true,
             "beregningsDato": "2019-05-20"
         }""".trimIndent()
@@ -73,7 +70,6 @@ class PacketToFaktaTest {
     fun ` should get correct grunnbelop before new G`() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"},
             "harAvtjentVerneplikt": true,
             "beregningsDato": "2019-05-20"
         }""".trimIndent()
@@ -90,7 +86,6 @@ class PacketToFaktaTest {
     fun ` should get correct grunnbelop after new G`() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"},
             "harAvtjentVerneplikt": true,
             "beregningsDato": "2019-05-27"
         }""".trimIndent()
@@ -107,7 +102,6 @@ class PacketToFaktaTest {
     fun ` should map brukt_inntektsperiode from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"},
             "bruktInntektsPeriode": {"førsteMåned":"2019-02", "sisteMåned":"2019-03"},
             "beregningsDato": "2019-05-20"
         }""".trimIndent()
@@ -125,7 +119,6 @@ class PacketToFaktaTest {
     fun ` should map inntekt from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "test"},
             "beregningsDato": "2019-05-20"
         }""".trimIndent()
 
@@ -138,26 +131,9 @@ class PacketToFaktaTest {
     }
 
     @Test
-    fun ` should map grunnlag_beregningsregel from packet to Fakta `() {
-        val json = """
-        {
-            "grunnlagResultat":{"beregningsregel": "regel"},
-            "beregningsDato": "2019-05-20"
-        }""".trimIndent()
-
-        val packet = Packet(json)
-        packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
-
-        val fakta = packetToFakta(packet)
-
-        assertEquals("regel", fakta.grunnlagBeregningsregel)
-    }
-
-    @Test
     fun ` should map lærling from packet to Fakta `() {
         val json = """
         {
-            "grunnlagResultat":{"beregningsregel": "regel"},
             "beregningsDato": "2019-05-20",
             "lærling": "true"
         }""".trimIndent()

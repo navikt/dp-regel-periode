@@ -45,15 +45,12 @@ class Application(
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
         val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
-        val GRUNNLAG_RESULTAT = "grunnlagResultat"
-        val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
         val BEREGNINGSDATO = "beregningsDato"
     }
 
     override fun filterPredicates(): List<Predicate<String, Packet>> {
         return listOf(
             Predicate { _, packet -> packet.hasField(INNTEKT) },
-            Predicate { _, packet -> packet.hasField(GRUNNLAG_RESULTAT) },
             Predicate { _, packet -> packet.hasField(BEREGNINGSDATO) },
             Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) })
     }
