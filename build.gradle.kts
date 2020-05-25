@@ -113,5 +113,5 @@ tasks.withType<Test> {
 }
 
 tasks.named("compileKotlin") {
-    // dependsOn("spotlessKotlinCheck")
+    dependsOn("spotlessKotlinCheck")
 }
