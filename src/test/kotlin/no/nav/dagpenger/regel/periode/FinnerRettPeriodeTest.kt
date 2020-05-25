@@ -140,7 +140,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom kravet til verneplikt er oppfylt og har minus i inntektsum `() {
+    fun ` Skal returnere 52 uker periode dersom kravet til verneplikt ikke er oppfylt og har minus i inntektsum `() {
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
