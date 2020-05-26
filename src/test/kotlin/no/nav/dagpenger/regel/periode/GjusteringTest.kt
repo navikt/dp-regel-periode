@@ -28,12 +28,12 @@ internal class GjusteringTest {
             inntekt = Inntekt(
                 "123",
                 generateArbeidsInntekt(1..1, BigDecimal(200000)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 10)
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10)
             ),
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 10, 20),
+            beregningsDato = LocalDate.of(2020, 10, 20),
             lærling = false
         )
 
@@ -49,12 +49,12 @@ internal class GjusteringTest {
                 inntekt = Inntekt(
                     "123",
                     generateArbeidsInntekt(1..1, BigDecimal(203999)),
-                    sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 10)
+                    sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10)
                 ),
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2019, 10, 20),
+                beregningsDato = LocalDate.of(2020, 10, 20),
                 lærling = false
             )
 
@@ -67,12 +67,11 @@ internal class GjusteringTest {
     fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
-                YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
-                    KlassifisertInntekt(
-                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
-                    )
+                YearMonth.of(2020, 1).minusMonths(it.toLong()), listOf(
+                KlassifisertInntekt(
+                    beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
                 )
-            )
+            ))
         }
     }
 }
