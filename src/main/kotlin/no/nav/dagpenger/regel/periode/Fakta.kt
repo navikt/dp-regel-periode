@@ -41,7 +41,7 @@ data class Fakta(
     val inntektSiste36inkludertFangstOgFiske =
         arbeidsinntektSiste36 + splitInntekt.all().sumInntekt(listOf(InntektKlasse.FANGST_FISKE))
 
-    fun erSærregel(): Boolean = verneplikt || erlærling()
+    fun erSærregel(): Boolean = erlærling()
     fun erlærling() = lærling && beregningsDato.erKoronaPeriode()
 }
 

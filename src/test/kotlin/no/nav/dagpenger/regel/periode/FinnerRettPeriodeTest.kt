@@ -15,6 +15,7 @@ class FinnerRettPeriodeTest {
     @Test
     fun ` Skal returnere 26 uker periode dersom beregningsregel fra grunnlag er VERNEPLIKT`() {
 
+        val grunnlagBeregningsregel = "VERNEPLIKT"
         val inntektsListe = generateArbeidsInntekt(
             1..12, BigDecimal(3000)
         )
@@ -29,16 +30,17 @@ class FinnerRettPeriodeTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "VERNEPLIKT"
+            grunnlagBeregningsregel = grunnlagBeregningsregel
         )
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat))
+        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat, grunnlagBeregningsregel))
     }
 
     @Test
     fun ` Skal returnere 26 uker periode dersom beregningsregel fra grunnlag er VERNEPLIKT og har minus i inntektsum `() {
+        val grunnlagBeregningsregel = "VERNEPLIKT"
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
@@ -50,19 +52,20 @@ class FinnerRettPeriodeTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "VERNEPLIKT"
+            grunnlagBeregningsregel = grunnlagBeregningsregel
         )
 
         assertEquals(expected = (-950000).toBigDecimal(), actual = fakta.arbeidsinntektSiste12)
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat))
+        assertEquals(26, finnHøyestePeriodeFraEvaluering(resultat, grunnlagBeregningsregel))
     }
 
     @Test
     fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har tjent mindre enn 2G `() {
 
+        val grunnlagBeregningsregel = "BLA"
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(3000))
         val fakta = Fakta(
             inntekt = Inntekt(
@@ -75,17 +78,18 @@ class FinnerRettPeriodeTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = grunnlagBeregningsregel
         )
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat))
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, grunnlagBeregningsregel))
     }
 
     @Test
     fun ` Skal returnere 104 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har tjent mer enn 2G `() {
 
+        val grunnlagBeregningsregel = "BLA"
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))
         val fakta = Fakta(
             inntekt = Inntekt(
@@ -98,16 +102,17 @@ class FinnerRettPeriodeTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = grunnlagBeregningsregel
         )
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(104, finnHøyestePeriodeFraEvaluering(resultat))
+        assertEquals(104, finnHøyestePeriodeFraEvaluering(resultat, grunnlagBeregningsregel))
     }
 
     @Test
     fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har tjent mindre enn 2G pga minusinntekt `() {
+        val grunnlagBeregningsregel = "BLA"
         val inntekt = listOf(
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 3), klassifiserteInntekter = listOf(
@@ -134,18 +139,19 @@ class FinnerRettPeriodeTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = grunnlagBeregningsregel
         )
 
         assertEquals(50000.toBigDecimal(), fakta.arbeidsinntektSiste12)
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat))
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, grunnlagBeregningsregel))
     }
 
     @Test
     fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har minus i inntektsum `() {
+        val grunnlagBeregningsregel = "BLA"
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
@@ -157,19 +163,20 @@ class FinnerRettPeriodeTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = grunnlagBeregningsregel
         )
 
         assertEquals((-950000.toBigDecimal()), fakta.arbeidsinntektSiste12)
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat))
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, grunnlagBeregningsregel))
     }
 
     @Test
-    fun ` Skal returnere 104 uker periode dersom beregningsregel fra grunnlag er VERNEPLIKT og har tjent mer enn 3G `() {
+    fun ` Skal returnere 104 uker periode dersom beregningsregel fra grunnlag er ikke VERNEPLIKT og har tjent mer enn 3G `() {
 
+        val grunnlagBeregningsregel = "IKKE_VERNEPLIKT"
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))
         val fakta = Fakta(
             inntekt = Inntekt(
@@ -178,16 +185,16 @@ class FinnerRettPeriodeTest {
                 sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
             ),
             bruktInntektsPeriode = null,
-            verneplikt = false,
+            verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = grunnlagBeregningsregel
         )
 
         val resultat = periode.evaluer(fakta)
 
-        assertEquals(104, finnHøyestePeriodeFraEvaluering(resultat))
+        assertEquals(104, finnHøyestePeriodeFraEvaluering(resultat, grunnlagBeregningsregel))
     }
 
     fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {

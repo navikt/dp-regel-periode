@@ -58,7 +58,7 @@ class LøsningService(
         ) {
             val fakta = packet.toFakta(inntektHenter)
             val evaluering: Evaluering = periode.evaluer(fakta)
-            val periodeResultat = finnHøyestePeriodeFraEvaluering(evaluering) ?: 0
+            val periodeResultat = finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel) ?: 0
 
             packet["@løsning"] = mapOf(
                 "Periode" to mapOf(
