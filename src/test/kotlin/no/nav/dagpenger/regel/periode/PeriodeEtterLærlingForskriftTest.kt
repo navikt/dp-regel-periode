@@ -19,7 +19,8 @@ internal class PeriodeEtterLærlingForskriftTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
-            lærling = true
+            lærling = true,
+            grunnlagBeregningsregel = "BLA"
         )
 
         // når
@@ -40,7 +41,8 @@ internal class PeriodeEtterLærlingForskriftTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 4, 20),
-            lærling = false
+            lærling = false,
+            grunnlagBeregningsregel = "BLA"
         )
 
         // når
@@ -60,7 +62,8 @@ internal class PeriodeEtterLærlingForskriftTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2021, 1, 1),
-            lærling = true
+            lærling = true,
+            grunnlagBeregningsregel = "BLA"
         )
 
         // når

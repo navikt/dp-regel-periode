@@ -7,8 +7,10 @@ import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.dagpenger.inntekt.rpc.InntektHenter
 import no.nav.dagpenger.regel.periode.Application.Companion.AVTJENT_VERNEPLIKT
+import no.nav.dagpenger.regel.periode.Application.Companion.BEREGNINGS_REGEL_GRUNNLAG
 import no.nav.dagpenger.regel.periode.Application.Companion.BRUKT_INNTEKTSPERIODE
 import no.nav.dagpenger.regel.periode.Application.Companion.FANGST_OG_FISK
+import no.nav.dagpenger.regel.periode.Application.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.Application.Companion.LÆRLING
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageProblems
@@ -32,6 +34,7 @@ class LøsningService(
             validate {
                 it.requireKey(
                     "@id",
+                    GRUNNLAG_RESULTAT,
                     "beregningsdato",
                     "vedtakId",
                     "inntektId"
@@ -91,6 +94,7 @@ private fun JsonMessage.toFakta(inntektHenter: InntektHenter): Fakta = Fakta(
     },
     verneplikt = this[AVTJENT_VERNEPLIKT].asBoolean(false),
     fangstOgFisk = this[FANGST_OG_FISK].asBoolean(false),
+    grunnlagBeregningsregel = this[GRUNNLAG_RESULTAT][BEREGNINGS_REGEL_GRUNNLAG].asText(),
     beregningsDato = this["beregningsdato"].asLocalDate(),
     lærling = this[LÆRLING].asBoolean(false)
 )

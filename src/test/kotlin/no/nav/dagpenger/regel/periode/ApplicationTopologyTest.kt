@@ -55,7 +55,8 @@ internal class ApplicationTopologyTest {
     fun ` Dagpenger behov without inntekt should not be processed `() {
         val json = """
             {
-                "beregningsDato": "2019-05-20"
+                "beregningsDato": "2019-05-20",
+                "beregningsregel": "BLA"
             }
             """.trimIndent()
 
@@ -76,9 +77,13 @@ internal class ApplicationTopologyTest {
     @Test
     fun ` dagpengebehov without beregningsDato should not be processed`() {
 
-        val emptyjsonBehov = "{}"
+        val json = """
+            {
+                "beregningsregel": "BLA"
+            }
+            """.trimIndent()
 
-        val packet = Packet(emptyjsonBehov)
+        val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
@@ -96,6 +101,30 @@ internal class ApplicationTopologyTest {
     }
 
     @Test
+    fun `Dagpenger behov without grunnlagResultat should not be processed`() {
+        val json = """
+            {
+                "beregningsDato": "2020-05-20"
+            }
+            """.trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", inntekt)
+
+        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
+            val inputRecord = factory.create(packet)
+            topologyTestDriver.pipeInput(inputRecord)
+
+            val ut = topologyTestDriver.readOutput(
+                DAGPENGER_BEHOV_PACKET_EVENT.name,
+                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+            )
+            assertTrue { null == ut }
+        }
+    }
+
+    @Test
     fun ` Should add PeriodeSubsumsjon `() {
         val json = """
             {
@@ -104,6 +133,10 @@ internal class ApplicationTopologyTest {
                 "vedtakId":3.1018297E7,
                 "beregningsDato":"2019-02-27",
                 "harAvtjentVerneplikt":false,
+                "grunnlagResultat":
+                    {
+                        "beregningsregel": "BLA"
+                    },
                 "bruktInntektsPeriode":
                     {
                         "førsteMåned":"2016-02",
@@ -159,6 +192,10 @@ internal class ApplicationTopologyTest {
                 "beregningsDato":"2018-04-06",
                 "harAvtjentVerneplikt":false,
                 "oppfyllerKravTilFangstOgFisk": true,
+                "grunnlagResultat":
+                    {
+                        "beregningsregel": "BLA"
+                    },
                 "bruktInntektsPeriode":
                     {
                         "førsteMåned":"2016-02",
@@ -196,6 +233,10 @@ internal class ApplicationTopologyTest {
                 "vedtakId":3.1018297E7,
                 "beregningsDato":"2019-02-27",
                 "harAvtjentVerneplikt":false,
+                "grunnlagResultat":
+                    {
+                        "beregningsregel": "BLA"
+                    },
                 "bruktInntektsPeriode":
                     {
                         "førsteMåned":"2016-02",
@@ -245,6 +286,7 @@ internal class ApplicationTopologyTest {
 
         val packet = Packet(json)
         packet.putValue("inntektV1", "ERROR")
+        packet.putValue("grunnlagResultat", "ERROR")
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
             val inputRecord = factory.create(packet)

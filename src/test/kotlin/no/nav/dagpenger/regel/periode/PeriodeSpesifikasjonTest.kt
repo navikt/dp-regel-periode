@@ -77,7 +77,8 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
-            lærling = false
+            lærling = false,
+            grunnlagBeregningsregel = "BLA"
         )
 
         finnHøyestePeriodeFraEvaluering(rotEvaluering) shouldBe 52
@@ -95,7 +96,8 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
-            lærling = true
+            lærling = true,
+            grunnlagBeregningsregel = "BLA"
         )
         val evaluering = periode.evaluer(fakta)
         assertSoftly {
@@ -118,7 +120,8 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 1),
-            lærling = true
+            lærling = true,
+            grunnlagBeregningsregel = "BLA"
         )
 
         val evaluering = periode.evaluer(fakta)
@@ -142,7 +145,8 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
-            lærling = false
+            lærling = false,
+            grunnlagBeregningsregel = "BLA"
         )
         val evaluering = periode.evaluer(fakta)
         assertSoftly {
@@ -165,7 +169,8 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
-            lærling = false
+            lærling = false,
+            grunnlagBeregningsregel = "BLA"
         )
         val evaluering = periode.evaluer(fakta)
         assertSoftly {

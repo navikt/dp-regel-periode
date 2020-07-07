@@ -23,7 +23,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "oppfyllerKravTilFangstOgFisk": true,
-            "beregningsDato": "2019-05-20"
+            "beregningsDato": "2019-05-20",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -39,7 +40,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-20"
+            "beregningsDato": "2019-05-20",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -55,7 +57,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-20"
+            "beregningsDato": "2019-05-20",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -71,7 +74,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-20"
+            "beregningsDato": "2019-05-20",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -87,7 +91,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-27"
+            "beregningsDato": "2019-05-27",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -103,7 +108,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "bruktInntektsPeriode": {"førsteMåned":"2019-02", "sisteMåned":"2019-03"},
-            "beregningsDato": "2019-05-20"
+            "beregningsDato": "2019-05-20",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -119,7 +125,8 @@ class PacketToFaktaTest {
     fun ` should map inntekt from packet to Fakta `() {
         val json = """
         {
-            "beregningsDato": "2019-05-20"
+            "beregningsDato": "2019-05-20",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
@@ -135,7 +142,8 @@ class PacketToFaktaTest {
         val json = """
         {
             "beregningsDato": "2019-05-20",
-            "lærling": "true"
+            "lærling": "true",
+            "grunnlagResultat":{"beregningsregel": "BLA"}
         }""".trimIndent()
 
         val packet = Packet(json)
