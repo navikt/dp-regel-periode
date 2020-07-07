@@ -39,17 +39,6 @@ internal class PeriodeSpesifikasjonTest {
         expectedIdentifikatorer shouldBe identifikatorer
     }
 
-    /*@Test
-    fun `Særregel består av verneplikt eller lærling`() {
-
-        val expectedIdentifikatorer = setOf<String>(
-            "VERNEPLIKT",
-            "LÆRLING"
-        )
-        val identifikatorer = identifikatorer(særregel.children)
-        expectedIdentifikatorer shouldBe identifikatorer
-    }*/
-
     @Test
     fun `Skal returnere 52 som antall uker`() {
         val evaluering = Evaluering.ja("52")
@@ -133,30 +122,6 @@ internal class PeriodeSpesifikasjonTest {
                 .shouldNotBeEmpty()
         }
     }
-
-    /*@Test
-    fun ` Ordinær skal ikke behandle verneplikt `() {
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..12, BigDecimal(1000000)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 2)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = true,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2020, 3, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
-        val evaluering = periode.evaluer(fakta)
-        assertSoftly {
-            fakta.erSærregel() shouldBe true
-            evaluering.resultat shouldBe Resultat.JA
-            evaluering.children.filter { periodeEtterOrdinæreMedJa(it) }
-                .shouldBeEmpty()
-        }
-    }*/
 
     @Test
     fun ` Ordinær brukes hvis det ikke er særregel `() {
