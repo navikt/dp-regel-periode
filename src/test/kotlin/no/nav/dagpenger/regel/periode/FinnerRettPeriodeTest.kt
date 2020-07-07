@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test
 class FinnerRettPeriodeTest {
 
     @Test
-    fun ` Skal returnere 26 uker periode dersom beregningsregel fra grunnlag er VERNEPLIKT`() {
+    fun ` Skal returnere 26 uker periode dersom beregningsregel fra grunnlag er Verneplikt`() {
 
-        val grunnlagBeregningsregel = "VERNEPLIKT"
+        val grunnlagBeregningsregel = "Verneplikt"
         val inntektsListe = generateArbeidsInntekt(
             1..12, BigDecimal(3000)
         )
@@ -39,8 +39,8 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 26 uker periode dersom beregningsregel fra grunnlag er VERNEPLIKT og har minus i inntektsum `() {
-        val grunnlagBeregningsregel = "VERNEPLIKT"
+    fun ` Skal returnere 26 uker periode dersom beregningsregel fra grunnlag er Verneplikt og har minus i inntektsum `() {
+        val grunnlagBeregningsregel = "Verneplikt"
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
@@ -63,7 +63,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har tjent mindre enn 2G `() {
+    fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er Verneplikt og har tjent mindre enn 2G `() {
 
         val grunnlagBeregningsregel = "BLA"
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(3000))
@@ -87,7 +87,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 104 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har tjent mer enn 2G `() {
+    fun ` Skal returnere 104 uker periode dersom beregningsregel fra grunnlag ikke er Verneplikt og har tjent mer enn 2G `() {
 
         val grunnlagBeregningsregel = "BLA"
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))
@@ -111,7 +111,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har tjent mindre enn 2G pga minusinntekt `() {
+    fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er Verneplikt og har tjent mindre enn 2G pga minusinntekt `() {
         val grunnlagBeregningsregel = "BLA"
         val inntekt = listOf(
             KlassifisertInntektMåned(
@@ -150,7 +150,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er VERNEPLIKT og har minus i inntektsum `() {
+    fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er Verneplikt og har minus i inntektsum `() {
         val grunnlagBeregningsregel = "BLA"
         val fakta = Fakta(
             inntekt = Inntekt(
@@ -174,7 +174,7 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
-    fun ` Skal returnere 104 uker periode dersom beregningsregel fra grunnlag er ikke VERNEPLIKT og har tjent mer enn 3G `() {
+    fun ` Skal returnere 104 uker periode dersom beregningsregel fra grunnlag er ikke Verneplikt og har tjent mer enn 3G `() {
 
         val grunnlagBeregningsregel = "IKKE_VERNEPLIKT"
         val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))

@@ -20,7 +20,7 @@ internal class PeriodeEtterAvtjentVernepliktTest {
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
             lærling = false,
-            grunnlagBeregningsregel = "VERNEPLIKT"
+            grunnlagBeregningsregel = "Verneplikt"
         )
 
         // når

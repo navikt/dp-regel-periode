@@ -113,7 +113,7 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
 }
 
 fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: String): Int? {
-    return if (beregningsregel == "VERNEPLIKT") {
+    return if (beregningsregel == "Verneplikt") {
         26
     } else {
         return evaluering
