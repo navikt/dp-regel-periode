@@ -70,6 +70,10 @@ internal class LøsningServiceTest {
               "beregningsdato": "2020-04-01",
               "bruktInntektsPeriode": {
               },
+              "grunnlagResultat":
+                {
+                  "beregningsregel": "BLA"
+                },
               "vedtakId": "abc",
               "inntektId": "${ULID().nextULID()}"
            }

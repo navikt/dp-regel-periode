@@ -45,12 +45,15 @@ class Application(
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
         val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
+        val GRUNNLAG_RESULTAT = "grunnlagResultat"
+        val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
         val BEREGNINGSDATO = "beregningsDato"
     }
 
     override fun filterPredicates(): List<Predicate<String, Packet>> {
         return listOf(
             Predicate { _, packet -> packet.hasField(INNTEKT) },
+            Predicate { _, packet -> packet.hasField(GRUNNLAG_RESULTAT) },
             Predicate { _, packet -> packet.hasField(BEREGNINGSDATO) },
             Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) })
     }
@@ -60,7 +63,7 @@ class Application(
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
 
-        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering)
+        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel)
 
         val subsumsjon = PeriodeSubsumsjon(
             ulidGenerator.nextULID(),
@@ -109,12 +112,16 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
     }
 }
 
-fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering): Int? {
-    return evaluering
-        .children
-        .filter { it.resultat == Resultat.JA }
-        .flatMap { mapEvalureringResultatToInt(it) }
-        .max()
+fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: String): Int? {
+    return if (beregningsregel == "Verneplikt") {
+        26
+    } else {
+        return evaluering
+            .children
+            .filter { it.resultat == Resultat.JA }
+            .flatMap { mapEvalureringResultatToInt(it) }
+            .max()
+    }
 }
 
 internal val configuration = Configuration()

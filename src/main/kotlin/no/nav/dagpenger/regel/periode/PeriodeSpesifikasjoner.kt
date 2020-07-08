@@ -143,7 +143,7 @@ val ordinær52: Spesifikasjon<Fakta> =
 val ordinær104: Spesifikasjon<Fakta> =
     (ordinærSiste12Måneder104Uker eller ordinærSiste36Måneder104Uker) eller (ordinærSiste12MånederMedFangstOgFiske104Uker eller ordinærSiste36MånederMedFangstOgFiske104Uker)
 
-val særregel = vernepiktPeriode eller lærlingPeriode
+val særregel = lærlingPeriode
 
 val ordinær: Spesifikasjon<Fakta> = ordinær52 eller ordinær104
 
