@@ -177,7 +177,7 @@ pipeline {
     }
 
     stage('Deploy') {
-      when { branch 'master-ikke-deploy-til-prod' }
+      when { branch 'master' }
 
       steps {
         sh label: 'Deploy with kubectl', script: """
