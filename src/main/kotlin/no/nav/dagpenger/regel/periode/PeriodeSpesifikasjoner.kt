@@ -9,12 +9,23 @@ import no.nav.nare.core.specifications.Spesifikasjon
 const val scale = 20
 val roundingMode = RoundingMode.HALF_UP
 
-val vernepliktPeriode = Spesifikasjon<Fakta>(
+val vernepliktUtenInntekt = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-19 Dagpenger etter avtjent verneplikt",
     identifikator = "VERNEPLIKT",
     implementasjon = {
         when {
-            verneplikt -> Evaluering.ja("26")
+            verneplikt && grunnlagBeregningsregel == "Verneplikt" -> Evaluering.ja("26")
+            else -> Evaluering.nei("0")
+        }
+    }
+)
+
+val vernepliktMedInntekt = Spesifikasjon<Fakta>(
+    beskrivelse = "§ 4-19 Dagpenger etter avtjent verneplikt",
+    identifikator = "VERNEPLIKT",
+    implementasjon = {
+        when {
+            verneplikt && grunnlagBeregningsregel != "Verneplikt" -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -142,6 +153,8 @@ val ordinær52: Spesifikasjon<Fakta> =
 
 val ordinær104: Spesifikasjon<Fakta> =
     (ordinærSiste12Måneder104Uker eller ordinærSiste36Måneder104Uker) eller (ordinærSiste12MånederMedFangstOgFiske104Uker eller ordinærSiste36MånederMedFangstOgFiske104Uker)
+
+val vernepliktPeriode = vernepliktMedInntekt eller vernepliktUtenInntekt
 
 val særregel = lærlingPeriode eller vernepliktPeriode
 
