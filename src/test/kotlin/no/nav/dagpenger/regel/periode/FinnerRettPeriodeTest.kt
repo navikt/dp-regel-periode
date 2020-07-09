@@ -111,6 +111,29 @@ class FinnerRettPeriodeTest {
     }
 
     @Test
+    fun ` Skal returnere 52 uker periode for lærlinger oppfylt i koronaperiode uansett inntjening`() {
+        val inntektsListe = generateArbeidsInntekt(1..12, BigDecimal(30000))
+        val beregningsregel = "BLA"
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                inntektsListe,
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+            ),
+            bruktInntektsPeriode = null,
+            verneplikt = false,
+            fangstOgFisk = false,
+            beregningsDato = LocalDate.of(2020, 5, 20),
+            lærling = true,
+            grunnlagBeregningsregel = beregningsregel
+        )
+
+        val resultat = periode.evaluer(fakta)
+
+        assertEquals(52, finnHøyestePeriodeFraEvaluering(resultat, beregningsregel))
+    }
+
+    @Test
     fun ` Skal returnere 52 uker periode dersom beregningsregel fra grunnlag ikke er Verneplikt og har tjent mindre enn 2G pga minusinntekt `() {
         val grunnlagBeregningsregel = "BLA"
         val inntekt = listOf(

@@ -9,7 +9,7 @@ import no.nav.nare.core.specifications.Spesifikasjon
 const val scale = 20
 val roundingMode = RoundingMode.HALF_UP
 
-val vernepiktPeriode = Spesifikasjon<Fakta>(
+val vernepliktPeriode = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-19 Dagpenger etter avtjent verneplikt",
     identifikator = "VERNEPLIKT",
     implementasjon = {
@@ -143,7 +143,7 @@ val ordinær52: Spesifikasjon<Fakta> =
 val ordinær104: Spesifikasjon<Fakta> =
     (ordinærSiste12Måneder104Uker eller ordinærSiste36Måneder104Uker) eller (ordinærSiste12MånederMedFangstOgFiske104Uker eller ordinærSiste36MånederMedFangstOgFiske104Uker)
 
-val særregel = lærlingPeriode
+val særregel = lærlingPeriode eller vernepliktPeriode
 
 val ordinær: Spesifikasjon<Fakta> = ordinær52 eller ordinær104
 
