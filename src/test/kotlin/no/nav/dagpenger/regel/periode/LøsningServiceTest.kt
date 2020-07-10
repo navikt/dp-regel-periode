@@ -48,7 +48,6 @@ internal class LøsningServiceTest {
 
     @Test
     fun `skal legge på periode-løsning på pakker vi forstår`() {
-
         rapid.sendTestMessage("sldjjfnqaolsdjcb")
         rapid.sendTestMessage(json)
 
@@ -58,24 +57,17 @@ internal class LøsningServiceTest {
             field(0, "@løsning")["Periode"]["periodeAntallUker"] shouldNotBe null
         }
     }
-
-    @Language("JSON")
-    private val json =
-        """
-            {
-              "@behov": [
-                "Periode"
-              ],
-              "@id": "123",
-              "beregningsdato": "2020-04-01",
-              "bruktInntektsPeriode": {
-              },
-              "grunnlagResultat":
-                {
-                  "beregningsregel": "BLA"
-                },
-              "vedtakId": "abc",
-              "inntektId": "${ULID().nextULID()}"
-           }
-            """.trimIndent()
 }
+
+@Language("JSON")
+private val json = """{
+  "@behov": [
+    "Periode"
+  ],
+  "@id": "123",
+  "beregningsdato": "2020-04-01",
+  "bruktInntektsPeriode": {},
+  "grunnlagBeregningsregel": "BLA",
+  "vedtakId": "abc",
+  "inntektId": "${ULID().nextULID()}"
+} """.trimIndent()
