@@ -3,8 +3,6 @@ package no.nav.dagpenger.regel.periode
 import com.squareup.moshi.JsonAdapter
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
-import java.net.URI
-import java.util.Properties
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
@@ -19,6 +17,8 @@ import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
+import java.net.URI
+import java.util.Properties
 
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
 private val periodeGittCounter = Counter.build()
@@ -55,7 +55,8 @@ class Application(
             Predicate { _, packet -> packet.hasField(INNTEKT) },
             Predicate { _, packet -> packet.hasField(GRUNNLAG_RESULTAT) },
             Predicate { _, packet -> packet.hasField(BEREGNINGSDATO) },
-            Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) })
+            Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) }
+        )
     }
 
     override fun onPacket(packet: Packet): Packet {
@@ -138,9 +139,11 @@ fun main() {
         apiKey = apiKey
     )
 
-    Runtime.getRuntime().addShutdownHook(Thread {
-        inntektClient.close()
-    })
+    Runtime.getRuntime().addShutdownHook(
+        Thread {
+            inntektClient.close()
+        }
+    )
 
     RapidApplication.create(
         configuration.rapidApplication

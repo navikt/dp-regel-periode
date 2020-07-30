@@ -7,8 +7,6 @@ import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
-import java.math.BigDecimal
-import java.time.YearMonth
 import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
@@ -18,6 +16,8 @@ import no.nav.dagpenger.inntekt.rpc.InntektHenter
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
+import java.time.YearMonth
 
 internal class LøsningServiceTest {
 
@@ -60,7 +60,8 @@ internal class LøsningServiceTest {
 }
 
 @Language("JSON")
-private val json = """{
+private val json =
+    """{
   "@behov": [
     "Periode"
   ],
@@ -70,4 +71,5 @@ private val json = """{
   "grunnlagBeregningsregel": "BLA",
   "vedtakId": "abc",
   "inntektId": "${ULID().nextULID()}"
-} """.trimIndent()
+} 
+    """.trimIndent()

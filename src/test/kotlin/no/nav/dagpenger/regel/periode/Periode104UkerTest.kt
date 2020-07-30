@@ -1,8 +1,5 @@
 package no.nav.dagpenger.regel.periode
 
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.YearMonth
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
@@ -10,6 +7,9 @@ import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.YearMonth
 
 internal class Periode104UkerTest {
 
@@ -242,7 +242,8 @@ internal class Periode104UkerTest {
     fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
-                YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
+                YearMonth.of(2019, 1).minusMonths(it.toLong()),
+                listOf(
                     KlassifisertInntekt(
                         beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
                     )
@@ -262,7 +263,8 @@ internal class Periode104UkerTest {
     fun generateFangstOgFiskInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
-                YearMonth.of(2019, 1).minusMonths(it.toLong()), listOf(
+                YearMonth.of(2019, 1).minusMonths(it.toLong()),
+                listOf(
                     KlassifisertInntekt(
                         beløpPerMnd, InntektKlasse.FANGST_FISKE
                     )
