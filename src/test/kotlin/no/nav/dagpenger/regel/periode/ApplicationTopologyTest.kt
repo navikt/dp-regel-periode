@@ -1,11 +1,5 @@
 package no.nav.dagpenger.regel.periode
 
-import java.math.BigDecimal
-import java.net.URI
-import java.time.YearMonth
-import java.util.Properties
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
@@ -18,6 +12,12 @@ import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
+import java.net.URI
+import java.time.YearMonth
+import java.util.Properties
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class ApplicationTopologyTest {
 
@@ -53,7 +53,8 @@ internal class ApplicationTopologyTest {
 
     @Test
     fun ` Dagpenger behov without inntekt should not be processed `() {
-        val json = """
+        val json =
+            """
             {
                 "beregningsDato": "2019-05-20",
                 "beregningsregel": "BLA"
@@ -77,7 +78,8 @@ internal class ApplicationTopologyTest {
     @Test
     fun ` dagpengebehov without beregningsDato should not be processed`() {
 
-        val json = """
+        val json =
+            """
             {
                 "beregningsregel": "BLA"
             }
@@ -102,7 +104,8 @@ internal class ApplicationTopologyTest {
 
     @Test
     fun `Dagpenger behov without grunnlagResultat should not be processed`() {
-        val json = """
+        val json =
+            """
             {
                 "beregningsDato": "2020-05-20"
             }
@@ -126,7 +129,8 @@ internal class ApplicationTopologyTest {
 
     @Test
     fun ` Should add PeriodeSubsumsjon `() {
-        val json = """
+        val json =
+            """
             {
                 "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
                 "aktørId":"1000052711564",
@@ -184,7 +188,8 @@ internal class ApplicationTopologyTest {
             sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3)
         )
 
-        val json = """
+        val json =
+            """
             {
                 "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
                 "aktørId":"1000052711564",
@@ -226,7 +231,8 @@ internal class ApplicationTopologyTest {
     @Test
     fun ` should add nare evaluation`() {
 
-        val json = """
+        val json =
+            """
             {
                 "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
                 "aktørId":"1000052711564",
@@ -278,7 +284,8 @@ internal class ApplicationTopologyTest {
             sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3)
         )
 
-        val json = """
+        val json =
+            """
             {
                 "beregningsDato": "2019-05-20"
             }

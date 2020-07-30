@@ -4,9 +4,6 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.YearMonth
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
@@ -15,12 +12,17 @@ import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import no.nav.nare.core.specifications.Spesifikasjon
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.YearMonth
 
 internal class PeriodeSpesifikasjonTest {
 
     fun identifikatorer(spesifikasjoner: List<Spesifikasjon<Fakta>>): Set<String> =
-        (spesifikasjoner.map { it.identifikator }
-            .toSet() + spesifikasjoner.flatMap { identifikatorer(it.children) }).toSet()
+        (
+            spesifikasjoner.map { it.identifikator }
+                .toSet() + spesifikasjoner.flatMap { identifikatorer(it.children) }
+            ).toSet()
 
     @Test
     fun `Ordinær består av ordinær`() {
@@ -153,7 +155,8 @@ internal class PeriodeSpesifikasjonTest {
     private fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
-                YearMonth.of(2020, 2).minusMonths(it.toLong()), listOf(
+                YearMonth.of(2020, 2).minusMonths(it.toLong()),
+                listOf(
                     KlassifisertInntekt(
                         beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
                     )

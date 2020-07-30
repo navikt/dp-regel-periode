@@ -1,7 +1,5 @@
 package no.nav.dagpenger.regel.periode
 
-import java.math.BigDecimal
-import java.time.LocalDate
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.all
@@ -10,6 +8,8 @@ import no.nav.dagpenger.grunnbelop.Grunnbeløp
 import no.nav.dagpenger.grunnbelop.Regel
 import no.nav.dagpenger.grunnbelop.forDato
 import no.nav.dagpenger.grunnbelop.getGrunnbeløpForRegel
+import java.math.BigDecimal
+import java.time.LocalDate
 
 data class Fakta(
     val inntekt: Inntekt,
