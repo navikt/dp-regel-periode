@@ -1,6 +1,0 @@
-bases:
-  - ../base
-
-patchesStrategicMerge:
-  - alerts.yaml
-  - nais.yaml
