@@ -1,11 +1,34 @@
-apiVersion: "nais.io/v1alpha1"
-kind: "Application"
+apiVersion: nais.io/v1alpha1
+kind: Application
 metadata:
-  name: dp-regel-periode
+  name: {{app}}
+  namespace: {{namespace}}
+  labels:
+    team: {{team}}
 spec:
-  vault:
-    paths:
-      - mountPath: /var/run/secrets/nais.io/service_user
-        kvPath: /serviceuser/data/prod/srvdp-regel-periode
+  image: {{ image }}
+  port: 8080
+  liveness:
+    path: /isAlive
+  readiness:
+    path: /isReady
+  prometheus:
+    enabled: true
+    path: /metrics
+  replicas:
+    min: 3
+    max: 3
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 300m
+      memory: 512Mi
   secureLogs:
     enabled: true
+  vault:
+    enabled: true
+    paths:
+      - kvPath: "serviceuser/data/prod/{{service_user}}"
+        mountPath: "/var/run/secrets/nais.io/service_user"

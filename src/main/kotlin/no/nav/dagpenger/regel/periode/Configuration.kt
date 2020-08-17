@@ -5,7 +5,6 @@ import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
 import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
 import com.natpryce.konfig.booleanType
-import com.natpryce.konfig.intType
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 import no.nav.dagpenger.events.Packet
@@ -21,7 +20,6 @@ private val localProperties = ConfigurationMap(
         "kafka.topic" to TOPIC,
         "kafka.reset.policy" to "earliest",
         "application.profile" to Profile.LOCAL.toString(),
-        "application.httpPort" to "8096",
         "nav.truststore.path" to "",
         "nav.truststore.password" to "changeme",
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
@@ -36,7 +34,6 @@ private val devProperties = ConfigurationMap(
         "kafka.topic" to TOPIC,
         "kafka.reset.policy" to "earliest",
         "application.profile" to Profile.DEV.toString(),
-        "application.httpPort" to "8096",
         "feature.gjustering" to false.toString(),
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
         "inntekt.grpc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
@@ -48,7 +45,6 @@ private val prodProperties = ConfigurationMap(
         "kafka.topic" to TOPIC,
         "kafka.reset.policy" to "earliest",
         "application.profile" to Profile.PROD.toString(),
-        "application.httpPort" to "8096",
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
         "inntekt.grpc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
     )
@@ -76,7 +72,8 @@ data class Configuration(
         "KAFKA_RAPID_TOPIC" to config()[Key("kafka.topic", stringType)],
         "KAFKA_RESET_POLICY" to config()[Key("kafka.reset.policy", stringType)],
         "NAV_TRUSTSTORE_PATH" to config()[Key("nav.truststore.path", stringType)],
-        "NAV_TRUSTSTORE_PASSWORD" to config()[Key("nav.truststore.password", stringType)]
+        "NAV_TRUSTSTORE_PASSWORD" to config()[Key("nav.truststore.password", stringType)],
+        "HTTP_PORT" to "8099"
     ) + System.getenv().filter { it.key.startsWith("NAIS_") }
 ) {
     data class Kafka(
@@ -94,7 +91,7 @@ data class Configuration(
     data class Application(
         val id: String = config().getOrElse(Key("application.id", stringType), "dagpenger-regel-periode"),
         val profile: Profile = config()[Key("application.profile", stringType)].let { Profile.valueOf(it) },
-        val httpPort: Int = config()[Key("application.httpPort", intType)],
+        val httpPort: Int = 8080,
         val inntektgrpcAddress: String = config()[Key("inntekt.grpc.address", stringType)],
         val inntektgrpcApiKey: String = config()[Key("inntekt.grpc.api.key", stringType)],
         val inntektgrpcApiSecret: String = config()[Key("inntekt.grpc.api.secret", stringType)]
