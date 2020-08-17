@@ -6,7 +6,7 @@ Beregner hvor lang periode bruker har krav på dagpenger.
 
 Gradle brukes som byggverktøy og er bundlet inn.
 
-`./gradlew build`
+`./gradlew build` 
 
 ---
 
