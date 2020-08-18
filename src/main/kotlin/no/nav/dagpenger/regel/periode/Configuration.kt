@@ -36,7 +36,7 @@ private val devProperties = ConfigurationMap(
         "application.profile" to Profile.DEV.toString(),
         "feature.gjustering" to false.toString(),
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
-        "inntekt.grpc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
+        "inntekt.grpc.address" to "dp-inntekt-api-grpc.teamdagpenger.svc.nais.local"
     )
 )
 private val prodProperties = ConfigurationMap(
@@ -46,7 +46,7 @@ private val prodProperties = ConfigurationMap(
         "kafka.reset.policy" to "earliest",
         "application.profile" to Profile.PROD.toString(),
         "behov.topic" to Topics.DAGPENGER_BEHOV_PACKET_EVENT.name,
-        "inntekt.grpc.address" to "dp-inntekt-api-grpc.default.svc.nais.local"
+        "inntekt.grpc.address" to "dp-inntekt-api-grpc.teamdagpenger.svc.nais.local"
     )
 )
 
