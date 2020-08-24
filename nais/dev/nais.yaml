@@ -9,7 +9,7 @@ spec:
   image: {{ image }}
   env:
     - name: FEATURE_GJUSTERING
-      value: "false"
+      value: "true"
   port: 8080
   liveness:
     path: /isAlive
