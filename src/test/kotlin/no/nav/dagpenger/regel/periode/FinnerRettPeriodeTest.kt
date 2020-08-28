@@ -17,12 +17,14 @@ class FinnerRettPeriodeTest {
 
         val grunnlagBeregningsregel = "Verneplikt"
         val inntektsListe = generateArbeidsInntekt(
-            1..12, BigDecimal(3000)
+            1..12,
+            BigDecimal(3000)
         )
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
-                inntektsListe, sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
+                inntektsListe,
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
 
             ),
             bruktInntektsPeriode = null,
@@ -227,7 +229,8 @@ class FinnerRettPeriodeTest {
                 YearMonth.of(2019, 1).minusMonths(it.toLong()),
                 listOf(
                     KlassifisertInntekt(
-                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                        beløpPerMnd,
+                        InntektKlasse.ARBEIDSINNTEKT
                     )
                 )
             )

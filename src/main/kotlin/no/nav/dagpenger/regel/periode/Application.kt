@@ -149,7 +149,8 @@ fun main() {
         configuration.rapidApplication
     ).apply {
         LøsningService(
-            this, inntektClient
+            this,
+            inntektClient
         )
     }.also {
         it.register(RapidHealthCheck)

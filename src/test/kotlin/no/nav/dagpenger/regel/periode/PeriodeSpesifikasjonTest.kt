@@ -158,7 +158,8 @@ internal class PeriodeSpesifikasjonTest {
                 YearMonth.of(2020, 2).minusMonths(it.toLong()),
                 listOf(
                     KlassifisertInntekt(
-                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                        beløpPerMnd,
+                        InntektKlasse.ARBEIDSINNTEKT
                     )
                 )
             )

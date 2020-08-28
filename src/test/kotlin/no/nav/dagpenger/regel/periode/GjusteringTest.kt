@@ -72,7 +72,8 @@ internal class GjusteringTest {
                 YearMonth.of(2020, 1).minusMonths(it.toLong()),
                 listOf(
                     KlassifisertInntekt(
-                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                        beløpPerMnd,
+                        InntektKlasse.ARBEIDSINNTEKT
                     )
                 )
             )

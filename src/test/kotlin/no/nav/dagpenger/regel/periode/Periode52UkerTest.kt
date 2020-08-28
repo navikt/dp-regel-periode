@@ -245,7 +245,8 @@ internal class Periode52UkerTest {
                 YearMonth.of(2019, 1).minusMonths(it.toLong()),
                 listOf(
                     KlassifisertInntekt(
-                        beløpPerMnd, InntektKlasse.ARBEIDSINNTEKT
+                        beløpPerMnd,
+                        InntektKlasse.ARBEIDSINNTEKT
                     )
                 )
             )
@@ -258,7 +259,8 @@ internal class Periode52UkerTest {
                 YearMonth.of(2019, 1).minusMonths(it.toLong()),
                 listOf(
                     KlassifisertInntekt(
-                        beløpPerMnd, InntektKlasse.FANGST_FISKE
+                        beløpPerMnd,
+                        InntektKlasse.FANGST_FISKE
                     )
                 )
             )
