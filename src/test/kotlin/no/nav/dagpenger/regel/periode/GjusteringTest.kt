@@ -49,7 +49,7 @@ internal class GjusteringTest {
             val fakta = Fakta(
                 inntekt = Inntekt(
                     "123",
-                    generateArbeidsInntekt(1..1, BigDecimal(203999)),
+                    generateArbeidsInntekt(1..1, BigDecimal(202701)),
                     sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10)
                 ),
                 bruktInntektsPeriode = null,
