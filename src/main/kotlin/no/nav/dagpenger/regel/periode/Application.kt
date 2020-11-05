@@ -12,7 +12,6 @@ import no.nav.dagpenger.streams.HealthCheck
 import no.nav.dagpenger.streams.HealthStatus
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
-import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
@@ -28,8 +27,7 @@ private val periodeGittCounter = Counter.build()
     .register()
 
 class Application(
-    private val config: Configuration,
-    public override val healthChecks: List<HealthCheck> = listOf()
+    private val config: Configuration
 ) : River(config.behovTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
@@ -128,7 +126,7 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: St
 internal val configuration = Configuration()
 
 fun main() {
-    val service = Application(configuration, healthChecks = listOf(RapidHealthCheck))
+    val service = Application(configuration)
     service.start()
 
     val apiKeyVerifier = ApiKeyVerifier(configuration.application.inntektgrpcApiSecret)
@@ -145,7 +143,7 @@ fun main() {
         }
     )
 
-    RapidApplication.create(
+    /*RapidApplication.create(
         configuration.rapidApplication
     ).apply {
         LøsningService(
@@ -154,7 +152,7 @@ fun main() {
         )
     }.also {
         it.register(RapidHealthCheck)
-    }.start()
+    }.start()*/
 }
 
 object RapidHealthCheck : RapidsConnection.StatusListener, HealthCheck {

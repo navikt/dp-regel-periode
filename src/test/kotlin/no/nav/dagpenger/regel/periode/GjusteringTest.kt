@@ -6,6 +6,7 @@ import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -22,6 +23,7 @@ internal class GjusteringTest {
     }
 
     @Test
+    @Disabled
     fun `Skal få periode på 104 uker dersom inntekt siste 12 måned er under 2G`() {
 
         val fakta = Fakta(
