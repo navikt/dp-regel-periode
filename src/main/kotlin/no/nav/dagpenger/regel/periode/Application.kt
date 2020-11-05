@@ -17,6 +17,7 @@ import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
 import java.net.URI
+import java.time.LocalDateTime
 import java.util.Properties
 
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
@@ -58,6 +59,15 @@ class Application(
     }
 
     override fun onPacket(packet: Packet): Packet {
+
+        val started: LocalDateTime? =
+            packet.getNullableStringValue("system_started")
+                ?.let { runCatching { LocalDateTime.parse(it) }.getOrNull() }
+
+        if (started?.isBefore(LocalDateTime.now().minusSeconds(30)) == true) {
+            throw RuntimeException("Denne pakka er for gammal!")
+        }
+
         val fakta = packetToFakta(packet)
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
