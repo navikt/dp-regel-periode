@@ -4,7 +4,6 @@ import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.specifications.Spesifikasjon
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.time.LocalDate
 
 const val scale = 20
 val roundingMode = RoundingMode.HALF_UP
