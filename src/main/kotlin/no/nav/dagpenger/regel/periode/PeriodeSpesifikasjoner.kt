@@ -135,8 +135,6 @@ val lærlingPeriode = Spesifikasjon<Fakta>(
     }
 )
 
-fun LocalDate.erKoronaPeriode() = this in (LocalDate.of(2020, 3, 20)..LocalDate.of(2020, 12, 31))
-
 val ordinær52: Spesifikasjon<Fakta> =
     (ordinærSiste12Måneder52Uker eller ordinærSiste36Måneder52Uker) eller (ordinærSiste12MånederMedFangstOgFiske52Uker eller ordinærSiste36MånederMedFangstOgFiske52Uker)
 
