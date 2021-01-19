@@ -76,8 +76,9 @@ internal class PeriodeSpesifikasjonTest {
         finnHøyestePeriodeFraEvaluering(rotEvaluering, grunnlagBeregningsregel) shouldBe 52
     }
 
+    // Fjerner den gamle testen, og bruker kun denne, da lærlingflag settes manuelt av saksbehandler, og skal ikke settes av saksbehandler når særregelen ikke lenger gjelder
     @Test
-    fun ` Ordinær skal ikke behandle lærling under koronatid`() {
+    fun ` Ordinær skal ikke behandle lærling`() {
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
@@ -97,31 +98,6 @@ internal class PeriodeSpesifikasjonTest {
             fakta.erSærregel() shouldBe true
             evaluering.children.filter { periodeEtterOrdinæreMedJa(it) }
                 .shouldBeEmpty()
-        }
-    }
-
-    @Test
-    fun ` Ordinær skal behandle lærling når det ikke er koronatid`() {
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..12, BigDecimal(1000000)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 2)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2020, 3, 1),
-            lærling = true,
-            grunnlagBeregningsregel = "BLA"
-        )
-
-        val evaluering = periode.evaluer(fakta)
-        assertSoftly {
-            fakta.erSærregel() shouldBe false
-            evaluering.resultat shouldBe Resultat.JA
-            evaluering.children.filter { periodeEtterOrdinæreMedJa(it) }
-                .shouldNotBeEmpty()
         }
     }
 
