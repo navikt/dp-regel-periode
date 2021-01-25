@@ -42,8 +42,9 @@ data class Fakta(
         arbeidsinntektSiste36 + splitInntekt.all().sumInntekt(listOf(InntektKlasse.FANGST_FISKE))
 
     fun erSærregel(): Boolean = erlærling()
-    // midlertidig regel, men per nå ikke tidsbestemt.
-    fun erlærling() = lærling
+
+    fun erlærling() = lærling && beregningsDato.erKoronaPeriode()
+    private fun LocalDate.erKoronaPeriode() = this in (LocalDate.of(2020, 3, 20)..LocalDate.of(2021, 9, 30))
 }
 
 internal fun isThisGjusteringTest(
