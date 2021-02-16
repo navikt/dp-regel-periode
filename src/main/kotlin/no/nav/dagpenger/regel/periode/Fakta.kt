@@ -10,6 +10,7 @@ import no.nav.dagpenger.grunnbelop.forDato
 import no.nav.dagpenger.grunnbelop.getGrunnbeløpForRegel
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.Month
 
 data class Fakta(
     val inntekt: Inntekt,
@@ -42,8 +43,9 @@ data class Fakta(
         arbeidsinntektSiste36 + splitInntekt.all().sumInntekt(listOf(InntektKlasse.FANGST_FISKE))
 
     fun erSærregel(): Boolean = erlærling()
-    // midlertidig regel, men per nå ikke tidsbestemt.
-    fun erlærling() = lærling
+
+    fun erlærling() = lærling && beregningsDato.erKoronaPeriode()
+    private fun LocalDate.erKoronaPeriode() = this in (LocalDate.of(2020, Month.MARCH, 20)..LocalDate.of(2021, Month.SEPTEMBER, 30))
 }
 
 internal fun isThisGjusteringTest(
