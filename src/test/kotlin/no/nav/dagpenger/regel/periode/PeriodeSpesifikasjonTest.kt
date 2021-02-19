@@ -44,7 +44,7 @@ internal class PeriodeSpesifikasjonTest {
     @Test
     fun `Skal returnere 52 som antall uker`() {
         val evaluering = Evaluering.ja("52")
-        mapEvalureringResultatToInt(evaluering).max() shouldBe 52
+        mapEvalureringResultatToInt(evaluering).maxOrNull() shouldBe 52
     }
 
     @Test
@@ -63,15 +63,6 @@ internal class PeriodeSpesifikasjonTest {
 
         val grunnlagBeregningsregel = "BLA"
         val rotEvaluering = Evaluering(Resultat.JA, "52", children = evaluering)
-        val fakta = Fakta(
-            Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            lærling = false,
-            grunnlagBeregningsregel = grunnlagBeregningsregel
-        )
 
         finnHøyestePeriodeFraEvaluering(rotEvaluering, grunnlagBeregningsregel) shouldBe 52
     }

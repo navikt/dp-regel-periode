@@ -8,9 +8,9 @@ import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.streams.Topics.DAGPENGER_BEHOV_PACKET_EVENT
 import no.nav.nare.core.evaluations.Evaluering
 import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.TestInputTopic
+import org.apache.kafka.streams.TestOutputTopic
 import org.apache.kafka.streams.TopologyTestDriver
-import org.apache.kafka.streams.test.ConsumerRecordFactory
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.net.URI
@@ -39,11 +39,6 @@ internal class ApplicationTopologyTest {
     )
 
     companion object {
-        val factory = ConsumerRecordFactory<String, Packet>(
-            DAGPENGER_BEHOV_PACKET_EVENT.name,
-            DAGPENGER_BEHOV_PACKET_EVENT.keySerde.serializer(),
-            DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.serializer()
-        )
         val periode = Application(Configuration())
         val config = Properties().apply {
             this[StreamsConfig.APPLICATION_ID_CONFIG] = "test"
@@ -62,16 +57,8 @@ internal class ApplicationTopologyTest {
             """.trimIndent()
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(Packet(json))
-            topologyTestDriver.pipeInput(inputRecord)
-
-            val ut = topologyTestDriver.readOutput(
-                DAGPENGER_BEHOV_PACKET_EVENT.name,
-                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
-            )
-
-            assertTrue { null == ut }
+            topologyTestDriver.behovInputTopic().also { it.pipeInput(Packet(json)) }
+            assertTrue { topologyTestDriver.behovOutputTopic().isEmpty }
         }
     }
 
@@ -89,16 +76,8 @@ internal class ApplicationTopologyTest {
         packet.putValue("inntektV1", inntekt)
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(packet)
-            topologyTestDriver.pipeInput(inputRecord)
-
-            val ut = topologyTestDriver.readOutput(
-                DAGPENGER_BEHOV_PACKET_EVENT.name,
-                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
-            )
-
-            assertTrue { null == ut }
+            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
+            assertTrue { topologyTestDriver.behovOutputTopic().isEmpty }
         }
     }
 
@@ -115,15 +94,8 @@ internal class ApplicationTopologyTest {
         packet.putValue("inntektV1", inntekt)
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(packet)
-            topologyTestDriver.pipeInput(inputRecord)
-
-            val ut = topologyTestDriver.readOutput(
-                DAGPENGER_BEHOV_PACKET_EVENT.name,
-                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
-            )
-            assertTrue { null == ut }
+            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
+            assertTrue { topologyTestDriver.behovOutputTopic().isEmpty }
         }
     }
 
@@ -153,18 +125,9 @@ internal class ApplicationTopologyTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(packet)
-            topologyTestDriver.pipeInput(inputRecord)
-
-            val ut = topologyTestDriver.readOutput(
-                DAGPENGER_BEHOV_PACKET_EVENT.name,
-                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
-            )
-
-            val result = ut.value()
-
-            assertTrue { result.hasField("periodeResultat") }
+            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.behovOutputTopic().readValue()
+            assertTrue { ut.hasField("periodeResultat") }
         }
     }
 
@@ -212,19 +175,10 @@ internal class ApplicationTopologyTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(packet)
-            topologyTestDriver.pipeInput(inputRecord)
-
-            val ut = topologyTestDriver.readOutput(
-                DAGPENGER_BEHOV_PACKET_EVENT.name,
-                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
-            )
-
-            val result = ut.value()
-
-            assertTrue { result.hasField("periodeResultat") }
-            assertEquals("52.0", result.getMapValue("periodeResultat")["periodeAntallUker"].toString())
+            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.behovOutputTopic().readValue()
+            assertTrue { ut.hasField("periodeResultat") }
+            assertEquals("52.0", ut.getMapValue("periodeResultat")["periodeAntallUker"].toString())
         }
     }
 
@@ -255,19 +209,11 @@ internal class ApplicationTopologyTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(packet)
-            topologyTestDriver.pipeInput(inputRecord)
-
-            val ut = topologyTestDriver.readOutput(
-                DAGPENGER_BEHOV_PACKET_EVENT.name,
-                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
-            )
-
-            assertTrue { ut.value().hasField(Application.PERIODE_NARE_EVALUERING) }
-
+            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.behovOutputTopic().readValue()
+            assertTrue { ut.hasField(Application.PERIODE_NARE_EVALUERING) }
             val nareEvaluering = periode.jsonAdapterEvaluering.fromJson(
-                ut.value().getStringValue(
+                ut.getStringValue(
                     Application.PERIODE_NARE_EVALUERING
                 )
             )
@@ -278,12 +224,6 @@ internal class ApplicationTopologyTest {
 
     @Test
     fun ` Should add problem on failure`() {
-        val inntekt = Inntekt(
-            inntektsId = "12345",
-            inntektsListe = emptyList(),
-            sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3)
-        )
-
         val json =
             """
             {
@@ -296,18 +236,26 @@ internal class ApplicationTopologyTest {
         packet.putValue("grunnlagResultat", "ERROR")
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            val inputRecord = factory.create(packet)
-            topologyTestDriver.pipeInput(inputRecord)
+            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.behovOutputTopic().readValue()
 
-            val ut = topologyTestDriver.readOutput(
-                DAGPENGER_BEHOV_PACKET_EVENT.name,
-                DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-                DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
-            )
-
-            assert(ut.value().hasProblem())
-            Assertions.assertEquals(URI("urn:dp:error:regel"), ut.value().getProblem()!!.type)
-            Assertions.assertEquals(URI("urn:dp:regel:periode"), ut.value().getProblem()!!.instance)
+            assert(ut.hasProblem())
+            assertEquals(URI("urn:dp:error:regel"), ut.getProblem()!!.type)
+            assertEquals(URI("urn:dp:regel:periode"), ut.getProblem()!!.instance)
         }
     }
 }
+
+private fun TopologyTestDriver.behovInputTopic(): TestInputTopic<String, Packet> =
+    this.createInputTopic(
+        DAGPENGER_BEHOV_PACKET_EVENT.name,
+        DAGPENGER_BEHOV_PACKET_EVENT.keySerde.serializer(),
+        DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.serializer()
+    )
+
+private fun TopologyTestDriver.behovOutputTopic(): TestOutputTopic<String, Packet> =
+    this.createOutputTopic(
+        DAGPENGER_BEHOV_PACKET_EVENT.name,
+        DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
+        DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+    )
