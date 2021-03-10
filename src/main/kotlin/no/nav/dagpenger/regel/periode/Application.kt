@@ -6,13 +6,8 @@ import io.prometheus.client.Counter
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
-import no.nav.dagpenger.inntekt.rpc.InntektHenterWrapper
-import no.nav.dagpenger.ktor.auth.ApiKeyVerifier
-import no.nav.dagpenger.streams.HealthCheck
-import no.nav.dagpenger.streams.HealthStatus
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfig
-import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
@@ -136,56 +131,5 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: St
 internal val configuration = Configuration()
 
 fun main() {
-    val service = Application(configuration)
-    service.start()
-
-    val apiKeyVerifier = ApiKeyVerifier(configuration.application.inntektgrpcApiSecret)
-    val apiKey = apiKeyVerifier.generate(configuration.application.inntektgrpcApiKey)
-
-    val inntektClient = InntektHenterWrapper(
-        serveraddress = configuration.application.inntektgrpcAddress,
-        apiKey = apiKey
-    )
-
-    Runtime.getRuntime().addShutdownHook(
-        Thread {
-            inntektClient.close()
-        }
-    )
-
-    /*RapidApplication.create(
-        configuration.rapidApplication
-    ).apply {
-        LøsningService(
-            this,
-            inntektClient
-        )
-    }.also {
-        it.register(RapidHealthCheck)
-    }.start()*/
-}
-
-object RapidHealthCheck : RapidsConnection.StatusListener, HealthCheck {
-    var healthy: Boolean = false
-
-    override fun onStartup(rapidsConnection: RapidsConnection) {
-        healthy = true
-    }
-
-    override fun onReady(rapidsConnection: RapidsConnection) {
-        healthy = true
-    }
-
-    override fun onNotReady(rapidsConnection: RapidsConnection) {
-        healthy = false
-    }
-
-    override fun onShutdown(rapidsConnection: RapidsConnection) {
-        healthy = false
-    }
-
-    override fun status(): HealthStatus = when (healthy) {
-        true -> HealthStatus.UP
-        false -> HealthStatus.DOWN
-    }
+    Application(configuration).start()
 }

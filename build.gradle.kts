@@ -46,10 +46,6 @@ val jar by tasks.getting(Jar::class) {
 dependencies {
     implementation(kotlin("stdlib"))
 
-    // grpc client and api key generation (ktorUtils)
-    implementation("com.github.navikt:dp-inntekt:2020.05.18-11.33.279ab2f32a2c")
-    implementation(Dagpenger.Biblioteker.ktorUtils)
-
     implementation(Dagpenger.Streams)
     implementation(Dagpenger.Events)
     implementation(Dagpenger.Biblioteker.grunnbeløp)
@@ -66,7 +62,10 @@ dependencies {
     implementation(Prometheus.log4j2)
     implementation(Prometheus.Nare.prometheus)
 
-    implementation(RapidAndRivers)
+    implementation(Log4j2.api)
+    implementation(Log4j2.core)
+    implementation(Log4j2.slf4j)
+    implementation(Log4j2.Logstash.logstashLayout)
 
     implementation(Nare.nare)
 
@@ -75,8 +74,6 @@ dependencies {
     implementation(Kafka.clients)
     implementation(Kafka.streams)
 
-    // logback (brought in by rapid-rivers)
-    implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation(Kotlin.Logging.kotlinLogging)
 
     testImplementation(kotlin("test"))
@@ -87,7 +84,6 @@ dependencies {
     testImplementation(KoTest.assertions)
 
     testImplementation(Kafka.streamTestUtils)
-    testImplementation(KafkaEmbedded.env)
     testImplementation(Wiremock.standalone)
     testImplementation(Mockk.mockk)
 }
