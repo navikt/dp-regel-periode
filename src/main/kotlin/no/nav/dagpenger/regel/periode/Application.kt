@@ -6,8 +6,11 @@ import io.prometheus.client.Counter
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
+import no.nav.dagpenger.streams.KafkaAivenCredentials
 import no.nav.dagpenger.streams.River
+import no.nav.dagpenger.streams.Topic
 import no.nav.dagpenger.streams.streamConfig
+import no.nav.dagpenger.streams.streamConfigAiven
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
@@ -22,9 +25,25 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class Application(
-    private val config: Configuration
-) : River(config.behovTopic) {
+class AivenApplication(
+    val config: Configuration,
+    topic: Topic<String, Packet> = config.regelTopic
+) : Application(config, topic) {
+    override val withHealthChecks: Boolean
+        get() = false
+
+    override fun getConfig(): Properties {
+        return streamConfigAiven(
+            appId = SERVICE_APP_ID,
+            bootStapServerUrl = configuration.kafka.aivenBrokers,
+            aivenCredentials = KafkaAivenCredentials()
+        )
+    }
+}
+open class Application(
+    private val config: Configuration,
+    topic: Topic<String, Packet> = config.behovTopic
+) : River(topic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
 
@@ -132,4 +151,5 @@ internal val configuration = Configuration()
 
 fun main() {
     Application(configuration).start()
+    AivenApplication(configuration).start()
 }

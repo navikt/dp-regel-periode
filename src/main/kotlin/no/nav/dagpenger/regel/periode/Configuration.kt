@@ -17,6 +17,7 @@ private const val TOPIC = "privat-dagpenger-behov-v2"
 private val localProperties = ConfigurationMap(
     mapOf(
         "kafka.bootstrap.servers" to "localhost:9092",
+        "KAFKA_BROKERS" to "localhost:9092",
         "kafka.topic" to TOPIC,
         "kafka.reset.policy" to "earliest",
         "application.profile" to Profile.LOCAL.toString(),
@@ -65,19 +66,11 @@ data class Configuration(
     val behovTopic: Topic<String, Packet> = Topics.DAGPENGER_BEHOV_PACKET_EVENT.copy(
         name = config()[Key("behov.topic", stringType)]
     ),
-    val rapidApplication: Map<String, String> = mapOf(
-        "RAPID_APP_NAME" to application.id,
-        "KAFKA_BOOTSTRAP_SERVERS" to config()[Key("kafka.bootstrap.servers", stringType)],
-        "KAFKA_CONSUMER_GROUP_ID" to "dp-regel-periode-rapid",
-        "KAFKA_RAPID_TOPIC" to config()[Key("kafka.topic", stringType)],
-        "KAFKA_RESET_POLICY" to config()[Key("kafka.reset.policy", stringType)],
-        "NAV_TRUSTSTORE_PATH" to config()[Key("nav.truststore.path", stringType)],
-        "NAV_TRUSTSTORE_PASSWORD" to config()[Key("nav.truststore.password", stringType)],
-        "HTTP_PORT" to "8099"
-    ) + System.getenv().filter { it.key.startsWith("NAIS_") }
+    val regelTopic: Topic<String, Packet> = behovTopic.copy("teamdagpenger.regel.v1")
 ) {
     data class Kafka(
         val brokers: String = config()[Key("kafka.bootstrap.servers", stringType)],
+        val aivenBrokers: String = config()[Key("KAFKA_BROKERS", stringType)],
         val user: String? = config().getOrNull(Key("srvdp.regel.periode.username", stringType)),
         val password: String? = config().getOrNull(Key("srvdp.regel.periode.password", stringType))
     ) {
