@@ -5,7 +5,6 @@ import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
-import no.nav.dagpenger.streams.Topics.DAGPENGER_BEHOV_PACKET_EVENT
 import no.nav.nare.core.evaluations.Evaluering
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TestInputTopic
@@ -57,8 +56,8 @@ internal class ApplicationTopologyTest {
             """.trimIndent()
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.behovInputTopic().also { it.pipeInput(Packet(json)) }
-            assertTrue { topologyTestDriver.behovOutputTopic().isEmpty }
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(Packet(json)) }
+            assertTrue { topologyTestDriver.regelOutputTopic().isEmpty }
         }
     }
 
@@ -76,8 +75,8 @@ internal class ApplicationTopologyTest {
         packet.putValue("inntektV1", inntekt)
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
-            assertTrue { topologyTestDriver.behovOutputTopic().isEmpty }
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
+            assertTrue { topologyTestDriver.regelOutputTopic().isEmpty }
         }
     }
 
@@ -94,8 +93,8 @@ internal class ApplicationTopologyTest {
         packet.putValue("inntektV1", inntekt)
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
-            assertTrue { topologyTestDriver.behovOutputTopic().isEmpty }
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
+            assertTrue { topologyTestDriver.regelOutputTopic().isEmpty }
         }
     }
 
@@ -125,8 +124,8 @@ internal class ApplicationTopologyTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
-            val ut = topologyTestDriver.behovOutputTopic().readValue()
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.regelOutputTopic().readValue()
             assertTrue { ut.hasField("periodeResultat") }
         }
     }
@@ -175,8 +174,8 @@ internal class ApplicationTopologyTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
-            val ut = topologyTestDriver.behovOutputTopic().readValue()
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.regelOutputTopic().readValue()
             assertTrue { ut.hasField("periodeResultat") }
             assertEquals("52.0", ut.getMapValue("periodeResultat")["periodeAntallUker"].toString())
         }
@@ -209,8 +208,8 @@ internal class ApplicationTopologyTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", inntekt)
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
-            val ut = topologyTestDriver.behovOutputTopic().readValue()
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.regelOutputTopic().readValue()
             assertTrue { ut.hasField(Application.PERIODE_NARE_EVALUERING) }
             val nareEvaluering = periode.jsonAdapterEvaluering.fromJson(
                 ut.getStringValue(
@@ -236,8 +235,8 @@ internal class ApplicationTopologyTest {
         packet.putValue("grunnlagResultat", "ERROR")
 
         TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.behovInputTopic().also { it.pipeInput(packet) }
-            val ut = topologyTestDriver.behovOutputTopic().readValue()
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.regelOutputTopic().readValue()
 
             assert(ut.hasProblem())
             assertEquals(URI("urn:dp:error:regel"), ut.getProblem()!!.type)
@@ -246,16 +245,16 @@ internal class ApplicationTopologyTest {
     }
 }
 
-private fun TopologyTestDriver.behovInputTopic(): TestInputTopic<String, Packet> =
+private fun TopologyTestDriver.regelInputTopic(): TestInputTopic<String, Packet> =
     this.createInputTopic(
-        DAGPENGER_BEHOV_PACKET_EVENT.name,
-        DAGPENGER_BEHOV_PACKET_EVENT.keySerde.serializer(),
-        DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.serializer()
+        REGEL_TOPIC.name,
+        REGEL_TOPIC.keySerde.serializer(),
+        REGEL_TOPIC.valueSerde.serializer()
     )
 
-private fun TopologyTestDriver.behovOutputTopic(): TestOutputTopic<String, Packet> =
+private fun TopologyTestDriver.regelOutputTopic(): TestOutputTopic<String, Packet> =
     this.createOutputTopic(
-        DAGPENGER_BEHOV_PACKET_EVENT.name,
-        DAGPENGER_BEHOV_PACKET_EVENT.keySerde.deserializer(),
-        DAGPENGER_BEHOV_PACKET_EVENT.valueSerde.deserializer()
+        REGEL_TOPIC.name,
+        REGEL_TOPIC.keySerde.deserializer(),
+        REGEL_TOPIC.valueSerde.deserializer()
     )

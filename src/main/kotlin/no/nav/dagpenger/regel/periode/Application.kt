@@ -8,15 +8,12 @@ import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
 import no.nav.dagpenger.streams.KafkaAivenCredentials
 import no.nav.dagpenger.streams.River
-import no.nav.dagpenger.streams.Topic
-import no.nav.dagpenger.streams.streamConfig
 import no.nav.dagpenger.streams.streamConfigAiven
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
 import java.net.URI
 import java.time.LocalDateTime
-import java.util.Properties
 
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
 private val periodeGittCounter = Counter.build()
@@ -25,25 +22,9 @@ private val periodeGittCounter = Counter.build()
     .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
     .register()
 
-class AivenApplication(
-    val config: Configuration,
-    topic: Topic<String, Packet> = config.regelTopic
-) : Application(config, topic) {
-    override val withHealthChecks: Boolean
-        get() = false
-
-    override fun getConfig(): Properties {
-        return streamConfigAiven(
-            appId = SERVICE_APP_ID,
-            bootStapServerUrl = configuration.kafka.aivenBrokers,
-            aivenCredentials = KafkaAivenCredentials()
-        )
-    }
-}
-open class Application(
-    private val config: Configuration,
-    topic: Topic<String, Packet> = config.behovTopic
-) : River(topic) {
+class Application(
+    private val config: Configuration
+) : River(config.regelTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
 
@@ -106,14 +87,11 @@ open class Application(
         periodeGittCounter.labels(periodeResultat.toString()).inc()
     }
 
-    override fun getConfig(): Properties {
-        val props = streamConfig(
-            appId = SERVICE_APP_ID,
-            bootStapServerUrl = config.kafka.brokers,
-            credential = config.kafka.credential()
-        )
-        return props
-    }
+    override fun getConfig() = streamConfigAiven(
+        appId = SERVICE_APP_ID,
+        bootStapServerUrl = configuration.kafka.aivenBrokers,
+        aivenCredentials = KafkaAivenCredentials()
+    )
 
     override fun onFailure(packet: Packet, error: Throwable?): Packet {
         packet.addProblem(
@@ -151,5 +129,4 @@ internal val configuration = Configuration()
 
 fun main() {
     Application(configuration).start()
-    AivenApplication(configuration).start()
 }
