@@ -17,23 +17,18 @@ private val localProperties = ConfigurationMap(
     mapOf(
         "KAFKA_BROKERS" to "localhost:9092",
         "kafka.reset.policy" to "earliest",
-        "application.profile" to Profile.LOCAL.toString(),
-        "inntekt.grpc.address" to "localhost",
-        "inntekt.grpc.api.key" to "apikey",
-        "inntekt.grpc.api.secret" to "secret"
+        "application.profile" to Profile.LOCAL.toString()
     )
 )
 private val devProperties = ConfigurationMap(
     mapOf(
         "application.profile" to Profile.DEV.toString(),
         "feature.gjustering" to false.toString(),
-        "inntekt.grpc.address" to "dp-inntekt-api-grpc.teamdagpenger.svc.nais.local"
     )
 )
 private val prodProperties = ConfigurationMap(
     mapOf(
         "application.profile" to Profile.PROD.toString(),
-        "inntekt.grpc.address" to "dp-inntekt-api-grpc.teamdagpenger.svc.nais.local"
     )
 )
 
@@ -64,10 +59,7 @@ data class Configuration(
     data class Application(
         val id: String = config().getOrElse(Key("application.id", stringType), "dagpenger-regel-periode"),
         val profile: Profile = config()[Key("application.profile", stringType)].let { Profile.valueOf(it) },
-        val httpPort: Int = 8080,
-        val inntektgrpcAddress: String = config()[Key("inntekt.grpc.address", stringType)],
-        val inntektgrpcApiKey: String = config()[Key("inntekt.grpc.api.key", stringType)],
-        val inntektgrpcApiSecret: String = config()[Key("inntekt.grpc.api.secret", stringType)]
+        val httpPort: Int = 8080
     )
 
     class Features {

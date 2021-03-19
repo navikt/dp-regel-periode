@@ -121,7 +121,7 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: St
             .children
             .filter { it.resultat == Resultat.JA }
             .flatMap { mapEvalureringResultatToInt(it) }
-            .max()
+            .maxOrNull()
     }
 }
 
