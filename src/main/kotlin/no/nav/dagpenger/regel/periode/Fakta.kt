@@ -51,6 +51,7 @@ data class Fakta(
 internal fun isThisGjusteringTest(
     beregningsdato: LocalDate
 ): Boolean {
-    val isBeregningsDatoAfterGjustering = beregningsdato.isAfter(LocalDate.of(2020, 5, 1).minusDays(1))
+    val gVirkning = LocalDate.of(2021, 3, 1)
+    val isBeregningsDatoAfterGjustering = beregningsdato.isAfter(gVirkning.minusDays(1))
     return configuration.features.gjustering() && isBeregningsDatoAfterGjustering
 }
