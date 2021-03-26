@@ -18,6 +18,7 @@ data class Fakta(
     val verneplikt: Boolean,
     val fangstOgFisk: Boolean,
     val beregningsDato: LocalDate,
+    val regelverksdato: LocalDate,
     val grunnbeløp: BigDecimal = when {
         isThisGjusteringTest(beregningsDato) -> Grunnbeløp.GjusteringsTest.verdi
         else -> getGrunnbeløpForRegel(Regel.Minsteinntekt).forDato(beregningsDato).verdi

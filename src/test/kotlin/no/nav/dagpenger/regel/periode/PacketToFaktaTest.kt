@@ -76,6 +76,37 @@ class PacketToFaktaTest {
     }
 
     @Test
+    fun ` should map regelverksdato from packet to Fakta `() {
+        val jsonMedRegelverksdato =
+            """
+        {
+            "harAvtjentVerneplikt": true,
+            "grunnlagResultat":{"beregningsregel": "BLA"},
+            "beregningsDato": "2019-04-10",
+            "regelverksdato": "2019-05-10"
+            
+        }
+            """.trimIndent()
+        val jsonUtenRegelverksdato =
+            """
+        {
+            "harAvtjentVerneplikt": true,
+            "grunnlagResultat":{"beregningsregel": "BLA"},
+            "beregningsDato": "2019-04-10"
+        }
+            """.trimIndent()
+
+        Packet(jsonMedRegelverksdato).also { packet ->
+            packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
+            assertEquals(LocalDate.of(2019, 5, 10), packetToFakta(packet).regelverksdato)
+        }
+        Packet(jsonUtenRegelverksdato).also { packet ->
+            packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
+            assertEquals(LocalDate.of(2019, 4, 10), packetToFakta(packet).regelverksdato)
+        }
+    }
+
+    @Test
     fun ` should get correct grunnbelop before new G`() {
         val json =
             """

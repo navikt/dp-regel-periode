@@ -31,6 +31,7 @@ class FinnerRettPeriodeTest {
             verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = grunnlagBeregningsregel
         )
@@ -53,6 +54,7 @@ class FinnerRettPeriodeTest {
             verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = grunnlagBeregningsregel
         )
@@ -79,6 +81,7 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = grunnlagBeregningsregel
         )
@@ -103,6 +106,7 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = grunnlagBeregningsregel
         )
@@ -126,6 +130,7 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 5, 20),
+            regelverksdato = LocalDate.of(2020, 5, 20),
             lærling = true,
             grunnlagBeregningsregel = beregningsregel
         )
@@ -164,6 +169,7 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = grunnlagBeregningsregel
         )
@@ -188,6 +194,7 @@ class FinnerRettPeriodeTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = grunnlagBeregningsregel
         )
@@ -214,6 +221,7 @@ class FinnerRettPeriodeTest {
             verneplikt = true,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = grunnlagBeregningsregel
         )

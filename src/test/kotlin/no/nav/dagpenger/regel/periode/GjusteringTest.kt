@@ -36,6 +36,7 @@ internal class GjusteringTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 10, 20),
+            regelverksdato = LocalDate.of(2020, 10, 20),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
         )
@@ -58,6 +59,7 @@ internal class GjusteringTest {
                 verneplikt = false,
                 fangstOgFisk = false,
                 beregningsDato = LocalDate.of(2020, 10, 20),
+                regelverksdato = LocalDate.of(2020, 10, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA"
             )

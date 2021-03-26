@@ -26,6 +26,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
         )
@@ -48,6 +49,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
         )
@@ -70,6 +72,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
         )
@@ -92,6 +95,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
         )
@@ -114,6 +118,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
@@ -137,6 +142,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
@@ -160,6 +166,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(6),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
@@ -183,6 +190,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = true,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(6),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
@@ -206,6 +214,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
@@ -229,6 +238,7 @@ internal class Periode104UkerTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2019, 5, 20),
+            regelverksdato = LocalDate.of(2019, 5, 20),
             grunnbeløp = BigDecimal(13),
             lærling = false,
             grunnlagBeregningsregel = "BLA"

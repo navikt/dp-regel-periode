@@ -20,6 +20,7 @@ internal class PeriodeEtterLærlingForskriftTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
+            regelverksdato = LocalDate.of(2020, 3, 20),
             lærling = true,
             grunnlagBeregningsregel = "BLA"
         )
@@ -47,6 +48,7 @@ internal class PeriodeEtterLærlingForskriftTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2021, 10, 1),
+            regelverksdato = LocalDate.of(2021, 10, 1),
             lærling = true,
             grunnlagBeregningsregel = "BLA"
         )

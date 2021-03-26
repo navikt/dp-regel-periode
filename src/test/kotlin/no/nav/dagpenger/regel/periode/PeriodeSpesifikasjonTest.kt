@@ -80,6 +80,7 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
+            regelverksdato = LocalDate.of(2020, 3, 20),
             lærling = true,
             grunnlagBeregningsregel = "BLA"
         )
@@ -104,6 +105,7 @@ internal class PeriodeSpesifikasjonTest {
             verneplikt = false,
             fangstOgFisk = false,
             beregningsDato = LocalDate.of(2020, 3, 20),
+            regelverksdato = LocalDate.of(2020, 3, 20),
             lærling = false,
             grunnlagBeregningsregel = "BLA"
         )

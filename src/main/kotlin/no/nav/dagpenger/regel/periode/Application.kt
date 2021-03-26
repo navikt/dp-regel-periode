@@ -42,6 +42,7 @@ class Application(
         val GRUNNLAG_RESULTAT = "grunnlagResultat"
         val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
         val BEREGNINGSDATO = "beregningsDato"
+        val REGELVERKSDATO = "regelverksdato"
     }
 
     override fun filterPredicates(): List<Predicate<String, Packet>> {
