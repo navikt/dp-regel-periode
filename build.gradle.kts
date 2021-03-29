@@ -76,6 +76,8 @@ dependencies {
 
     implementation(Kotlin.Logging.kotlinLogging)
 
+    implementation("no.finn.unleash:unleash-client-java:3.2.9")
+
     testImplementation(kotlin("test"))
     testImplementation(Junit5.api)
     testRuntimeOnly(Junit5.engine)

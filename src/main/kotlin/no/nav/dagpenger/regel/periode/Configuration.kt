@@ -4,7 +4,6 @@ import com.natpryce.konfig.ConfigurationMap
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
 import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
-import com.natpryce.konfig.booleanType
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 import no.nav.dagpenger.events.Packet
@@ -17,18 +16,20 @@ private val localProperties = ConfigurationMap(
     mapOf(
         "KAFKA_BROKERS" to "localhost:9092",
         "kafka.reset.policy" to "earliest",
-        "application.profile" to Profile.LOCAL.toString()
+        "application.profile" to Profile.LOCAL.toString(),
+        "unleash.url" to "https://localhost"
     )
 )
 private val devProperties = ConfigurationMap(
     mapOf(
         "application.profile" to Profile.DEV.toString(),
-        "feature.gjustering" to false.toString(),
+        "unleash.url" to "https://unleash.nais.io/api/"
     )
 )
 private val prodProperties = ConfigurationMap(
     mapOf(
         "application.profile" to Profile.PROD.toString(),
+        "unleash.url" to "https://unleash.nais.io/api/"
     )
 )
 
@@ -49,7 +50,6 @@ val REGEL_TOPIC = Topic(
 data class Configuration(
     val kafka: Kafka = Kafka(),
     val application: Application = Application(),
-    val features: Features = Features(),
     val regelTopic: Topic<String, Packet> = REGEL_TOPIC
 ) {
     data class Kafka(
@@ -59,12 +59,9 @@ data class Configuration(
     data class Application(
         val id: String = config().getOrElse(Key("application.id", stringType), "dagpenger-regel-periode"),
         val profile: Profile = config()[Key("application.profile", stringType)].let { Profile.valueOf(it) },
-        val httpPort: Int = 8080
+        val httpPort: Int = 8080,
+        val unleashUrl: String = config()[Key("unleash.url", stringType)]
     )
-
-    class Features {
-        fun gjustering() = config().getOrElse(Key("feature.gjustering", booleanType), false)
-    }
 }
 
 enum class Profile {

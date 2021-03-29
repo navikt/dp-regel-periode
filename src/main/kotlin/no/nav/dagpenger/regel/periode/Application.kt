@@ -3,6 +3,7 @@ package no.nav.dagpenger.regel.periode
 import com.squareup.moshi.JsonAdapter
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
+import no.finn.unleash.Unleash
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
@@ -43,6 +44,7 @@ class Application(
         val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
         val BEREGNINGSDATO = "beregningsDato"
         val REGELVERKSDATO = "regelverksdato"
+        var unleash: Unleash = setupUnleash(configuration.application.unleashUrl)
     }
 
     override fun filterPredicates(): List<Predicate<String, Packet>> {

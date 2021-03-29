@@ -8,6 +8,7 @@ import no.nav.dagpenger.grunnbelop.Grunnbeløp
 import no.nav.dagpenger.grunnbelop.Regel
 import no.nav.dagpenger.grunnbelop.forDato
 import no.nav.dagpenger.grunnbelop.getGrunnbeløpForRegel
+import no.nav.dagpenger.regel.periode.Application.Companion.unleash
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month
@@ -54,5 +55,5 @@ internal fun isThisGjusteringTest(
 ): Boolean {
     val gVirkning = LocalDate.of(2021, 3, 1)
     val isBeregningsDatoAfterGjustering = beregningsdato.isAfter(gVirkning.minusDays(1))
-    return configuration.features.gjustering() && isBeregningsDatoAfterGjustering
+    return unleash.isEnabled(GJUSTERING_TEST) && isBeregningsDatoAfterGjustering
 }
