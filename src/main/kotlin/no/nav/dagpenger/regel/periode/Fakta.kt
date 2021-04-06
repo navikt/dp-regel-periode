@@ -46,7 +46,7 @@ data class Fakta(
 
     fun erSærregel(): Boolean = erlærling()
 
-    fun erlærling() = lærling && beregningsDato.erKoronaPeriode()
+    fun erlærling() = lærling && regelverksdato.erKoronaPeriode()
     private fun LocalDate.erKoronaPeriode() = this in (LocalDate.of(2020, Month.MARCH, 20)..LocalDate.of(2021, Month.SEPTEMBER, 30))
 }
 

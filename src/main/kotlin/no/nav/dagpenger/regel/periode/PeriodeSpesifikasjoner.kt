@@ -123,7 +123,7 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     }
 )
 
-val lærlingPeriode = Spesifikasjon<Fakta>(
+val lærlingPeriodeKorona = Spesifikasjon<Fakta>(
     beskrivelse = "§ 2-6. Midlertidig inntekssikringsordning for lærlinger – unntak fra folketrygdloven § 4-4 til § 4-6",
     identifikator = "LÆRLING",
     implementasjon = {
@@ -140,7 +140,7 @@ val ordinær52: Spesifikasjon<Fakta> =
 val ordinær104: Spesifikasjon<Fakta> =
     (ordinærSiste12Måneder104Uker eller ordinærSiste36Måneder104Uker) eller (ordinærSiste12MånederMedFangstOgFiske104Uker eller ordinærSiste36MånederMedFangstOgFiske104Uker)
 
-val særregel = lærlingPeriode eller vernepliktPeriode
+val særregel = lærlingPeriodeKorona eller vernepliktPeriode
 
 val ordinær: Spesifikasjon<Fakta> = ordinær52 eller ordinær104
 
