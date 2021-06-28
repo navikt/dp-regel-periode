@@ -48,7 +48,7 @@ dependencies {
 
     implementation(Dagpenger.Streams)
     implementation(Dagpenger.Events)
-    implementation(Dagpenger.Biblioteker.grunnbeløp)
+    implementation(Dagpenger.Grunnbeløp)
 
     implementation(Moshi.moshi)
     implementation(Moshi.moshiAdapters)
