@@ -20,14 +20,13 @@ apply {
 
 repositories {
     mavenCentral()
-    jcenter()
     maven("https://packages.confluent.io/maven/")
     maven("https://jitpack.io")
 }
 
 application {
     applicationName = "dp-regel-periode"
-    mainClassName = "no.nav.dagpenger.regel.periode.ApplicationKt"
+    mainClass.set("no.nav.dagpenger.regel.periode.ApplicationKt")
 }
 
 java {

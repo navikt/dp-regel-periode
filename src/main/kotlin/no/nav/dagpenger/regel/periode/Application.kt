@@ -35,7 +35,6 @@ class Application(
         val LÆRLING = "lærling"
         val REGELIDENTIFIKATOR = "Periode.v1"
         val PERIODE_RESULTAT = "periodeResultat"
-        val PERIODE_NARE_EVALUERING = "periodeNareEvaluering"
         val INNTEKT = "inntektV1"
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
         val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
@@ -70,7 +69,9 @@ class Application(
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
 
-        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel)
+        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel).also {
+            tellHvilkenPeriodeSomBleGitt(it)
+        }
 
         val subsumsjon = PeriodeSubsumsjon(
             ulidGenerator.nextULID(),
@@ -79,9 +80,6 @@ class Application(
             periodeResultat ?: 0
         )
 
-        tellHvilkenPeriodeSomBleGitt(periodeResultat)
-
-        packet.putValue(PERIODE_NARE_EVALUERING, jsonAdapterEvaluering.toJson(evaluering))
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
         return packet
     }

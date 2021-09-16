@@ -5,7 +5,6 @@ import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
-import no.nav.nare.core.evaluations.Evaluering
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TestInputTopic
 import org.apache.kafka.streams.TestOutputTopic
@@ -178,46 +177,6 @@ internal class ApplicationTopologyTest {
             val ut = topologyTestDriver.regelOutputTopic().readValue()
             assertTrue { ut.hasField("periodeResultat") }
             assertEquals("52.0", ut.getMapValue("periodeResultat")["periodeAntallUker"].toString())
-        }
-    }
-
-    @Test
-    fun ` should add nare evaluation`() {
-
-        val json =
-            """
-            {
-                "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
-                "aktørId":"1000052711564",
-                "vedtakId":3.1018297E7,
-                "beregningsDato":"2019-02-27",
-                "harAvtjentVerneplikt":false,
-                "grunnlagResultat":
-                    {
-                        "beregningsregel": "BLA"
-                    },
-                "bruktInntektsPeriode":
-                    {
-                        "førsteMåned":"2016-02",
-                        "sisteMåned":"2016-11"
-                    }
-
-            }
-            """.trimIndent()
-
-        val packet = Packet(json)
-        packet.putValue("inntektV1", inntekt)
-        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
-            val ut = topologyTestDriver.regelOutputTopic().readValue()
-            assertTrue { ut.hasField(Application.PERIODE_NARE_EVALUERING) }
-            val nareEvaluering = periode.jsonAdapterEvaluering.fromJson(
-                ut.getStringValue(
-                    Application.PERIODE_NARE_EVALUERING
-                )
-            )
-
-            assertTrue { nareEvaluering is Evaluering }
         }
     }
 
