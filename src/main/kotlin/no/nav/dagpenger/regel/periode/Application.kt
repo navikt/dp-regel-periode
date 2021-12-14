@@ -114,6 +114,7 @@ fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
     }
 }
 
+// TODO: Mer intuitiv og robust løsning for 26 ukers dagpengeperiode for vernepliktige
 fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: String): Int? {
     return if (beregningsregel == "Verneplikt") {
         26

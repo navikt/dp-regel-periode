@@ -20,14 +20,14 @@ internal class PeriodeSpesifikasjonTest {
 
     fun identifikatorer(spesifikasjoner: List<Spesifikasjon<Fakta>>): Set<String> =
         (
-            spesifikasjoner.map { it.identifikator }
-                .toSet() + spesifikasjoner.flatMap { identifikatorer(it.children) }
+            spesifikasjoner.map { it.identifikator }.toSet() +
+                spesifikasjoner.flatMap { identifikatorer(it.children) }
             ).toSet()
 
     @Test
     fun `Ordinær består av ordinær`() {
 
-        val expectedIdentifikatorer = setOf<String>(
+        val expectedIdentifikatorer = setOf(
             "ORDINÆR_12_52",
             "ORDINÆR_36_52",
             "ORDINÆR_12_52_FANGSTOGFISK",
