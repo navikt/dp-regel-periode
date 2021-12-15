@@ -18,8 +18,8 @@ internal class PeriodeEtterLærlingForskriftTest {
         "2020-03-20, LÆRLING",
         "2021-09-30, LÆRLING",
         "2021-10-01, ORDINÆR_12_52",
-        "2021-12-13, ORDINÆR_12_52",
-        "2021-12-14, LÆRLING",
+        "2021-12-14, ORDINÆR_12_52",
+        "2021-12-15, LÆRLING",
         "2022-02-28, LÆRLING",
         "2022-03-01, ORDINÆR_12_52",
     )
