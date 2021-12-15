@@ -54,7 +54,6 @@ data class Fakta(
 
     private fun LocalDate.andreKoronaperiode() =
         this in (LocalDate.of(2021, Month.DECEMBER, 14)..LocalDate.of(2022, Month.FEBRUARY, 28))
-
 }
 
 internal fun isThisGjusteringTest(
