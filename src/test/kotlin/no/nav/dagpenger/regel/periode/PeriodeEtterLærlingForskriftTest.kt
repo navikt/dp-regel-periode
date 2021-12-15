@@ -24,7 +24,8 @@ internal class PeriodeEtterLærlingForskriftTest {
         "2022-03-01, ORDINÆR_12_52",
     )
     fun ` § 2-6 - Periode for lærlinger – unntak fra folketrygdloven § 4-4 til § 4-6 og det er koronatid `(
-        beregningsdato: LocalDate, identifikator: String,
+        beregningsdato: LocalDate,
+        identifikator: String,
     ) {
 
         // gitt fakta
