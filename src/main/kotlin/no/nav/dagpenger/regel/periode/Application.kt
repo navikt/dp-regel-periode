@@ -106,11 +106,11 @@ class Application(
     }
 }
 
-fun mapEvalureringResultatToInt(it: Evaluering): List<Int> {
+fun mapEvalueringResultatToInt(it: Evaluering): List<Int> {
     return if (it.children.isEmpty()) {
         listOf(it.begrunnelse.toInt())
     } else {
-        it.children.flatMap { mapEvalureringResultatToInt(it) }
+        it.children.flatMap { mapEvalueringResultatToInt(it) }
     }
 }
 
@@ -122,7 +122,7 @@ fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: St
         return evaluering
             .children
             .filter { it.resultat == Resultat.JA }
-            .flatMap { mapEvalureringResultatToInt(it) }
+            .flatMap { mapEvalueringResultatToInt(it) }
             .maxOrNull()
     }
 }
