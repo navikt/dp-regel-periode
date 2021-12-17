@@ -34,7 +34,7 @@ class PacketToFaktaTest {
 
         val fakta = packetToFakta(packet)
 
-        assertTrue(fakta.erGyldigFangstOgFisk())
+        assertTrue(fakta.fangstOgFiskeErIkkeAvviklet())
     }
 
     @Test
