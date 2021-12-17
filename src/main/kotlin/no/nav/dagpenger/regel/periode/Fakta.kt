@@ -33,7 +33,6 @@ data class Fakta(
             inntektsPeriode.sisteMåned
         )
     } ?: inntekt
-
     val splitInntekt = filtrertInntekt.splitIntoInntektsPerioder()
 
     val arbeidsinntektSiste12 = splitInntekt.first.sumInntekt(listOf(InntektKlasse.ARBEIDSINNTEKT))
