@@ -68,10 +68,10 @@ internal class Periode52UkerTest {
         "2022-01-01, NEI",
     )
     fun `Regelverk for fangst of fisk er avviklet fra og med 01-01-2022`(
-        regelverksdato: String,
+        regelverksdato: LocalDate,
         forventetUtfall: String
     ) {
-
+        val forventetResultat = Resultat.valueOf(forventetUtfall)
         val sisteAvsluttendeKalenderMåned = YearMonth.of(2021, 11)
 
         val fangstOgFiskInntekter = generateFangstOgFiskInntekt(1..12, BigDecimal(50000))
@@ -86,15 +86,15 @@ internal class Periode52UkerTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = true,
-            beregningsDato = LocalDate.parse(regelverksdato),
-            regelverksdato = LocalDate.parse(regelverksdato),
+            beregningsDato = regelverksdato,
+            regelverksdato = regelverksdato,
             lærling = false,
             grunnlagBeregningsregel = "BLA"
         )
 
         val evaluering = fangstOgFiske52.evaluer(fakta)
 
-        assertTrue(evaluering.children.all { Resultat.valueOf(forventetUtfall) == it.resultat })
+        assertTrue(evaluering.children.all { it.resultat == forventetResultat })
     }
 
     @Test

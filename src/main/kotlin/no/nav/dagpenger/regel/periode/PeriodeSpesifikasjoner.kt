@@ -51,7 +51,7 @@ val ordinærSiste12MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            erGyldigFangstOgFisk() && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -62,7 +62,7 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            erGyldigFangstOgFisk() && inntektSiste36inkludertFangstOgFiske.divide(
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste36inkludertFangstOgFiske.divide(
                 BigDecimal(3),
                 scale,
                 roundingMode
@@ -72,7 +72,7 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     }
 )
 
-internal fun Fakta.erGyldigFangstOgFisk(): Boolean {
+internal fun Fakta.fangstOgFiskeErIkkeAvviklet(): Boolean {
     val fangstOgFiskAvvikletFra = LocalDate.of(2022, 1, 1)
     return (fangstOgFisk && regelverksdato < fangstOgFiskAvvikletFra)
 }
@@ -108,7 +108,7 @@ val ordinærSiste12MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            erGyldigFangstOgFisk() && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -119,7 +119,7 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            erGyldigFangstOgFisk() && inntektSiste36inkludertFangstOgFiske.divide(
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste36inkludertFangstOgFiske.divide(
                 BigDecimal(3),
                 scale,
                 roundingMode
