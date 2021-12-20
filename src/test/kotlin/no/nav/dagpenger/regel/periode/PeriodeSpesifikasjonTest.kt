@@ -44,14 +44,14 @@ internal class PeriodeSpesifikasjonTest {
     @Test
     fun `Skal returnere 52 som antall uker`() {
         val evaluering = Evaluering.ja("52")
-        mapEvalureringResultatToInt(evaluering).maxOrNull() shouldBe 52
+        mapEvalueringResultatToInt(evaluering).maxOrNull() shouldBe 52
     }
 
     @Test
     fun `Skal returnere evalueringene som int`() {
         val evaluering = listOf(Evaluering.ja("52"), Evaluering.ja("26"))
 
-        val resultat = evaluering.flatMap { mapEvalureringResultatToInt(it) }
+        val resultat = evaluering.flatMap { mapEvalueringResultatToInt(it) }
 
         listOf(52, 26) shouldBe resultat
     }

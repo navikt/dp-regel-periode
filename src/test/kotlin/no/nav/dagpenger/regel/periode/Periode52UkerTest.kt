@@ -6,7 +6,10 @@ import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
 import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.YearMonth
@@ -57,6 +60,41 @@ internal class Periode52UkerTest {
         val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
 
         assertEquals(Resultat.NEI, evaluering.resultat)
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "2021-12-31, JA",
+        "2022-01-01, NEI",
+    )
+    fun `Regelverk for fangst of fisk er avviklet fra og med 01-01-2022`(
+        regelverksdato: LocalDate,
+        forventetUtfall: String
+    ) {
+        val forventetResultat = Resultat.valueOf(forventetUtfall)
+        val sisteAvsluttendeKalenderMåned = YearMonth.of(2021, 11)
+
+        val fangstOgFiskInntekter = generateFangstOgFiskInntekt(1..12, BigDecimal(50000))
+        val arbeidsInntekter = generateArbeidsInntekt(1..12, BigDecimal(1000))
+
+        val fakta = Fakta(
+            inntekt = Inntekt(
+                "123",
+                inntektsListe = fangstOgFiskInntekter + arbeidsInntekter,
+                sisteAvsluttendeKalenderMåned = sisteAvsluttendeKalenderMåned
+            ),
+            bruktInntektsPeriode = null,
+            verneplikt = false,
+            fangstOgFisk = true,
+            beregningsDato = regelverksdato,
+            regelverksdato = regelverksdato,
+            lærling = false,
+            grunnlagBeregningsregel = "BLA"
+        )
+
+        val evaluering = fangstOgFiske52.evaluer(fakta)
+
+        assertTrue(evaluering.children.all { it.resultat == forventetResultat })
     }
 
     @Test

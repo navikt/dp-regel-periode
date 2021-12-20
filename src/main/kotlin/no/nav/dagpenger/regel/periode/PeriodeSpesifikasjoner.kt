@@ -4,6 +4,7 @@ import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.specifications.Spesifikasjon
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.LocalDate
 
 const val scale = 20
 val roundingMode = RoundingMode.HALF_UP
@@ -50,7 +51,7 @@ val ordinærSiste12MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            fangstOgFisk && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste12inkludertFangstOgFiske >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
             else -> Evaluering.nei("0")
         }
     }
@@ -61,7 +62,7 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_104_FANGSTOGFISK",
     implementasjon = {
         when {
-            fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste36inkludertFangstOgFiske.divide(
                 BigDecimal(3),
                 scale,
                 roundingMode
@@ -70,6 +71,11 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker = Spesifikasjon<Fakta>(
         }
     }
 )
+
+internal fun Fakta.fangstOgFiskeErIkkeAvviklet(): Boolean {
+    val fangstOgFiskAvvikletFra = LocalDate.of(2022, 1, 1)
+    return (fangstOgFisk && regelverksdato < fangstOgFiskAvvikletFra)
+}
 
 val ordinærSiste12Måneder52Uker = Spesifikasjon<Fakta>(
     beskrivelse = "§ 4-15 Antall stønadsuker (stønadsperiode), siste 12 mnd, 52 uker",
@@ -102,7 +108,7 @@ val ordinærSiste12MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_12_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            fangstOgFisk && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste12inkludertFangstOgFiske < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
             else -> Evaluering.nei("0")
         }
     }
@@ -113,7 +119,7 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker = Spesifikasjon<Fakta>(
     identifikator = "ORDINÆR_36_52_FANGSTOGFISK",
     implementasjon = {
         when {
-            fangstOgFisk && inntektSiste36inkludertFangstOgFiske.divide(
+            fangstOgFiskeErIkkeAvviklet() && inntektSiste36inkludertFangstOgFiske.divide(
                 BigDecimal(3),
                 scale,
                 roundingMode
@@ -134,11 +140,14 @@ val lærlingPeriodeKorona = Spesifikasjon<Fakta>(
     }
 )
 
+val fangstOgFiske52 = ordinærSiste12MånederMedFangstOgFiske52Uker eller ordinærSiste36MånederMedFangstOgFiske52Uker
+val fangstOgFiske104 = ordinærSiste12MånederMedFangstOgFiske104Uker eller ordinærSiste36MånederMedFangstOgFiske104Uker
+
 val ordinær52: Spesifikasjon<Fakta> =
-    (ordinærSiste12Måneder52Uker eller ordinærSiste36Måneder52Uker) eller (ordinærSiste12MånederMedFangstOgFiske52Uker eller ordinærSiste36MånederMedFangstOgFiske52Uker)
+    (ordinærSiste12Måneder52Uker eller ordinærSiste36Måneder52Uker) eller fangstOgFiske52
 
 val ordinær104: Spesifikasjon<Fakta> =
-    (ordinærSiste12Måneder104Uker eller ordinærSiste36Måneder104Uker) eller (ordinærSiste12MånederMedFangstOgFiske104Uker eller ordinærSiste36MånederMedFangstOgFiske104Uker)
+    (ordinærSiste12Måneder104Uker eller ordinærSiste36Måneder104Uker) eller fangstOgFiske104
 
 val særregel = lærlingPeriodeKorona eller vernepliktPeriode
 
