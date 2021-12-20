@@ -5,13 +5,28 @@ import no.nav.nare.core.evaluations.Resultat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import java.time.LocalDate
 import java.time.YearMonth
 
 internal class PeriodeEtterLærlingForskriftTest {
 
-    @Test
-    fun ` § 2-6 - Periode for lærlinger – unntak fra folketrygdloven § 4-4 til § 4-6 og det er koronatid `() {
+    @ParameterizedTest
+    @CsvSource(
+        "2020-03-19, ORDINÆR_12_52",
+        "2020-03-20, LÆRLING",
+        "2021-09-30, LÆRLING",
+        "2021-10-01, ORDINÆR_12_52",
+        "2021-12-14, ORDINÆR_12_52",
+        "2021-12-15, LÆRLING",
+        "2022-02-28, LÆRLING",
+        "2022-03-01, ORDINÆR_12_52",
+    )
+    fun ` § 2-6 - Periode for lærlinger – unntak fra folketrygdloven § 4-4 til § 4-6 og det er koronatid `(
+        beregningsdato: LocalDate,
+        identifikator: String,
+    ) {
 
         // gitt fakta
         val fakta = Fakta(
@@ -19,10 +34,10 @@ internal class PeriodeEtterLærlingForskriftTest {
             bruktInntektsPeriode = null,
             verneplikt = false,
             fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2020, 3, 20),
-            regelverksdato = LocalDate.of(2020, 3, 20),
+            beregningsDato = beregningsdato,
+            regelverksdato = beregningsdato,
             lærling = true,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = "Har ingen betydning for utfall"
         )
 
         // når
@@ -31,11 +46,7 @@ internal class PeriodeEtterLærlingForskriftTest {
         // så
         assertEquals(Resultat.JA, evaluering.children[0].resultat)
         assertEquals("52", evaluering.children[0].begrunnelse)
-        assertEquals("LÆRLING", evaluering.children[0].identifikator)
-        assertEquals(
-            "§ 2-6. Midlertidig inntekssikringsordning for lærlinger – unntak fra folketrygdloven § 4-4 til § 4-6",
-            evaluering.children[0].beskrivelse
-        )
+        assertEquals(identifikator, evaluering.children[0].identifikator)
     }
 
     @Test
