@@ -20,8 +20,8 @@ internal class PeriodeEtterLærlingForskriftTest {
         "2021-10-01, ORDINÆR_12_52",
         "2021-12-14, ORDINÆR_12_52",
         "2021-12-15, LÆRLING",
-        "2022-02-28, LÆRLING",
-        "2022-03-01, ORDINÆR_12_52",
+        "2022-03-31, LÆRLING",
+        "2022-04-01, ORDINÆR_12_52",
     )
     fun ` § 2-6 - Periode for lærlinger – unntak fra folketrygdloven § 4-4 til § 4-6 og det er koronatid `(
         beregningsdato: LocalDate,
