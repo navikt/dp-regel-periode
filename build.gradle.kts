@@ -47,7 +47,7 @@ dependencies {
 
     implementation(Dagpenger.Streams)
     implementation(Dagpenger.Events)
-    implementation(Dagpenger.Grunnbeløp)
+    implementation("com.github.navikt:dp-grunnbelop:2023.04.11-15.15.dd33088904de")
 
     implementation(Moshi.moshi)
     implementation(Moshi.moshiAdapters)
