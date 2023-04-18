@@ -7,7 +7,7 @@ import no.finn.unleash.util.UnleashConfig
 const val GJUSTERING_TEST = "dp-g-justeringstest"
 
 fun setupUnleash(unleashApiUrl: String): DefaultUnleash {
-    val appName = "dp-regel-minsteinntekt"
+    val appName = "dp-regel-periode"
     val unleashconfig = UnleashConfig.builder()
         .appName(appName)
         .instanceId(appName)
