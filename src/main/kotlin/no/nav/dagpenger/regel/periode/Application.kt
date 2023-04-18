@@ -1,6 +1,5 @@
 package no.nav.dagpenger.regel.periode
 
-import com.squareup.moshi.JsonAdapter
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
 import no.finn.unleash.Unleash
@@ -14,7 +13,6 @@ import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
 import java.net.URI
-import java.time.LocalDateTime
 
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
 private val periodeGittCounter = Counter.build()
@@ -24,12 +22,10 @@ private val periodeGittCounter = Counter.build()
     .register()
 
 class Application(
-    private val config: Configuration
+    private val config: Configuration,
 ) : River(config.regelTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
-
-    val jsonAdapterEvaluering: JsonAdapter<Evaluering> = moshiInstance.adapter(Evaluering::class.java)
 
     companion object {
         val LÆRLING = "lærling"
@@ -51,20 +47,11 @@ class Application(
             Predicate { _, packet -> packet.hasField(INNTEKT) },
             Predicate { _, packet -> packet.hasField(GRUNNLAG_RESULTAT) },
             Predicate { _, packet -> packet.hasField(BEREGNINGSDATO) },
-            Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) }
+            Predicate { _, packet -> !packet.hasField(PERIODE_RESULTAT) },
         )
     }
 
     override fun onPacket(packet: Packet): Packet {
-
-        val started: LocalDateTime? =
-            packet.getNullableStringValue("system_started")
-                ?.let { runCatching { LocalDateTime.parse(it) }.getOrNull() }
-
-        if (started?.isBefore(LocalDateTime.now().minusSeconds(30)) == true) {
-            throw RuntimeException("Denne pakka er for gammal!")
-        }
-
         val fakta = packetToFakta(packet)
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
@@ -77,7 +64,7 @@ class Application(
             ulidGenerator.nextULID(),
             ulidGenerator.nextULID(),
             REGELIDENTIFIKATOR,
-            periodeResultat ?: 0
+            periodeResultat ?: 0,
         )
 
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
@@ -91,7 +78,7 @@ class Application(
     override fun getConfig() = streamConfigAiven(
         appId = SERVICE_APP_ID,
         bootStapServerUrl = configuration.kafka.aivenBrokers,
-        aivenCredentials = KafkaAivenCredentials()
+        aivenCredentials = KafkaAivenCredentials(),
     )
 
     override fun onFailure(packet: Packet, error: Throwable?): Packet {
@@ -99,8 +86,8 @@ class Application(
             Problem(
                 type = URI("urn:dp:error:regel"),
                 title = "Ukjent feil ved bruk av perioderegel",
-                instance = URI("urn:dp:regel:periode")
-            )
+                instance = URI("urn:dp:regel:periode"),
+            ),
         )
         return packet
     }
