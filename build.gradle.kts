@@ -10,7 +10,7 @@ plugins {
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -40,6 +40,9 @@ val jar by tasks.getting(Jar::class) {
     manifest {
         attributes["Multi-Release"] = "true" // https://github.com/johnrengelman/shadow/issues/449
     }
+}
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer::class.java)
 }
 
 dependencies {
