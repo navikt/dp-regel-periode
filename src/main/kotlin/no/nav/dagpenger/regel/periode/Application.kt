@@ -1,8 +1,8 @@
 package no.nav.dagpenger.regel.periode
 
+import io.getunleash.Unleash
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
-import no.finn.unleash.Unleash
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem

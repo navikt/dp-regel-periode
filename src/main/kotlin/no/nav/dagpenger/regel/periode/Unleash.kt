@@ -1,8 +1,8 @@
 package no.nav.dagpenger.regel.periode
 
-import no.finn.unleash.DefaultUnleash
-import no.finn.unleash.strategy.Strategy
-import no.finn.unleash.util.UnleashConfig
+import io.getunleash.DefaultUnleash
+import io.getunleash.strategy.Strategy
+import io.getunleash.util.UnleashConfig
 
 const val GJUSTERING_TEST = "dp-g-justeringstest"
 
@@ -20,8 +20,8 @@ fun setupUnleash(unleashApiUrl: String): DefaultUnleash {
 class ByClusterStrategy(private val currentCluster: Cluster) : Strategy {
     override fun getName(): String = "byCluster"
 
-    override fun isEnabled(parameters: Map<String, String>?): Boolean {
-        val clustersParameter = parameters?.get("cluster") ?: return false
+    override fun isEnabled(parameters: Map<String, String>): Boolean {
+        val clustersParameter = parameters["cluster"] ?: return false
         val alleClustere = clustersParameter.split(",").map { it.trim() }.map { it.lowercase() }.toList()
         return alleClustere.contains(currentCluster.asString())
     }

@@ -1,6 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
-import no.finn.unleash.FakeUnleash
+import io.getunleash.FakeUnleash
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
@@ -17,12 +17,11 @@ internal class GjusteringTest {
     @Test
     @Disabled
     fun `Skal få periode på 104 uker dersom inntekt siste 12 måned er under 2G`() {
-
         val fakta = Fakta(
             inntekt = Inntekt(
                 "123",
                 generateArbeidsInntekt(1..1, BigDecimal(200000)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10)
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10),
             ),
             bruktInntektsPeriode = null,
             verneplikt = false,
@@ -30,7 +29,7 @@ internal class GjusteringTest {
             beregningsDato = LocalDate.of(2020, 10, 20),
             regelverksdato = LocalDate.of(2020, 10, 20),
             lærling = false,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = "BLA",
         )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
@@ -46,7 +45,7 @@ internal class GjusteringTest {
             inntekt = Inntekt(
                 "123",
                 generateArbeidsInntekt(1..1, BigDecimal(202701)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10)
+                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10),
             ),
             bruktInntektsPeriode = null,
             verneplikt = false,
@@ -54,7 +53,7 @@ internal class GjusteringTest {
             beregningsDato = LocalDate.of(2020, 10, 20),
             regelverksdato = LocalDate.of(2020, 10, 20),
             lærling = false,
-            grunnlagBeregningsregel = "BLA"
+            grunnlagBeregningsregel = "BLA",
         )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
@@ -69,9 +68,9 @@ internal class GjusteringTest {
                 listOf(
                     KlassifisertInntekt(
                         beløpPerMnd,
-                        InntektKlasse.ARBEIDSINNTEKT
-                    )
-                )
+                        InntektKlasse.ARBEIDSINNTEKT,
+                    ),
+                ),
             )
         }
     }
