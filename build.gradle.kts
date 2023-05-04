@@ -50,7 +50,7 @@ dependencies {
 
     implementation(Dagpenger.Streams)
     implementation(Dagpenger.Events)
-    implementation("com.github.navikt:dp-grunnbelop:2023.04.11-15.15.dd33088904de")
+    implementation("com.github.navikt:dp-grunnbelop:2023.05.04-15.36.3a722dae0a19")
 
     implementation(Moshi.moshi)
     implementation(Moshi.moshiAdapters)
