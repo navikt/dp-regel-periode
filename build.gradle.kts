@@ -29,12 +29,9 @@ application {
     mainClass.set("no.nav.dagpenger.regel.periode.ApplicationKt")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+kotlin {
+    jvmToolchain(17)
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
 
 val jar by tasks.getting(Jar::class) {
     manifest {

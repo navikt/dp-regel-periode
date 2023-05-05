@@ -15,7 +15,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v1
         with:
-          java-version: '13.x'
+          java-version: '17.x'
 
       - name: Setup gradle dependency cache
         uses: actions/cache@v2
@@ -51,6 +51,7 @@ jobs:
     needs: [build]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    environment: dev-fss
     steps:
       - name: Fetch NAIS yaml
         uses: actions/download-artifact@v1
@@ -93,6 +94,7 @@ jobs:
     needs: [deploy-dev]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    environment: prod-fss
     steps:
       - name: Fetch NAIS yaml
         uses: actions/download-artifact@v1
