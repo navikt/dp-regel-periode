@@ -8,11 +8,12 @@ const val GJUSTERING_TEST = "dp-g-justeringstest"
 
 fun setupUnleash(unleashApiUrl: String): DefaultUnleash {
     val appName = "dp-regel-periode"
-    val unleashconfig = UnleashConfig.builder()
-        .appName(appName)
-        .instanceId(appName)
-        .unleashAPI(unleashApiUrl)
-        .build()
+    val unleashconfig =
+        UnleashConfig.builder()
+            .appName(appName)
+            .instanceId(appName)
+            .unleashAPI(unleashApiUrl)
+            .build()
 
     return DefaultUnleash(unleashconfig, ByClusterStrategy(Cluster.current))
 }
@@ -28,7 +29,10 @@ class ByClusterStrategy(private val currentCluster: Cluster) : Strategy {
 }
 
 enum class Cluster {
-    DEV_FSS, PROD_FSS, ANNET;
+    DEV_FSS,
+    PROD_FSS,
+    ANNET,
+    ;
 
     companion object {
         val current: Cluster by lazy {

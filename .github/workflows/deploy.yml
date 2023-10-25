@@ -1,50 +1,57 @@
 name: Build and deploy
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
 
-env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/dp-regel-periode:${{ github.sha }}
 jobs:
   build:
     name: Build and publish Docker image
     runs-on: ubuntu-latest
+    permissions: # Sjekk https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+      contents: write
+      packages: write
+      id-token: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Java
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
         with:
-          java-version: '17.x'
-
-      - name: Setup gradle dependency cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', 'buildSrc/src/main/kotlin/Constants.kt') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Build with Gradle
-        run: ./gradlew build --info
-
-      - name: Build and Publish Docker image
-        if: github.ref == 'refs/heads/master'
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/wrapper-validation-action@v1.1.0
+      - uses: gradle/gradle-build-action@v2.9.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker build -t $IMAGE .
-          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-          docker push $IMAGE
+          # Eksluder test dependencies
+          DEPENDENCY_GRAPH_INCLUDE_CONFIGURATIONS: compileClasspath|runtimeClasspath
+        with:
+          gradle-version: wrapper
+          dependency-graph: generate-and-submit
+          arguments: --configuration-cache build installDist
+
+      - name: docker-build-push
+        uses: nais/docker-build-push@v0
+        if: github.ref == 'refs/heads/master'
+        id: docker-build-push
+        with:
+          byosbom: dependency-graph-reports/build_and_deploy-build.json
+          team: teamdagpenger
+          push_image: true # optional, default true
+          tag: ${{ github.sha }}
+          dockerfile: Dockerfile # optional, default Dockerfile
+          docker_context: . # optional, default .
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
       - name: Archive NAIS yaml
         if: github.ref == 'refs/heads/master'
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: nais-yaml
-          path: nais
+          path: .nais
+
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
 
   deploy-dev:
     name: Deploy to dev
@@ -54,58 +61,38 @@ jobs:
     environment: dev-fss
     steps:
       - name: Fetch NAIS yaml
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: nais-yaml
-          path: nais
+          path: .nais
 
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
-          RESOURCE: nais/dev/nais.yaml
-          VARS: nais/vars.yaml
+          RESOURCE: .nais/nais.yaml
+          VAR: image=${{ needs.build.outputs.image }}
+          VARS: .nais/dev-vars.yaml
           PRINT_PAYLOAD: true
 
-#  acceptance-tests:
-#    name: Run acceptance tests
-#    needs: [deploy-dev]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-#        with:
-#          repository: navikt/dagpenger-funksjonelle-tester
-#      - id: repo-name
-#        name: Split owner from repository name
-#        run: |
-#          echo ::set-output name=name::$(echo ${{github.repository}} | sed -e "s/^navikt\///" )
-#      - uses: nais/deploy/actions/deploy@v1
-#        name: Run tests
-#        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: dev-fss
-#          VAR: GITHUB_REPO=${{ steps.repo-name.outputs.name }}
-#          RESOURCE: nais/tests.yml
-#        timeout-minutes: 5
-#
   deploy-prod:
     name: Deploy to Production
-    needs: [deploy-dev]
+    needs: [build, deploy-dev]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment: prod-fss
     steps:
       - name: Fetch NAIS yaml
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: nais-yaml
-          path: nais
+          path: .nais
 
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
-          RESOURCE: nais/prod/nais.yaml
-          VARS: nais/vars.yaml
+          RESOURCE: .nais/nais.yaml
+          VAR: image=${{ needs.build.outputs.image }}
+          VARS: .nais/prod-vars.yaml
           PRINT_PAYLOAD: true

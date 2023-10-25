@@ -1,0 +1,9 @@
+kafka:
+  pool: nav-prod
+
+replicas:
+  min: 3
+  max: 3
+
+unleash:
+  environment: production

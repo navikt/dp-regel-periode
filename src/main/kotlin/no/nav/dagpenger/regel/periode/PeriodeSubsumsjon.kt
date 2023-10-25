@@ -6,9 +6,8 @@ data class PeriodeSubsumsjon(
     val sporingsId: String,
     val subsumsjonsId: String,
     val regelidentifikator: String,
-    val periode: Int
+    val periode: Int,
 ) {
-
     companion object {
         val SPORINGSID = "sporingsId"
         val SUBSUMSJONSID = "subsumsjonsId"
@@ -21,12 +20,12 @@ data class PeriodeSubsumsjon(
             SPORINGSID to sporingsId,
             SUBSUMSJONSID to subsumsjonsId,
             REGELIDENTIFIKATOR to regelidentifikator,
-            PERIODE to periode
+            PERIODE to periode,
         )
     }
 }
 
 data class InntektsPeriode(
     val førsteMåned: YearMonth,
-    val sisteMåned: YearMonth
+    val sisteMåned: YearMonth,
 )

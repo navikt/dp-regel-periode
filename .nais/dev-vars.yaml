@@ -1,0 +1,9 @@
+kafka:
+  pool: nav-dev
+
+replicas:
+  min: 2
+  max: 3
+
+unleash:
+  environment: development

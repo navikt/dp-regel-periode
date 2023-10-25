@@ -15,12 +15,14 @@ import org.apache.kafka.streams.kstream.Predicate
 import java.net.URI
 
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
-private val periodeGittCounter = Counter.build()
-    .name("utfall_dagpengeperiode")
-    .labelNames("periode")
-    .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
-    .register()
+private val periodeGittCounter =
+    Counter.build()
+        .name("utfall_dagpengeperiode")
+        .labelNames("periode")
+        .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
+        .register()
 
+@Suppress("ktlint:standard:property-naming")
 class Application(
     private val config: Configuration,
 ) : River(config.regelTopic) {
@@ -56,16 +58,18 @@ class Application(
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
 
-        val periodeResultat: Int? = finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel).also {
-            tellHvilkenPeriodeSomBleGitt(it)
-        }
+        val periodeResultat: Int? =
+            finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel).also {
+                tellHvilkenPeriodeSomBleGitt(it)
+            }
 
-        val subsumsjon = PeriodeSubsumsjon(
-            ulidGenerator.nextULID(),
-            ulidGenerator.nextULID(),
-            REGELIDENTIFIKATOR,
-            periodeResultat ?: 0,
-        )
+        val subsumsjon =
+            PeriodeSubsumsjon(
+                ulidGenerator.nextULID(),
+                ulidGenerator.nextULID(),
+                REGELIDENTIFIKATOR,
+                periodeResultat ?: 0,
+            )
 
         packet.putValue(PERIODE_RESULTAT, subsumsjon.toMap())
         return packet
@@ -75,13 +79,17 @@ class Application(
         periodeGittCounter.labels(periodeResultat.toString()).inc()
     }
 
-    override fun getConfig() = streamConfigAiven(
-        appId = SERVICE_APP_ID,
-        bootStapServerUrl = configuration.kafka.aivenBrokers,
-        aivenCredentials = KafkaAivenCredentials(),
-    )
+    override fun getConfig() =
+        streamConfigAiven(
+            appId = SERVICE_APP_ID,
+            bootStapServerUrl = configuration.kafka.aivenBrokers,
+            aivenCredentials = KafkaAivenCredentials(),
+        )
 
-    override fun onFailure(packet: Packet, error: Throwable?): Packet {
+    override fun onFailure(
+        packet: Packet,
+        error: Throwable?,
+    ): Packet {
         packet.addProblem(
             Problem(
                 type = URI("urn:dp:error:regel"),
@@ -102,7 +110,10 @@ fun mapEvalueringResultatToInt(it: Evaluering): List<Int> {
 }
 
 // TODO: Mer intuitiv og robust løsning for 26 ukers dagpengeperiode for vernepliktige
-fun finnHøyestePeriodeFraEvaluering(evaluering: Evaluering, beregningsregel: String): Int? {
+fun finnHøyestePeriodeFraEvaluering(
+    evaluering: Evaluering,
+    beregningsregel: String,
+): Int? {
     return if (beregningsregel == "Verneplikt") {
         26
     } else {

@@ -17,26 +17,25 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 internal class PeriodeSpesifikasjonTest {
-
     fun identifikatorer(spesifikasjoner: List<Spesifikasjon<Fakta>>): Set<String> =
         (
             spesifikasjoner.map { it.identifikator }.toSet() +
                 spesifikasjoner.flatMap { identifikatorer(it.children) }
-            ).toSet()
+        ).toSet()
 
     @Test
     fun `Ordinær består av ordinær`() {
-
-        val expectedIdentifikatorer = setOf(
-            "ORDINÆR_12_52",
-            "ORDINÆR_36_52",
-            "ORDINÆR_12_52_FANGSTOGFISK",
-            "ORDINÆR_36_52_FANGSTOGFISK",
-            "ORDINÆR_12_104",
-            "ORDINÆR_36_104",
-            "ORDINÆR_12_104_FANGSTOGFISK",
-            "ORDINÆR_36_104_FANGSTOGFISK"
-        )
+        val expectedIdentifikatorer =
+            setOf(
+                "ORDINÆR_12_52",
+                "ORDINÆR_36_52",
+                "ORDINÆR_12_52_FANGSTOGFISK",
+                "ORDINÆR_36_52_FANGSTOGFISK",
+                "ORDINÆR_12_104",
+                "ORDINÆR_36_104",
+                "ORDINÆR_12_104_FANGSTOGFISK",
+                "ORDINÆR_36_104_FANGSTOGFISK",
+            )
         val identifikatorer = identifikatorer(ordinær.children)
         expectedIdentifikatorer shouldBe identifikatorer
     }
@@ -58,7 +57,6 @@ internal class PeriodeSpesifikasjonTest {
 
     @Test
     fun `Skal returnere høyeste periode som har evaluering lik JA`() {
-
         val evaluering = listOf(Evaluering.ja("52"), Evaluering.ja("26"), Evaluering.nei("104"))
 
         val grunnlagBeregningsregel = "BLA"
@@ -70,20 +68,22 @@ internal class PeriodeSpesifikasjonTest {
     // Fjerner den gamle testen, og bruker kun denne, da lærlingflag settes manuelt av saksbehandler, og skal ikke settes av saksbehandler når særregelen ikke lenger gjelder
     @Test
     fun ` Ordinær skal ikke behandle lærling`() {
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..12, BigDecimal(1000000)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 2)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2020, 3, 20),
-            regelverksdato = LocalDate.of(2020, 3, 20),
-            lærling = true,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateArbeidsInntekt(1..12, BigDecimal(1000000)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 2),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2020, 3, 20),
+                regelverksdato = LocalDate.of(2020, 3, 20),
+                lærling = true,
+                grunnlagBeregningsregel = "BLA",
+            )
         val evaluering = periode.evaluer(fakta)
         assertSoftly {
             evaluering.resultat shouldBe Resultat.JA
@@ -95,20 +95,22 @@ internal class PeriodeSpesifikasjonTest {
 
     @Test
     fun ` Ordinær brukes hvis det ikke er særregel `() {
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..12, BigDecimal(1000000)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 2)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2020, 3, 20),
-            regelverksdato = LocalDate.of(2020, 3, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateArbeidsInntekt(1..12, BigDecimal(1000000)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 2),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2020, 3, 20),
+                regelverksdato = LocalDate.of(2020, 3, 20),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
         val evaluering = periode.evaluer(fakta)
         assertSoftly {
             fakta.erSærregel() shouldBe false
@@ -118,19 +120,21 @@ internal class PeriodeSpesifikasjonTest {
         }
     }
 
-    private fun periodeEtterOrdinæreMedJa(it: Evaluering) =
-        it.resultat == Resultat.JA && it.identifikator.startsWith("ORDINÆR")
+    private fun periodeEtterOrdinæreMedJa(it: Evaluering) = it.resultat == Resultat.JA && it.identifikator.startsWith("ORDINÆR")
 
-    private fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
+    private fun generateArbeidsInntekt(
+        range: IntRange,
+        beløpPerMnd: BigDecimal,
+    ): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2020, 2).minusMonths(it.toLong()),
                 listOf(
                     KlassifisertInntekt(
                         beløpPerMnd,
-                        InntektKlasse.ARBEIDSINNTEKT
-                    )
-                )
+                        InntektKlasse.ARBEIDSINNTEKT,
+                    ),
+                ),
             )
         }
     }

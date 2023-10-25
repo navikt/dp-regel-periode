@@ -11,7 +11,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 internal class PeriodeEtterLærlingForskriftTest {
-
     @ParameterizedTest
     @CsvSource(
         "2020-03-19, ORDINÆR_12_52",
@@ -27,18 +26,18 @@ internal class PeriodeEtterLærlingForskriftTest {
         beregningsdato: LocalDate,
         identifikator: String,
     ) {
-
         // gitt fakta
-        val fakta = Fakta(
-            inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = beregningsdato,
-            regelverksdato = beregningsdato,
-            lærling = true,
-            grunnlagBeregningsregel = "Har ingen betydning for utfall"
-        )
+        val fakta =
+            Fakta(
+                inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = beregningsdato,
+                regelverksdato = beregningsdato,
+                lærling = true,
+                grunnlagBeregningsregel = "Har ingen betydning for utfall",
+            )
 
         // når
         val evaluering = periode.evaluer(fakta)
@@ -51,18 +50,18 @@ internal class PeriodeEtterLærlingForskriftTest {
 
     @Test
     fun `§ 2-6 - Skal ikke gi periode for lærlinger hvis utenfor koronatid  – unntak fra folketrygdloven § 4-4 til § 4-6 `() {
-
         // gitt fakta
-        val fakta = Fakta(
-            inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2021, 10, 1),
-            regelverksdato = LocalDate.of(2021, 10, 1),
-            lærling = true,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2021, 10, 1),
+                regelverksdato = LocalDate.of(2021, 10, 1),
+                lærling = true,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         assertFalse(fakta.erSærregel())
     }

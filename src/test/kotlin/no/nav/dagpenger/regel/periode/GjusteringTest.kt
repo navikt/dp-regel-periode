@@ -17,20 +17,22 @@ internal class GjusteringTest {
     @Test
     @Disabled
     fun `Skal få periode på 104 uker dersom inntekt siste 12 måned er under 2G`() {
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..1, BigDecimal(200000)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10),
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2020, 10, 20),
-            regelverksdato = LocalDate.of(2020, 10, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA",
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateArbeidsInntekt(1..1, BigDecimal(200000)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2020, 10, 20),
+                regelverksdato = LocalDate.of(2020, 10, 20),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
 
@@ -41,27 +43,32 @@ internal class GjusteringTest {
     fun `Skal få periode på 52 uker dersom inntekt siste 12 måned er under 2G`() {
         Application.unleash = FakeUnleash().also { it.enable(GJUSTERING_TEST) }
 
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..1, BigDecimal(202701)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10),
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2020, 10, 20),
-            regelverksdato = LocalDate.of(2020, 10, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA",
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateArbeidsInntekt(1..1, BigDecimal(202701)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2020, 10),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2020, 10, 20),
+                regelverksdato = LocalDate.of(2020, 10, 20),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
 
         assertEquals(Resultat.NEI, evaluering.resultat)
     }
 
-    fun generateArbeidsInntekt(range: IntRange, beløpPerMnd: BigDecimal): List<KlassifisertInntektMåned> {
+    fun generateArbeidsInntekt(
+        range: IntRange,
+        beløpPerMnd: BigDecimal,
+    ): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2020, 1).minusMonths(it.toLong()),

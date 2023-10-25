@@ -9,12 +9,12 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 class PacketToFaktaTest {
-
-    val emptyInntekt: Inntekt = Inntekt(
-        inntektsId = "12345",
-        inntektsListe = emptyList(),
-        sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3)
-    )
+    val emptyInntekt: Inntekt =
+        Inntekt(
+            inntektsId = "12345",
+            inntektsListe = emptyList(),
+            sisteAvsluttendeKalenderMåned = YearMonth.of(2018, 3),
+        )
 
     val jsonAdapterInntekt = moshiInstance.adapter(Inntekt::class.java)
 
@@ -22,11 +22,11 @@ class PacketToFaktaTest {
     fun ` should map fangst_og_fisk from packet to Fakta `() {
         val json =
             """
-        {
-            "oppfyllerKravTilFangstOgFisk": true,
-            "beregningsDato": "2019-05-20",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "oppfyllerKravTilFangstOgFisk": true,
+                "beregningsDato": "2019-05-20",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)
@@ -41,11 +41,11 @@ class PacketToFaktaTest {
     fun ` should map avtjent_verneplikt from packet to Fakta `() {
         val json =
             """
-        {
-            "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-20",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "harAvtjentVerneplikt": true,
+                "beregningsDato": "2019-05-20",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)
@@ -60,11 +60,11 @@ class PacketToFaktaTest {
     fun ` should map beregningsdato from packet to Fakta `() {
         val json =
             """
-        {
-            "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-20",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "harAvtjentVerneplikt": true,
+                "beregningsDato": "2019-05-20",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)
@@ -79,21 +79,21 @@ class PacketToFaktaTest {
     fun ` should map regelverksdato from packet to Fakta `() {
         val jsonMedRegelverksdato =
             """
-        {
-            "harAvtjentVerneplikt": true,
-            "grunnlagResultat":{"beregningsregel": "BLA"},
-            "beregningsDato": "2019-04-10",
-            "regelverksdato": "2019-05-10"
-            
-        }
+            {
+                "harAvtjentVerneplikt": true,
+                "grunnlagResultat":{"beregningsregel": "BLA"},
+                "beregningsDato": "2019-04-10",
+                "regelverksdato": "2019-05-10"
+                
+            }
             """.trimIndent()
         val jsonUtenRegelverksdato =
             """
-        {
-            "harAvtjentVerneplikt": true,
-            "grunnlagResultat":{"beregningsregel": "BLA"},
-            "beregningsDato": "2019-04-10"
-        }
+            {
+                "harAvtjentVerneplikt": true,
+                "grunnlagResultat":{"beregningsregel": "BLA"},
+                "beregningsDato": "2019-04-10"
+            }
             """.trimIndent()
 
         Packet(jsonMedRegelverksdato).also { packet ->
@@ -110,11 +110,11 @@ class PacketToFaktaTest {
     fun ` should get correct grunnbelop before new G`() {
         val json =
             """
-        {
-            "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-20",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "harAvtjentVerneplikt": true,
+                "beregningsDato": "2019-05-20",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)
@@ -129,11 +129,11 @@ class PacketToFaktaTest {
     fun ` should get correct grunnbelop after new G`() {
         val json =
             """
-        {
-            "harAvtjentVerneplikt": true,
-            "beregningsDato": "2019-05-27",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "harAvtjentVerneplikt": true,
+                "beregningsDato": "2019-05-27",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)
@@ -148,11 +148,11 @@ class PacketToFaktaTest {
     fun ` should map brukt_inntektsperiode from packet to Fakta `() {
         val json =
             """
-        {
-            "bruktInntektsPeriode": {"førsteMåned":"2019-02", "sisteMåned":"2019-03"},
-            "beregningsDato": "2019-05-20",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "bruktInntektsPeriode": {"førsteMåned":"2019-02", "sisteMåned":"2019-03"},
+                "beregningsDato": "2019-05-20",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)
@@ -168,10 +168,10 @@ class PacketToFaktaTest {
     fun ` should map inntekt from packet to Fakta `() {
         val json =
             """
-        {
-            "beregningsDato": "2019-05-20",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "beregningsDato": "2019-05-20",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)
@@ -186,11 +186,11 @@ class PacketToFaktaTest {
     fun ` should map lærling from packet to Fakta `() {
         val json =
             """
-        {
-            "beregningsDato": "2019-05-20",
-            "lærling": "true",
-            "grunnlagResultat":{"beregningsregel": "BLA"}
-        }
+            {
+                "beregningsDato": "2019-05-20",
+                "lærling": "true",
+                "grunnlagResultat":{"beregningsregel": "BLA"}
+            }
             """.trimIndent()
 
         val packet = Packet(json)

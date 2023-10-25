@@ -15,24 +15,24 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 internal class Periode104UkerTest {
-
     @Test
     fun `Skal gi periode på 104 uker når man har arbeidsinntekt over 2 G siste 12 mnd`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generate12MånederArbeidsInntekt(),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generate12MånederArbeidsInntekt(),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
 
@@ -41,21 +41,22 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal gi periode på 104 uker når man har næringsinntekt over 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generate12MånederFangstOgFiskInntekt(),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = true,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generate12MånederFangstOgFiskInntekt(),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = true,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -64,21 +65,22 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal gi periode på 104 uker når man har arbeidsinntekt over 2 G i snitt de siste 36 mnd`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generate36MånederArbeidsInntekt(),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generate36MånederArbeidsInntekt(),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
 
@@ -87,21 +89,22 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal gi periode på 104 uker når man har næringsinntekt over 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generate36MånederFangstOgFiskInntekt(),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = true,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generate36MånederFangstOgFiskInntekt(),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = true,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -110,22 +113,23 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 104 uker når man har arbeidsinntekt under 2 G siste 12 mnd`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..12, BigDecimal(1)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            grunnbeløp = BigDecimal(13),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateArbeidsInntekt(1..12, BigDecimal(1)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                grunnbeløp = BigDecimal(13),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
 
@@ -134,22 +138,23 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 104 uker når man har næringsinntektinntekt under 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateFangstOgFiskInntekt(1..12, BigDecimal(1)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = true,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            grunnbeløp = BigDecimal(13),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateFangstOgFiskInntekt(1..12, BigDecimal(1)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = true,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                grunnbeløp = BigDecimal(13),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -158,22 +163,23 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 104 uker når man har arbeidsinntekt under 2 G i snitt de siste 36 mnd`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateArbeidsInntekt(1..36, BigDecimal(1)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            grunnbeløp = BigDecimal(6),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateArbeidsInntekt(1..36, BigDecimal(1)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                grunnbeløp = BigDecimal(6),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
 
@@ -182,22 +188,23 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 104 uker når man har næringsinntekt under 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generateFangstOgFiskInntekt(1..36, BigDecimal(1)),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = true,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            grunnbeløp = BigDecimal(6),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generateFangstOgFiskInntekt(1..36, BigDecimal(1)),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = true,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                grunnbeløp = BigDecimal(6),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -206,22 +213,23 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 104 uker når man har næringsinntektinntekt over 2 G siste 12 mnd men fangst og fisk er ikke oppfylt`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generate12MånederFangstOgFiskInntekt(),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            grunnbeløp = BigDecimal(13),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generate12MånederFangstOgFiskInntekt(),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                grunnbeløp = BigDecimal(13),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -229,23 +237,25 @@ internal class Periode104UkerTest {
     }
 
     @Test
+    @Suppress("ktlint:standard:max-line-length")
     fun `Skal ikke gi periode på 104 uker når man har næringsinntektinntekt over 2 G i snitt de siste 36 mnd men fangst og fisk er ikke oppfylt`() {
-
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                generate36MånederFangstOgFiskInntekt(),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = false,
-            beregningsDato = LocalDate.of(2019, 5, 20),
-            regelverksdato = LocalDate.of(2019, 5, 20),
-            grunnbeløp = BigDecimal(13),
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        generate36MånederFangstOgFiskInntekt(),
+                        sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4),
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = false,
+                beregningsDato = LocalDate.of(2019, 5, 20),
+                regelverksdato = LocalDate.of(2019, 5, 20),
+                grunnbeløp = BigDecimal(13),
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
 
@@ -259,28 +269,32 @@ internal class Periode104UkerTest {
     )
     fun `Regelverk for fangst of fisk er avviklet fra og med 01-01-2022`(
         regelverksdato: LocalDate,
-        forventetUtfall: String
+        forventetUtfall: String,
     ) {
         val forventetResultat = Resultat.valueOf(forventetUtfall)
         val sisteAvsluttendeKalenderMåned = YearMonth.of(2021, 11)
 
-        val fangstOgFiskInntekter = generateFangstOgFiskInntekt(1..36, BigDecimal(50000), sisteAvsluttendeKalenderMåned)
-        val arbeidsInntekter = generateArbeidsInntekt(1..36, BigDecimal(1000), sisteAvsluttendeKalenderMåned)
+        val fangstOgFiskInntekter =
+            generateFangstOgFiskInntekt(1..36, BigDecimal(50000), sisteAvsluttendeKalenderMåned)
+        val arbeidsInntekter =
+            generateArbeidsInntekt(1..36, BigDecimal(1000), sisteAvsluttendeKalenderMåned)
 
-        val fakta = Fakta(
-            inntekt = Inntekt(
-                "123",
-                inntektsListe = fangstOgFiskInntekter + arbeidsInntekter,
-                sisteAvsluttendeKalenderMåned = sisteAvsluttendeKalenderMåned
-            ),
-            bruktInntektsPeriode = null,
-            verneplikt = false,
-            fangstOgFisk = true,
-            beregningsDato = regelverksdato,
-            regelverksdato = regelverksdato,
-            lærling = false,
-            grunnlagBeregningsregel = "BLA"
-        )
+        val fakta =
+            Fakta(
+                inntekt =
+                    Inntekt(
+                        "123",
+                        inntektsListe = fangstOgFiskInntekter + arbeidsInntekter,
+                        sisteAvsluttendeKalenderMåned = sisteAvsluttendeKalenderMåned,
+                    ),
+                bruktInntektsPeriode = null,
+                verneplikt = false,
+                fangstOgFisk = true,
+                beregningsDato = regelverksdato,
+                regelverksdato = regelverksdato,
+                lærling = false,
+                grunnlagBeregningsregel = "BLA",
+            )
 
         val evaluering = fangstOgFiske104.evaluer(fakta)
 
@@ -290,7 +304,7 @@ internal class Periode104UkerTest {
     fun generateArbeidsInntekt(
         range: IntRange,
         beløpPerMnd: BigDecimal,
-        månedForSisteInntekt: YearMonth = YearMonth.of(2019, 1)
+        månedForSisteInntekt: YearMonth = YearMonth.of(2019, 1),
     ): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
@@ -298,9 +312,9 @@ internal class Periode104UkerTest {
                 listOf(
                     KlassifisertInntekt(
                         beløpPerMnd,
-                        InntektKlasse.ARBEIDSINNTEKT
-                    )
-                )
+                        InntektKlasse.ARBEIDSINNTEKT,
+                    ),
+                ),
             )
         }
     }
@@ -316,7 +330,7 @@ internal class Periode104UkerTest {
     fun generateFangstOgFiskInntekt(
         range: IntRange,
         beløpPerMnd: BigDecimal,
-        månedForSisteInntekt: YearMonth = YearMonth.of(2019, 1)
+        månedForSisteInntekt: YearMonth = YearMonth.of(2019, 1),
     ): List<KlassifisertInntektMåned> {
         return (range).toList().map {
             KlassifisertInntektMåned(
@@ -324,9 +338,9 @@ internal class Periode104UkerTest {
                 listOf(
                     KlassifisertInntekt(
                         beløpPerMnd,
-                        InntektKlasse.FANGST_FISKE
-                    )
-                )
+                        InntektKlasse.FANGST_FISKE,
+                    ),
+                ),
             )
         }
     }
