@@ -52,7 +52,7 @@ dependencies {
 
     // kafka
     implementation("org.apache.kafka:kafka-streams:3.3.1")
-    implementation("org.apache.kafka:kafka-clients:3.3.1")
+    implementation("org.apache.kafka:kafka-clients:7.5.1-ce")
 
     // Miljøkonfigurasjon
     implementation(libs.konfig)
