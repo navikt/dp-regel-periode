@@ -48,7 +48,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-layout-template-json:$log4j2Versjon")
     implementation("org.apache.logging.log4j:log4j-core:$log4j2Versjon")
 
-    implementation("no.nav:nare:768ae37")
+    implementation("no.nav:nare:13785ff")
 
     // kafka
     implementation("org.apache.kafka:kafka-streams:3.3.1")
