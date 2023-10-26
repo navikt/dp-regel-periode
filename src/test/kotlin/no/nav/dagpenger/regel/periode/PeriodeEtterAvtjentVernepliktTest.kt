@@ -41,16 +41,18 @@ internal class PeriodeEtterAvtjentVernepliktTest {
 
     @Test
     fun ` § 4-19 - Dagpenger etter avtjent verneplikt skal gi 26 uker  `() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
                 bruktInntektsPeriode = null,
                 verneplikt = true,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "Verneplikt",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = vernepliktPeriode.evaluer(fakta)
@@ -59,16 +61,18 @@ internal class PeriodeEtterAvtjentVernepliktTest {
 
     @Test
     fun ` § 4-19 - Dagpenger etter ikke å ha avtjent verneplikt skal ikke gi 26 uker  `() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = vernepliktPeriode.evaluer(fakta)

@@ -37,6 +37,7 @@ internal class PeriodeEtterLærlingForskriftTest {
                 regelverksdato = beregningsdato,
                 lærling = true,
                 grunnlagBeregningsregel = "Har ingen betydning for utfall",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         // når
@@ -51,16 +52,18 @@ internal class PeriodeEtterLærlingForskriftTest {
     @Test
     fun `§ 2-6 - Skal ikke gi periode for lærlinger hvis utenfor koronatid  – unntak fra folketrygdloven § 4-4 til § 4-6 `() {
         // gitt fakta
+        val beregningsdato = LocalDate.of(2021, 10, 1)
         val fakta =
             Fakta(
                 inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2021, 10, 1),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2021, 10, 1),
                 lærling = true,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         assertFalse(fakta.erSærregel())

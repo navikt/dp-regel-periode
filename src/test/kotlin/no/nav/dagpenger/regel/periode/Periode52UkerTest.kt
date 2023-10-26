@@ -17,6 +17,7 @@ import java.time.YearMonth
 internal class Periode52UkerTest {
     @Test
     fun `Skal ikke gi periode på 52 uker når man har arbeidsinntekt over 2 G siste 12 mnd`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -28,10 +29,11 @@ internal class Periode52UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste12Måneder52Uker.evaluer(fakta)
@@ -41,6 +43,7 @@ internal class Periode52UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 52 uker når man har næringsinntekt over 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -52,10 +55,11 @@ internal class Periode52UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = true,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske52Uker.evaluer(fakta)
@@ -93,6 +97,7 @@ internal class Periode52UkerTest {
                 regelverksdato = regelverksdato,
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(regelverksdato),
             )
 
         val evaluering = fangstOgFiske52.evaluer(fakta)
@@ -102,6 +107,7 @@ internal class Periode52UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 52 uker når man har arbeidsinntekt over 2 G i snitt de siste 36 mnd`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -113,10 +119,11 @@ internal class Periode52UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste36Måneder52Uker.evaluer(fakta)
@@ -126,6 +133,7 @@ internal class Periode52UkerTest {
 
     @Test
     fun `Skal ikke gi periode på 52 uker når man har næringsinntekt over 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -137,10 +145,11 @@ internal class Periode52UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = true,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske52Uker.evaluer(fakta)

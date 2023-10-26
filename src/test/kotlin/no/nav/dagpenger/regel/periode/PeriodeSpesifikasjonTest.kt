@@ -8,6 +8,8 @@ import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.events.inntekt.v1.KlassifisertInntektMåned
+import no.nav.dagpenger.regel.periode.Evalueringer.finnHøyestePeriodeFraEvaluering
+import no.nav.dagpenger.regel.periode.Evalueringer.mapEvalueringResultatToInt
 import no.nav.nare.core.evaluations.Evaluering
 import no.nav.nare.core.evaluations.Resultat
 import no.nav.nare.core.specifications.Spesifikasjon
@@ -68,6 +70,7 @@ internal class PeriodeSpesifikasjonTest {
     // Fjerner den gamle testen, og bruker kun denne, da lærlingflag settes manuelt av saksbehandler, og skal ikke settes av saksbehandler når særregelen ikke lenger gjelder
     @Test
     fun ` Ordinær skal ikke behandle lærling`() {
+        val beregningsdato = LocalDate.of(2020, 3, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -79,10 +82,11 @@ internal class PeriodeSpesifikasjonTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2020, 3, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2020, 3, 20),
                 lærling = true,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
         val evaluering = periode.evaluer(fakta)
         assertSoftly {
@@ -95,6 +99,7 @@ internal class PeriodeSpesifikasjonTest {
 
     @Test
     fun ` Ordinær brukes hvis det ikke er særregel `() {
+        val beregningsdato = LocalDate.of(2020, 3, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -106,10 +111,11 @@ internal class PeriodeSpesifikasjonTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2020, 3, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2020, 3, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
         val evaluering = periode.evaluer(fakta)
         assertSoftly {

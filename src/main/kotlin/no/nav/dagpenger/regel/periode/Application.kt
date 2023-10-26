@@ -6,11 +6,11 @@ import io.prometheus.client.Counter
 import no.nav.NarePrometheus
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.Problem
+import no.nav.dagpenger.regel.periode.Evalueringer.finnHøyestePeriodeFraEvaluering
 import no.nav.dagpenger.streams.KafkaAivenCredentials
 import no.nav.dagpenger.streams.River
 import no.nav.dagpenger.streams.streamConfigAiven
 import no.nav.nare.core.evaluations.Evaluering
-import no.nav.nare.core.evaluations.Resultat
 import org.apache.kafka.streams.kstream.Predicate
 import java.net.URI
 
@@ -28,6 +28,7 @@ class Application(
 ) : River(config.regelTopic) {
     override val SERVICE_APP_ID: String = config.application.id
     override val HTTP_PORT: Int = config.application.httpPort
+    private val unleash: Unleash = configuration.unleash
 
     companion object {
         val LÆRLING = "lærling"
@@ -41,7 +42,6 @@ class Application(
         val BEREGNINGS_REGEL_GRUNNLAG = "beregningsregel"
         val BEREGNINGSDATO = "beregningsDato"
         val REGELVERKSDATO = "regelverksdato"
-        var unleash: Unleash = setupUnleash(configuration.application.unleashUrl)
     }
 
     override fun filterPredicates(): List<Predicate<String, Packet>> {
@@ -54,7 +54,7 @@ class Application(
     }
 
     override fun onPacket(packet: Packet): Packet {
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(unleash))
 
         val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
 
@@ -98,30 +98,6 @@ class Application(
             ),
         )
         return packet
-    }
-}
-
-fun mapEvalueringResultatToInt(it: Evaluering): List<Int> {
-    return if (it.children.isEmpty()) {
-        listOf(it.begrunnelse.toInt())
-    } else {
-        it.children.flatMap { mapEvalueringResultatToInt(it) }
-    }
-}
-
-// TODO: Mer intuitiv og robust løsning for 26 ukers dagpengeperiode for vernepliktige
-fun finnHøyestePeriodeFraEvaluering(
-    evaluering: Evaluering,
-    beregningsregel: String,
-): Int? {
-    return if (beregningsregel == "Verneplikt") {
-        26
-    } else {
-        return evaluering
-            .children
-            .filter { it.resultat == Resultat.JA }
-            .flatMap { mapEvalueringResultatToInt(it) }
-            .maxOrNull()
     }
 }
 

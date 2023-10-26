@@ -17,6 +17,7 @@ import java.time.YearMonth
 internal class Periode104UkerTest {
     @Test
     fun `Skal gi periode på 104 uker når man har arbeidsinntekt over 2 G siste 12 mnd`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -28,10 +29,11 @@ internal class Periode104UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste12Måneder104Uker.evaluer(fakta)
@@ -41,6 +43,7 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal gi periode på 104 uker når man har næringsinntekt over 2 G siste 12 mnd og fangst og fisk er oppfylt`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -52,10 +55,11 @@ internal class Periode104UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = true,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste12MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -65,6 +69,7 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal gi periode på 104 uker når man har arbeidsinntekt over 2 G i snitt de siste 36 mnd`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -76,10 +81,11 @@ internal class Periode104UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = false,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste36Måneder104Uker.evaluer(fakta)
@@ -89,6 +95,7 @@ internal class Periode104UkerTest {
 
     @Test
     fun `Skal gi periode på 104 uker når man har næringsinntekt over 2 G i snitt de siste 36 mnd og fangst og fisk er oppfylt`() {
+        val beregningsdato = LocalDate.of(2019, 5, 20)
         val fakta =
             Fakta(
                 inntekt =
@@ -100,10 +107,11 @@ internal class Periode104UkerTest {
                 bruktInntektsPeriode = null,
                 verneplikt = false,
                 fangstOgFisk = true,
-                beregningsDato = LocalDate.of(2019, 5, 20),
+                beregningsDato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
             )
 
         val evaluering = ordinærSiste36MånederMedFangstOgFiske104Uker.evaluer(fakta)
@@ -294,6 +302,7 @@ internal class Periode104UkerTest {
                 regelverksdato = regelverksdato,
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",
+                grunnbeløp = grunnbeløpStrategy.grunnbeløp(regelverksdato),
             )
 
         val evaluering = fangstOgFiske104.evaluer(fakta)

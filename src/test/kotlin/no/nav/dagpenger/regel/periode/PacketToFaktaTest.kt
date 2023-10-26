@@ -1,5 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
+import io.getunleash.FakeUnleash
 import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -32,7 +33,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertTrue(fakta.fangstOgFiskeErIkkeAvviklet())
     }
@@ -51,7 +52,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertTrue(fakta.verneplikt)
     }
@@ -70,7 +71,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertEquals(LocalDate.of(2019, 5, 20), fakta.beregningsDato)
     }
@@ -98,11 +99,11 @@ class PacketToFaktaTest {
 
         Packet(jsonMedRegelverksdato).also { packet ->
             packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
-            assertEquals(LocalDate.of(2019, 5, 10), packetToFakta(packet).regelverksdato)
+            assertEquals(LocalDate.of(2019, 5, 10), packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash())).regelverksdato)
         }
         Packet(jsonUtenRegelverksdato).also { packet ->
             packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
-            assertEquals(LocalDate.of(2019, 4, 10), packetToFakta(packet).regelverksdato)
+            assertEquals(LocalDate.of(2019, 4, 10), packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash())).regelverksdato)
         }
     }
 
@@ -120,7 +121,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertEquals(96883.toBigDecimal(), fakta.grunnbeløp)
     }
@@ -139,7 +140,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertEquals(99858.toBigDecimal(), fakta.grunnbeløp)
     }
@@ -158,7 +159,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertEquals(YearMonth.of(2019, 2), fakta.bruktInntektsPeriode!!.førsteMåned)
         assertEquals(YearMonth.of(2019, 3), fakta.bruktInntektsPeriode!!.sisteMåned)
@@ -177,7 +178,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertEquals("12345", fakta.inntekt.inntektsId)
     }
@@ -196,7 +197,7 @@ class PacketToFaktaTest {
         val packet = Packet(json)
         packet.putValue("inntektV1", jsonAdapterInntekt.toJsonValue(emptyInntekt)!!)
 
-        val fakta = packetToFakta(packet)
+        val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
         assertTrue(fakta.lærling)
     }
