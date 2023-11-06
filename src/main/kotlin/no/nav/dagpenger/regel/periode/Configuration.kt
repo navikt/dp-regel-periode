@@ -41,9 +41,8 @@ private val prodProperties =
 
 private fun config() =
     when (System.getenv("NAIS_CLUSTER_NAME") ?: System.getProperty("NAIS_CLUSTER_NAME")) {
-        "dev-fss" -> systemProperties() overriding EnvironmentVariables overriding devProperties
         "dev-gcp" -> systemProperties() overriding EnvironmentVariables overriding devProperties
-        "prod-fss" -> systemProperties() overriding EnvironmentVariables overriding prodProperties
+        "prod-gcp" -> systemProperties() overriding EnvironmentVariables overriding prodProperties
         else -> {
             systemProperties() overriding EnvironmentVariables overriding localProperties
         }
