@@ -31,7 +31,7 @@ jobs:
 
       - name: docker-build-push
         uses: nais/docker-build-push@v0
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/feature/gcp'
         id: docker-build-push
         with:
           byosbom: dependency-graph-reports/build_and_deploy-build.json
@@ -44,7 +44,7 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
       - name: Archive NAIS yaml
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/feature/gcp'
         uses: actions/upload-artifact@v3
         with:
           name: nais-yaml
@@ -56,9 +56,9 @@ jobs:
   deploy-dev:
     name: Deploy to dev
     needs: [build]
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/feature/gcp'
     runs-on: ubuntu-latest
-    environment: dev-fss
+    environment: dev-gcp
     steps:
       - name: Fetch NAIS yaml
         uses: actions/download-artifact@v3
@@ -69,30 +69,30 @@ jobs:
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-fss
+          CLUSTER: dev-gcp
           RESOURCE: .nais/unleash-apitoken.yaml,.nais/nais.yaml
           VAR: image=${{ needs.build.outputs.image }}
           VARS: .nais/dev-vars.yaml
           PRINT_PAYLOAD: true
 
-  deploy-prod:
-    name: Deploy to Production
-    needs: [build, deploy-dev]
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    environment: prod-fss
-    steps:
-      - name: Fetch NAIS yaml
-        uses: actions/download-artifact@v3
-        with:
-          name: nais-yaml
-          path: .nais
-
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-fss
-          RESOURCE: .nais/unleash-apitoken.yaml,.nais/nais.yaml
-          VAR: image=${{ needs.build.outputs.image }}
-          VARS: .nais/prod-vars.yaml
-          PRINT_PAYLOAD: true
+#  deploy-prod:
+#    name: Deploy to Production
+#    needs: [build, deploy-dev]
+#    if: github.ref == 'refs/heads/master'
+#    runs-on: ubuntu-latest
+#    environment: prod-fss
+#    steps:
+#      - name: Fetch NAIS yaml
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: nais-yaml
+#          path: .nais
+#
+#      - uses: nais/deploy/actions/deploy@v1
+#        env:
+#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+#          CLUSTER: prod-fss
+#          RESOURCE: .nais/unleash-apitoken.yaml,.nais/nais.yaml
+#          VAR: image=${{ needs.build.outputs.image }}
+#          VARS: .nais/prod-vars.yaml
+#          PRINT_PAYLOAD: true
