@@ -65,7 +65,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")
 
-    testImplementation("org.apache.kafka:kafka-streams-test-utils:3.3.1")
+    testImplementation("org.apache.kafka:kafka-streams-test-utils:7.5.2-ce")
 }
 
 // https://stackoverflow.com/questions/48033792/log4j2-error-statuslogger-unrecognized-conversion-specifier
