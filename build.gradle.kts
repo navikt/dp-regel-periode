@@ -51,7 +51,7 @@ dependencies {
     implementation("no.nav:nare:768ae37")
 
     // kafka
-    implementation("org.apache.kafka:kafka-streams:3.3.1")
+    implementation("org.apache.kafka:kafka-streams:7.5.2-ce")
     implementation("org.apache.kafka:kafka-clients:3.3.1")
 
     // Miljøkonfigurasjon
@@ -65,7 +65,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")
 
-    testImplementation("org.apache.kafka:kafka-streams-test-utils:3.3.1")
+    testImplementation("org.apache.kafka:kafka-streams-test-utils:7.5.2-ce")
 }
 
 // https://stackoverflow.com/questions/48033792/log4j2-error-statuslogger-unrecognized-conversion-specifier
