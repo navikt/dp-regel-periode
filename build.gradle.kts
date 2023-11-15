@@ -26,6 +26,7 @@ val moshiVersion = "1.15.0"
 val log4j2Versjon = "2.21.1"
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation(libs.rapids.and.rivers)
 
     implementation("com.github.navikt:dagpenger-events:20230831.d11fdb")
     implementation("com.github.navikt:dagpenger-streams:20230831.f3d785")

@@ -5,12 +5,13 @@ import no.nav.dagpenger.grunnbelop.Grunnbeløp
 import no.nav.dagpenger.grunnbelop.Regel
 import no.nav.dagpenger.grunnbelop.forDato
 import no.nav.dagpenger.grunnbelop.getGrunnbeløpForRegel
+import no.nav.dagpenger.regel.sats.Config
 import java.math.BigDecimal
 import java.time.LocalDate
 
 const val GJUSTERING_TEST = "dp-g-justeringstest"
 
-class GrunnbeløpStrategy(private val unleash: Unleash) {
+class GrunnbeløpStrategy(private val unleash: Unleash = Config.unleash) {
     fun grunnbeløp(beregningsdato: LocalDate): BigDecimal {
         return if (isThisGjusteringTest(beregningsdato)) {
             Grunnbeløp.GjusteringsTest.verdi
