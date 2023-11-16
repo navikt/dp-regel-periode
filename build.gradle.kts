@@ -58,7 +58,7 @@ dependencies {
     implementation(libs.konfig)
 
     // unleash
-    implementation("io.getunleash:unleash-client-java:8.4.0")
+    implementation("io.getunleash:unleash-client-java:9.1.0")
 
     testImplementation(kotlin("test"))
     testImplementation(libs.kotest.assertions.core)
