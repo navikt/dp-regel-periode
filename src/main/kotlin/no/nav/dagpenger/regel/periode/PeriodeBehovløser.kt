@@ -20,10 +20,10 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
         val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
         val GRUNNLAG_RESULTAT = "grunnlagResultat"
-        val BEREGNINGSREGEL_GRUNNLAG = "beregningsregel"
+        val GRUNNLAG_BEREGNINGSREGEL = "beregningsregel"
         val BEREGNINGSDATO = "beregningsDato"
         val REGELVERKSDATO = "regelverksdato"
-        internal val validations: River.() -> Unit = {
+        internal val rapidFilter: River.() -> Unit = {
             validate { it.requireKey(INNTEKT, GRUNNLAG_RESULTAT, BEREGNINGSDATO) }
             validate {
                 it.interestedIn(
@@ -31,16 +31,16 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
                     REGELVERKSDATO,
                     LÆRLING,
                     BRUKT_INNTEKTSPERIODE,
-                    FANGST_OG_FISK
+                    FANGST_OG_FISK,
+                    GRUNNLAG_BEREGNINGSREGEL,
                 )
             }
             validate { it.rejectKey(PERIODE_RESULTAT) }
         }
     }
 
-
     init {
-        River(rapidsConnection).apply(validations).register(this)
+        River(rapidsConnection).apply(rapidFilter).register(this)
     }
 
     override fun onPacket(

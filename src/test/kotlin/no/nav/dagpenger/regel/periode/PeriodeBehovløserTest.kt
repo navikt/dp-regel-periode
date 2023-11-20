@@ -33,7 +33,7 @@ class PeriodeBehovløserTest {
                 mapOf(
                     AVTJENT_VERNEPLIKT to true,
                     BEREGNINGSDATO to "2020-05-20",
-                    GRUNNLAG_RESULTAT to mapOf(PeriodeBehovløser.BEREGNINGSREGEL_GRUNNLAG to "Verneplikt"),
+                    GRUNNLAG_RESULTAT to mapOf(PeriodeBehovløser.GRUNNLAG_BEREGNINGSREGEL to "Verneplikt"),
                     INNTEKT to
                         jsonMapper.convertValue(
                             nullInntekt, Map::class.java,
