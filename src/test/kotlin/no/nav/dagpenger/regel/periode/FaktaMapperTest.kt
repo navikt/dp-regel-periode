@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.regel.periode.FaktaMapper.ManglendeGrunnlagBeregningsregelException
 import no.nav.dagpenger.regel.periode.FaktaMapper.grunnlagBeregningsregel
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FISK
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_BEREGNINGSREGEL
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
@@ -35,7 +36,8 @@ class FaktaMapperTest {
             inntekt: Map<String, Any> = emptyInntekt,
             lærling: Boolean? = null,
             regelverksdato: LocalDate? = null,
-            beregningsregelGrunnlag: String? = null,
+            beregningsregelGrunnlag: String? = "Mikke",
+            fangstOgFisk: Any? = true,
         ): String {
             val testMap =
                 mutableMapOf(
@@ -48,6 +50,9 @@ class FaktaMapperTest {
             beregningsregelGrunnlag?.let {
                 testMap[GRUNNLAG_RESULTAT] = mapOf(GRUNNLAG_BEREGNINGSREGEL to beregningsregelGrunnlag)
             }
+            fangstOgFisk?.let {
+                testMap[FANGST_OG_FISK] = fangstOgFisk
+            }
 
             return JsonMessage.newMessage(testMap).toJson()
         }
@@ -57,12 +62,31 @@ class FaktaMapperTest {
     fun `Beregningsregel grunnlag`() {
         val behovløser = OnPacketTestListener(testRapid)
         testRapid.sendTestMessage(testMessage(beregningsregelGrunnlag = "Langbein"))
-        behovløser.packet.grunnlagBeregningsregel() shouldBe "Langbein"
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).grunnlagBeregningsregel shouldBe "Langbein"
 
         testRapid.sendTestMessage(testMessage(beregningsregelGrunnlag = null))
 
         shouldThrow<ManglendeGrunnlagBeregningsregelException> {
-            behovløser.packet.grunnlagBeregningsregel() shouldBe null
+            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).grunnlagBeregningsregel
+        }
+    }
+
+    @Test
+    fun `Fangst og fiske blir mappet riktig`() {
+        val behovløser = OnPacketTestListener(testRapid)
+
+        testRapid.sendTestMessage(testMessage(fangstOgFisk = true))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk shouldBe true
+
+        testRapid.sendTestMessage(testMessage(fangstOgFisk = false))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk shouldBe false
+
+        testRapid.sendTestMessage(testMessage(fangstOgFisk = null))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk shouldBe false
+
+        testRapid.sendTestMessage(testMessage(fangstOgFisk = 100))
+        shouldThrow<IllegalArgumentException> {
+            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk
         }
     }
 

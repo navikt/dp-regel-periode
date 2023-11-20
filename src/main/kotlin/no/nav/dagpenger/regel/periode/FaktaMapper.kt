@@ -1,5 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
+import com.fasterxml.jackson.databind.JsonNode
 import mu.KotlinLogging
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.regel.periode.FaktaMapper.avtjentVerneplikt
@@ -62,11 +63,9 @@ object FaktaMapper {
         }
     }
 
-    class ManglendeGrunnlagBeregningsregelException : RuntimeException()
-
     fun JsonMessage.fangstOgFiske() =
         when (this.harVerdi(FANGST_OG_FISK)) {
-            true -> this[FANGST_OG_FISK].asBoolean()
+            true -> this[FANGST_OG_FISK].toBooleanStrict()
             false -> false
         }
 
@@ -104,7 +103,11 @@ object FaktaMapper {
         }
     }
 
+    private fun JsonNode.toBooleanStrict() = this.asText().toBooleanStrict()
+
     class ManglendeInntektException : RuntimeException("Mangler inntekt")
+
+    class ManglendeGrunnlagBeregningsregelException : RuntimeException()
 
     private fun JsonMessage.harVerdi(field: String) = !this[field].isMissingOrNull()
 }
