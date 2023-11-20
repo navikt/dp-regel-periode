@@ -71,7 +71,7 @@ object FaktaMapper {
 
     fun JsonMessage.lærling() =
         when (this.harVerdi(LÆRLING)) {
-            true -> this[LÆRLING].asBoolean()
+            true -> this[LÆRLING].toBooleanStrict()
             false -> false
         }
 

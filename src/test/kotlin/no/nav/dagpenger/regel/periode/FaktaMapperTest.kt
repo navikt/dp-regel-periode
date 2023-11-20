@@ -9,6 +9,7 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FIS
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_BEREGNINGSREGEL
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.LÆRLING
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.MessageProblems
@@ -34,7 +35,7 @@ class FaktaMapperTest {
             behovId: String = "behovId",
             beregningsdato: LocalDate = LocalDate.MAX,
             inntekt: Map<String, Any> = emptyInntekt,
-            lærling: Boolean? = null,
+            lærling: Any? = false,
             regelverksdato: LocalDate? = null,
             beregningsregelGrunnlag: String? = "Mikke",
             fangstOgFisk: Any? = true,
@@ -52,6 +53,10 @@ class FaktaMapperTest {
             }
             fangstOgFisk?.let {
                 testMap[FANGST_OG_FISK] = fangstOgFisk
+            }
+
+            lærling?.let {
+                testMap[LÆRLING] = lærling
             }
 
             return JsonMessage.newMessage(testMap).toJson()
@@ -87,6 +92,25 @@ class FaktaMapperTest {
         testRapid.sendTestMessage(testMessage(fangstOgFisk = 100))
         shouldThrow<IllegalArgumentException> {
             packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk
+        }
+    }
+
+    @Test
+    fun `lærling mappet riktig`() {
+        val behovløser = OnPacketTestListener(testRapid)
+
+        testRapid.sendTestMessage(testMessage(lærling = true))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).lærling shouldBe true
+
+        testRapid.sendTestMessage(testMessage(lærling = false))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).lærling shouldBe false
+
+        testRapid.sendTestMessage(testMessage(lærling = null))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).lærling shouldBe false
+
+        testRapid.sendTestMessage(testMessage(lærling = 100))
+        shouldThrow<IllegalArgumentException> {
+            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).lærling
         }
     }
 
