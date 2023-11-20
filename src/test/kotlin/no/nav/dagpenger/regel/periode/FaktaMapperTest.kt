@@ -3,7 +3,9 @@ package no.nav.dagpenger.regel.periode
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.regel.periode.FaktaMapper.ManglendeGrunnlagBeregningsregelException
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.AVTJENT_VERNEPLIKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BRUKT_INNTEKTSPERIODE
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FISKE
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_BEREGNINGSREGEL
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
@@ -25,23 +27,18 @@ class FaktaMapperTest {
     private val testRapid = TestRapid()
 
     private companion object {
-        private val emptyInntekt =
-            mapOf(
-                "inntektsId" to "12345",
-                "inntektsListe" to emptyList<String>(),
-                "sisteAvsluttendeKalenderMåned" to YearMonth.of(2018, 3),
-            )
-
         private fun testMessage(
             behovId: String = "behovId",
             beregningsdato: Any = LocalDate.MAX,
-            inntekt: Map<String, Any> = emptyInntekt,
+            inntekt: Any = "{}",
             lærling: Any? = false,
+            avtjentVerneplikt: Any? = false,
             regelverksdato: Any? = LocalDate.MAX,
-            beregningsregelGrunnlag: String? = "Mikke",
+            grunnlagBeregningsregel: String? = "Mikke",
             fangstOgFisk: Any? = true,
+            bruktInntektsperiode: Any? = null,
         ): String {
-            val testMap =
+            val testMap: MutableMap<String, Any> =
                 mutableMapOf(
                     // BEHOV_ID to behovId,
                     INNTEKT to inntekt,
@@ -49,31 +46,43 @@ class FaktaMapperTest {
                     GRUNNLAG_RESULTAT to "{}",
                 )
 
-            beregningsregelGrunnlag?.let {
-                testMap[GRUNNLAG_RESULTAT] = mapOf(GRUNNLAG_BEREGNINGSREGEL to beregningsregelGrunnlag)
+            grunnlagBeregningsregel?.let {
+                testMap[GRUNNLAG_RESULTAT] = mapOf(GRUNNLAG_BEREGNINGSREGEL to it)
             }
             fangstOgFisk?.let {
-                testMap[FANGST_OG_FISKE] = fangstOgFisk
+                testMap[FANGST_OG_FISKE] = it
             }
 
             lærling?.let {
-                testMap[LÆRLING] = lærling
+                testMap[LÆRLING] = it
+            }
+
+            avtjentVerneplikt?.let {
+                testMap[AVTJENT_VERNEPLIKT] = it
             }
 
             regelverksdato?.let {
-                testMap[REGELVERKSDATO] = regelverksdato
+                testMap[REGELVERKSDATO] = it
+            }
+
+            bruktInntektsperiode?.let {
+                testMap[BRUKT_INNTEKTSPERIODE] = it
+            }
+
+            inntekt?.let {
+                testMap[INNTEKT] = it
             }
             return JsonMessage.newMessage(testMap).toJson()
         }
     }
 
     @Test
-    fun `Beregningsregel grunnlag`() {
+    fun `Beregningsregel blir grunnlag`() {
         val behovløser = OnPacketTestListener(testRapid)
-        testRapid.sendTestMessage(testMessage(beregningsregelGrunnlag = "Langbein"))
+        testRapid.sendTestMessage(testMessage(grunnlagBeregningsregel = "Langbein"))
         packetToFakta(behovløser.packet, GrunnbeløpStrategy()).grunnlagBeregningsregel shouldBe "Langbein"
 
-        testRapid.sendTestMessage(testMessage(beregningsregelGrunnlag = null))
+        testRapid.sendTestMessage(testMessage(grunnlagBeregningsregel = null))
 
         shouldThrow<ManglendeGrunnlagBeregningsregelException> {
             packetToFakta(behovløser.packet, GrunnbeløpStrategy()).grunnlagBeregningsregel
@@ -100,7 +109,26 @@ class FaktaMapperTest {
     }
 
     @Test
-    fun `lærling mappet riktig`() {
+    fun `Avtjent verneplikt blir mappet riktig`() {
+        val behovløser = OnPacketTestListener(testRapid)
+
+        testRapid.sendTestMessage(testMessage(avtjentVerneplikt = true))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).verneplikt shouldBe true
+
+        testRapid.sendTestMessage(testMessage(avtjentVerneplikt = false))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).verneplikt shouldBe false
+
+        testRapid.sendTestMessage(testMessage(avtjentVerneplikt = null))
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).verneplikt shouldBe false
+
+        testRapid.sendTestMessage(testMessage(avtjentVerneplikt = 100))
+        shouldThrow<IllegalArgumentException> {
+            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).verneplikt
+        }
+    }
+
+    @Test
+    fun `Lærling blir mappet riktig`() {
         val behovløser = OnPacketTestListener(testRapid)
 
         testRapid.sendTestMessage(testMessage(lærling = true))
@@ -149,6 +177,88 @@ class FaktaMapperTest {
         packetToFakta(behovløser.packet, GrunnbeløpStrategy()).regelverksdato shouldBe beregningsdato
     }
 
+    @Test
+    fun `Brukt inntektsperiode blir mappet riktig`() {
+        val behovløser = OnPacketTestListener(testRapid)
+        val førsteMåned = YearMonth.of(2019, 5)
+        val sisteMåned = YearMonth.of(2020, 4)
+
+        testRapid.sendTestMessage(
+            testMessage(
+                bruktInntektsperiode =
+                    mapOf(
+                        "førsteMåned" to førsteMåned,
+                        "sisteMåned" to sisteMåned,
+                    ),
+            ),
+        )
+        packetToFakta(
+            behovløser.packet,
+            GrunnbeløpStrategy(),
+        ).bruktInntektsperiode shouldBe InntektsPeriode(førsteMåned = førsteMåned, sisteMåned = sisteMåned)
+
+        testRapid.sendTestMessage(
+            testMessage(
+                bruktInntektsperiode = null,
+            ),
+        )
+        packetToFakta(
+            behovløser.packet,
+            GrunnbeløpStrategy(),
+        ).bruktInntektsperiode shouldBe null
+
+        testRapid.sendTestMessage(
+            testMessage(
+                bruktInntektsperiode =
+                    mapOf(
+                        "MikkeMus" to førsteMåned,
+                        "sisteMåned" to sisteMåned,
+                    ),
+            ),
+        )
+        shouldThrow<IllegalArgumentException> {
+            packetToFakta(
+                behovløser.packet,
+                GrunnbeløpStrategy(),
+            )
+        }
+
+        testRapid.sendTestMessage(
+            testMessage(
+                bruktInntektsperiode =
+                    mapOf(
+                        "førsteMåned" to førsteMåned,
+                        "sisteMåned" to "DonaldDuck",
+                    ),
+            ),
+        )
+        shouldThrow<IllegalArgumentException> {
+            packetToFakta(
+                behovløser.packet,
+                GrunnbeløpStrategy(),
+            )
+        }
+    }
+
+    @Test
+    fun `Inntekt blir mappet riktig`() {
+        val behovløser = OnPacketTestListener(testRapid)
+
+        testRapid.sendTestMessage(
+            testMessage(
+                inntekt = inntektMap(),
+            ),
+        )
+
+        packetToFakta(
+            behovløser.packet,
+            GrunnbeløpStrategy(),
+        ).inntekt.let {
+            it.inntektsId shouldBe "id3a"
+            it.inntektsListe.size shouldBe 2
+        }
+    }
+
     private class OnPacketTestListener(rapidsConnection: RapidsConnection) : River.PacketListener {
         var problems: MessageProblems? = null
         lateinit var packet: JsonMessage
@@ -171,4 +281,30 @@ class FaktaMapperTest {
             this.problems = problems
         }
     }
+
+    private fun inntektMap() =
+        mapOf(
+            "inntektsId" to "id3a",
+            "inntektsListe" to
+                listOf(
+                    mapOf(
+                        "årMåned" to "2020-10",
+                        "klassifiserteInntekter" to
+                            listOf(
+                                mapOf("beløp" to "400000", "inntektKlasse" to "ARBEIDSINNTEKT"),
+                                mapOf("beløp" to "400000.5", "inntektKlasse" to "DAGPENGER"),
+                            ),
+                    ),
+                    mapOf(
+                        "årMåned" to "2020-11",
+                        "klassifiserteInntekter" to
+                            listOf(
+                                mapOf("beløp" to 400000.0, "inntektKlasse" to "ARBEIDSINNTEKT"),
+                                mapOf("beløp" to 100000, "inntektKlasse" to "DAGPENGER"),
+                            ),
+                    ),
+                ),
+            "manueltRedigert" to false,
+            "sisteAvsluttendeKalenderMåned" to "2023-09",
+        )
 }

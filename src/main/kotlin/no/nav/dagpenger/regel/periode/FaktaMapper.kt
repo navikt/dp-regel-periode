@@ -86,7 +86,7 @@ object FaktaMapper {
 
     fun JsonMessage.avtjentVerneplikt() =
         when (this.harVerdi(AVTJENT_VERNEPLIKT)) {
-            true -> this[AVTJENT_VERNEPLIKT].asBoolean()
+            true -> this[AVTJENT_VERNEPLIKT].toBooleanStrict()
             false -> false
         }
 
