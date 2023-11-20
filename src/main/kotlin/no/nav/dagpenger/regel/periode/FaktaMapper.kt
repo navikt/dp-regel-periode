@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import mu.KotlinLogging
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.regel.periode.FaktaMapper.avtjentVerneplikt
+import no.nav.dagpenger.regel.periode.FaktaMapper.beregningsdato
 import no.nav.dagpenger.regel.periode.FaktaMapper.bruktInntektsPeriode
 import no.nav.dagpenger.regel.periode.FaktaMapper.fangstOgFiske
 import no.nav.dagpenger.regel.periode.FaktaMapper.grunnlagBeregningsregel
@@ -31,7 +32,7 @@ internal fun packetToFakta(
 ): Fakta {
     val verneplikt = packet.avtjentVerneplikt()
     val inntekt: Inntekt = packet.inntekt()
-    val beregningsDato = packet[BEREGNINGSDATO].asLocalDate()
+    val beregningsDato = packet.beregningsdato()
     val regelverksdato = packet.regelverksdato() ?: beregningsDato
     val lærling = packet.lærling()
 
@@ -75,10 +76,12 @@ object FaktaMapper {
             false -> false
         }
 
+    fun JsonMessage.beregningsdato() = this[BEREGNINGSDATO].asLocalDate()
+
     fun JsonMessage.regelverksdato() =
         when (this.harVerdi(REGELVERKSDATO)) {
             true -> this[REGELVERKSDATO].asLocalDate()
-            false -> null
+            false -> this.beregningsdato()
         }
 
     fun JsonMessage.avtjentVerneplikt() =
