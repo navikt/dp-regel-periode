@@ -1,6 +1,7 @@
 package no.nav.dagpenger.regel.periode
 
 import io.kotest.matchers.shouldBe
+import no.nav.dagpenger.events.Packet
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.AVTJENT_VERNEPLIKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
@@ -9,8 +10,10 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.PERIODE_RESULTAT
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
+import org.apache.kafka.streams.TopologyTestDriver
 import org.junit.jupiter.api.Test
 import java.time.YearMonth
+import kotlin.test.assertTrue
 
 class PeriodeBehovløserTest {
     private val testrapid = TestRapid()
@@ -45,5 +48,36 @@ class PeriodeBehovløserTest {
 
         val message = testrapid.inspektør.message(0)
         message[PERIODE_RESULTAT]["periodeAntallUker"].asInt() shouldBe 26
+    }
+    @Test
+    fun ` Should add PeriodeSubsumsjon `() {
+        val json =
+            """
+            {
+                "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
+                "aktørId":"1000052711564",
+                "vedtakId":3.1018297E7,
+                "beregningsDato":"2019-02-27",
+                "harAvtjentVerneplikt":false,
+                "grunnlagResultat":
+                    {
+                        "beregningsregel": "BLA"
+                    },
+                "bruktInntektsPeriode":
+                    {
+                        "førsteMåned":"2016-02",
+                        "sisteMåned":"2016-11"
+                    }
+
+            }
+            """.trimIndent()
+
+        val packet = Packet(json)
+        packet.putValue("inntektV1", inntekt)
+        TopologyTestDriver(ApplicationTopologyTest.periode.buildTopology(), ApplicationTopologyTest.config).use { topologyTestDriver ->
+            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
+            val ut = topologyTestDriver.regelOutputTopic().readValue()
+            assertTrue { ut.hasField("periodeResultat") }
+        }
     }
 }

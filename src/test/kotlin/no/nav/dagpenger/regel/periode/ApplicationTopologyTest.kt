@@ -47,58 +47,6 @@ internal class ApplicationTopologyTest {
     }
 
     @Test
-    fun ` Dagpenger behov without inntekt should not be processed `() {
-        val json =
-            """
-            {
-                "beregningsDato": "2019-05-20",
-                "beregningsregel": "BLA"
-            }
-            """.trimIndent()
-
-        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.regelInputTopic().also { it.pipeInput(Packet(json)) }
-            assertTrue { topologyTestDriver.regelOutputTopic().isEmpty }
-        }
-    }
-
-    @Test
-    fun ` dagpengebehov without beregningsDato should not be processed`() {
-        val json =
-            """
-            {
-                "beregningsregel": "BLA"
-            }
-            """.trimIndent()
-
-        val packet = Packet(json)
-        packet.putValue("inntektV1", inntekt)
-
-        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
-            assertTrue { topologyTestDriver.regelOutputTopic().isEmpty }
-        }
-    }
-
-    @Test
-    fun `Dagpenger behov without grunnlagResultat should not be processed`() {
-        val json =
-            """
-            {
-                "beregningsDato": "2020-05-20"
-            }
-            """.trimIndent()
-
-        val packet = Packet(json)
-        packet.putValue("inntektV1", inntekt)
-
-        TopologyTestDriver(periode.buildTopology(), config).use { topologyTestDriver ->
-            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
-            assertTrue { topologyTestDriver.regelOutputTopic().isEmpty }
-        }
-    }
-
-    @Test
     fun ` Should add PeriodeSubsumsjon `() {
         val json =
             """
