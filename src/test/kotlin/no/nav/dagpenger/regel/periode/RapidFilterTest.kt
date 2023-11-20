@@ -4,28 +4,26 @@ import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.PERIODE_RESULTAT
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.MessageProblems
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
-import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 
 class RapidFilterTest {
     private val testRapid = TestRapid()
-    private val inntektId = "01HF4BNZTR2F30GR0Q0TCH22KS"
     private val testMessage =
         mapOf(
-            // PeriodeBehovløser.BEHOV_ID to "ULID",
-            BEREGNINGSDATO to "2020-04-30",
-            INNTEKT to inntektJson(inntektId),
-            GRUNNLAG_RESULTAT to mapOf(PeriodeBehovløser.GRUNNLAG_BEREGNINGSREGEL to "VeldigFinBeregningsregel"),
+            BEREGNINGSDATO to "verdi",
+            INNTEKT to "verid",
+            GRUNNLAG_RESULTAT to "verdi",
         )
 
     @Test
-    fun `Skal behandle pakker med alle required keys, unntatt pakker med løsning`() {
+    fun `Skal behandle pakker med alle required keys`() {
         val testListener = TestListener(testRapid)
         testRapid.sendTestMessage(
             JsonMessage.newMessage(testMessage).toJson(),
@@ -33,37 +31,44 @@ class RapidFilterTest {
         testListener.onPacketCalled shouldBe true
     }
 
-    @Language("JSON")
-    private fun inntektJson(inntektId: String) =
-        """
-        {
-          "inntektsId": "$inntektId",
-          "inntektsListe": [
-            {
-              "årMåned": "2020-10",
-              "klassifiserteInntekter": [
-                {
-                  "beløp": "40000",
-                  "inntektKlasse": "ARBEIDSINNTEKT"
-                }
-              ],
-              "harAvvik": false
-            },
-            {
-              "årMåned": "2020-11",
-              "klassifiserteInntekter": [
-                {
-                  "beløp": "40000",
-                  "inntektKlasse": "ARBEIDSINNTEKT"
-                }
-              ],
-              "harAvvik": false
+    @Test
+    fun `Skal ikke behandle pakker med løsning`() {
+        val testListener = TestListener(testRapid)
+        val messageMedLøsning =
+            testMessage.toMutableMap().also {
+                it[PERIODE_RESULTAT] = "verdi"
             }
-          ],
-          "manueltRedigert": false,
-          "sisteAvsluttendeKalenderMåned": "2023-09"
-        }
-        """.trimIndent()
+        testRapid.sendTestMessage(
+            JsonMessage.newMessage(messageMedLøsning).toJson(),
+        )
+        testListener.onPacketCalled shouldBe false
+    }
+
+    @Test
+    fun `Skal kke behandle pakker med  manglende required keys`() {
+        val testListener = TestListener(testRapid)
+
+        testRapid.sendTestMessage(
+            testMessage.muterOgKonverterToJsonString { it.remove(BEREGNINGSDATO) },
+        )
+        testListener.onPacketCalled shouldBe false
+
+        testRapid.sendTestMessage(
+            testMessage.muterOgKonverterToJsonString { it.remove(INNTEKT) },
+        )
+        testListener.onPacketCalled shouldBe false
+
+        testRapid.sendTestMessage(
+            testMessage.muterOgKonverterToJsonString { it.remove(GRUNNLAG_RESULTAT) },
+        )
+        testListener.onPacketCalled shouldBe false
+    }
+
+    private fun Map<String, Any>.muterOgKonverterToJsonString(block: (map: MutableMap<String, Any>) -> Unit): String {
+        val mutableMap = this.toMutableMap()
+        block.invoke(mutableMap)
+        return JsonMessage.newMessage(mutableMap).toJson()
+    }
 
     private class TestListener(rapidsConnection: RapidsConnection) : River.PacketListener {
         var onPacketCalled = false
