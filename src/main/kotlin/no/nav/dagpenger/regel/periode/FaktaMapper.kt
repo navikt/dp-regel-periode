@@ -17,7 +17,7 @@ import no.nav.helse.rapids_rivers.isMissingOrNull
 
 private val sikkerLogg = KotlinLogging.logger("tjenestekall")
 
-internal fun packetToFakta(
+internal fun kpacketToFakta(
     packet: JsonMessage,
     grunnbeløpStrategy: GrunnbeløpStrategy,
 ): Fakta {
