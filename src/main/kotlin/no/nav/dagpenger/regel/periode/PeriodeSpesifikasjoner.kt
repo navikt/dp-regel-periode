@@ -82,7 +82,7 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker =
 
 internal fun Fakta.fangstOgFiskeErIkkeAvviklet(): Boolean {
     val fangstOgFiskAvvikletFra = LocalDate.of(2022, 1, 1)
-    return (fangstOgFisk && regelverksdato < fangstOgFiskAvvikletFra)
+    return (fangstOgFiske && regelverksdato < fangstOgFiskAvvikletFra)
 }
 
 val ordinærSiste12Måneder52Uker =

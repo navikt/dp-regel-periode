@@ -45,10 +45,10 @@ internal class PeriodeEtterAvtjentVernepliktTest {
         val fakta =
             Fakta(
                 inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
-                bruktInntektsPeriode = null,
+                bruktInntektsperiode = null,
                 verneplikt = true,
-                fangstOgFisk = false,
-                beregningsDato = beregningsdato,
+                fangstOgFiske = false,
+                beregningsdato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "Verneplikt",
@@ -65,10 +65,10 @@ internal class PeriodeEtterAvtjentVernepliktTest {
         val fakta =
             Fakta(
                 inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
-                bruktInntektsPeriode = null,
+                bruktInntektsperiode = null,
                 verneplikt = false,
-                fangstOgFisk = false,
-                beregningsDato = beregningsdato,
+                fangstOgFiske = false,
+                beregningsdato = beregningsdato,
                 regelverksdato = LocalDate.of(2019, 5, 20),
                 lærling = false,
                 grunnlagBeregningsregel = "BLA",

@@ -10,17 +10,17 @@ import java.time.Month
 
 data class Fakta(
     val inntekt: Inntekt,
-    val bruktInntektsPeriode: InntektsPeriode? = null,
+    val bruktInntektsperiode: InntektsPeriode? = null,
     val verneplikt: Boolean,
-    val fangstOgFisk: Boolean,
-    val beregningsDato: LocalDate,
+    val fangstOgFiske: Boolean,
+    val beregningsdato: LocalDate,
     val regelverksdato: LocalDate,
     val grunnbeløp: BigDecimal,
     val lærling: Boolean,
     val grunnlagBeregningsregel: String,
 ) {
     val filtrertInntekt =
-        bruktInntektsPeriode?.let { inntektsPeriode ->
+        bruktInntektsperiode?.let { inntektsPeriode ->
             inntekt.filterPeriod(
                 inntektsPeriode.førsteMåned,
                 inntektsPeriode.sisteMåned,

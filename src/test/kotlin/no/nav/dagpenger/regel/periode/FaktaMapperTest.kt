@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.regel.periode.FaktaMapper.ManglendeGrunnlagBeregningsregelException
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
-import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FISK
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FISKE
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_BEREGNINGSREGEL
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
@@ -53,7 +53,7 @@ class FaktaMapperTest {
                 testMap[GRUNNLAG_RESULTAT] = mapOf(GRUNNLAG_BEREGNINGSREGEL to beregningsregelGrunnlag)
             }
             fangstOgFisk?.let {
-                testMap[FANGST_OG_FISK] = fangstOgFisk
+                testMap[FANGST_OG_FISKE] = fangstOgFisk
             }
 
             lærling?.let {
@@ -85,17 +85,17 @@ class FaktaMapperTest {
         val behovløser = OnPacketTestListener(testRapid)
 
         testRapid.sendTestMessage(testMessage(fangstOgFisk = true))
-        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk shouldBe true
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFiske shouldBe true
 
         testRapid.sendTestMessage(testMessage(fangstOgFisk = false))
-        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk shouldBe false
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFiske shouldBe false
 
         testRapid.sendTestMessage(testMessage(fangstOgFisk = null))
-        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk shouldBe false
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFiske shouldBe false
 
         testRapid.sendTestMessage(testMessage(fangstOgFisk = 100))
         shouldThrow<IllegalArgumentException> {
-            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFisk
+            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).fangstOgFiske
         }
     }
 
@@ -124,11 +124,11 @@ class FaktaMapperTest {
 
         val beregningsdato = LocalDate.of(2022, 1, 1)
         testRapid.sendTestMessage(testMessage(beregningsdato = beregningsdato))
-        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).beregningsDato shouldBe beregningsdato
+        packetToFakta(behovløser.packet, GrunnbeløpStrategy()).beregningsdato shouldBe beregningsdato
 
         testRapid.sendTestMessage(testMessage(beregningsdato = 100))
         shouldThrow<DateTimeParseException> {
-            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).beregningsDato
+            packetToFakta(behovløser.packet, GrunnbeløpStrategy()).beregningsdato
         }
     }
 

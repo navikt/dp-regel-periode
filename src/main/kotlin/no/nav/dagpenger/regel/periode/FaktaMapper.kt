@@ -5,7 +5,7 @@ import mu.KotlinLogging
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.regel.periode.FaktaMapper.avtjentVerneplikt
 import no.nav.dagpenger.regel.periode.FaktaMapper.beregningsdato
-import no.nav.dagpenger.regel.periode.FaktaMapper.bruktInntektsPeriode
+import no.nav.dagpenger.regel.periode.FaktaMapper.bruktInntektsperiode
 import no.nav.dagpenger.regel.periode.FaktaMapper.fangstOgFiske
 import no.nav.dagpenger.regel.periode.FaktaMapper.grunnlagBeregningsregel
 import no.nav.dagpenger.regel.periode.FaktaMapper.inntekt
@@ -14,7 +14,7 @@ import no.nav.dagpenger.regel.periode.FaktaMapper.regelverksdato
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.AVTJENT_VERNEPLIKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BRUKT_INNTEKTSPERIODE
-import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FISK
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FISKE
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_BEREGNINGSREGEL
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
@@ -32,11 +32,11 @@ internal fun packetToFakta(
 ): Fakta {
     val verneplikt = packet.avtjentVerneplikt()
     val inntekt: Inntekt = packet.inntekt()
-    val beregningsDato = packet.beregningsdato()
-    val regelverksdato = packet.regelverksdato() ?: beregningsDato
+    val beregningsdato = packet.beregningsdato()
+    val regelverksdato = packet.regelverksdato() ?: beregningsdato
     val lærling = packet.lærling()
 
-    val bruktInntektsPeriode = packet.bruktInntektsPeriode()
+    val bruktInntektsperiode = packet.bruktInntektsperiode()
 
     val fangstOgFisk = packet.fangstOgFiske()
 
@@ -44,14 +44,14 @@ internal fun packetToFakta(
 
     return Fakta(
         inntekt = inntekt,
-        bruktInntektsPeriode = bruktInntektsPeriode,
+        bruktInntektsperiode = bruktInntektsperiode,
         verneplikt = verneplikt,
-        fangstOgFisk = fangstOgFisk,
+        fangstOgFiske = fangstOgFisk,
         grunnlagBeregningsregel = grunnlagBeregningsregel,
-        beregningsDato = beregningsDato,
+        beregningsdato = beregningsdato,
         regelverksdato = regelverksdato,
         lærling = lærling,
-        grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsDato),
+        grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsdato),
     )
 }
 
@@ -65,8 +65,8 @@ object FaktaMapper {
     }
 
     fun JsonMessage.fangstOgFiske() =
-        when (this.harVerdi(FANGST_OG_FISK)) {
-            true -> this[FANGST_OG_FISK].toBooleanStrict()
+        when (this.harVerdi(FANGST_OG_FISKE)) {
+            true -> this[FANGST_OG_FISKE].toBooleanStrict()
             false -> false
         }
 
@@ -90,10 +90,10 @@ object FaktaMapper {
             false -> false
         }
 
-    fun JsonMessage.bruktInntektsPeriode(): InntektsPeriode? {
-        val inntektsPerioder = this[BRUKT_INNTEKTSPERIODE]
+    fun JsonMessage.bruktInntektsperiode(): InntektsPeriode? {
+        val bruktInntektsperiode = this[BRUKT_INNTEKTSPERIODE]
         return when (this.harVerdi(BRUKT_INNTEKTSPERIODE)) {
-            true -> jsonMapper.convertValue(inntektsPerioder, InntektsPeriode::class.java)
+            true -> jsonMapper.convertValue(bruktInntektsperiode, InntektsPeriode::class.java)
             false -> null
         }
     }

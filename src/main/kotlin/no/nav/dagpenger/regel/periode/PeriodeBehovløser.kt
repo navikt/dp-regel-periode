@@ -17,7 +17,7 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
         val PERIODE_RESULTAT = "periodeResultat"
         val INNTEKT = "inntektV1"
         val AVTJENT_VERNEPLIKT = "harAvtjentVerneplikt"
-        val FANGST_OG_FISK = "oppfyllerKravTilFangstOgFisk"
+        val FANGST_OG_FISKE = "oppfyllerKravTilFangstOgFisk"
         val BRUKT_INNTEKTSPERIODE = "bruktInntektsPeriode"
         val GRUNNLAG_RESULTAT = "grunnlagResultat"
         val GRUNNLAG_BEREGNINGSREGEL = "beregningsregel"
@@ -31,7 +31,7 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
                     REGELVERKSDATO,
                     LÆRLING,
                     BRUKT_INNTEKTSPERIODE,
-                    FANGST_OG_FISK,
+                    FANGST_OG_FISKE,
                     GRUNNLAG_BEREGNINGSREGEL,
                 )
             }

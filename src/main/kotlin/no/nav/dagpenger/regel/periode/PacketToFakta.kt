@@ -29,11 +29,11 @@ internal fun packetToFakta(
 
     return Fakta(
         inntekt = inntekt,
-        bruktInntektsPeriode = bruktInntektsPeriode,
+        bruktInntektsperiode = bruktInntektsPeriode,
         verneplikt = verneplikt,
-        fangstOgFisk = fangstOgFisk,
+        fangstOgFiske = fangstOgFisk,
         grunnlagBeregningsregel = grunnlagBeregningsregel,
-        beregningsDato = beregningsDato,
+        beregningsdato = beregningsDato,
         regelverksdato = regelverksdato,
         lærling = lærling,
         grunnbeløp = grunnbeløpStrategy.grunnbeløp(beregningsDato),

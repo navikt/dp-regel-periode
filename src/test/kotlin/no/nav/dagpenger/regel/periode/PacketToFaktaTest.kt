@@ -73,7 +73,7 @@ class PacketToFaktaTest {
 
         val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
-        assertEquals(LocalDate.of(2019, 5, 20), fakta.beregningsDato)
+        assertEquals(LocalDate.of(2019, 5, 20), fakta.beregningsdato)
     }
 
     @Test
@@ -161,8 +161,8 @@ class PacketToFaktaTest {
 
         val fakta = packetToFakta(packet, GrunnbeløpStrategy(FakeUnleash()))
 
-        assertEquals(YearMonth.of(2019, 2), fakta.bruktInntektsPeriode!!.førsteMåned)
-        assertEquals(YearMonth.of(2019, 3), fakta.bruktInntektsPeriode!!.sisteMåned)
+        assertEquals(YearMonth.of(2019, 2), fakta.bruktInntektsperiode!!.førsteMåned)
+        assertEquals(YearMonth.of(2019, 3), fakta.bruktInntektsperiode!!.sisteMåned)
     }
 
     @Test

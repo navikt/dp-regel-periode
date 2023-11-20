@@ -30,10 +30,10 @@ internal class PeriodeEtterLærlingForskriftTest {
         val fakta =
             Fakta(
                 inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
-                bruktInntektsPeriode = null,
+                bruktInntektsperiode = null,
                 verneplikt = false,
-                fangstOgFisk = false,
-                beregningsDato = beregningsdato,
+                fangstOgFiske = false,
+                beregningsdato = beregningsdato,
                 regelverksdato = beregningsdato,
                 lærling = true,
                 grunnlagBeregningsregel = "Har ingen betydning for utfall",
@@ -56,10 +56,10 @@ internal class PeriodeEtterLærlingForskriftTest {
         val fakta =
             Fakta(
                 inntekt = Inntekt("123", emptyList(), sisteAvsluttendeKalenderMåned = YearMonth.of(2019, 4)),
-                bruktInntektsPeriode = null,
+                bruktInntektsperiode = null,
                 verneplikt = false,
-                fangstOgFisk = false,
-                beregningsDato = beregningsdato,
+                fangstOgFiske = false,
+                beregningsdato = beregningsdato,
                 regelverksdato = LocalDate.of(2021, 10, 1),
                 lærling = true,
                 grunnlagBeregningsregel = "BLA",
