@@ -55,8 +55,14 @@ internal fun packetToFakta(
 
 object FaktaMapper {
     fun JsonMessage.grunnlagBeregningsregel(): String {
-        return this[GRUNNLAG_RESULTAT][GRUNNLAG_BEREGNINGSREGEL].asText()
+        try {
+            return this[GRUNNLAG_RESULTAT][GRUNNLAG_BEREGNINGSREGEL].asText()
+        } catch (e: Exception) {
+            throw ManglendeGrunnlagBeregningsregelException()
+        }
     }
+
+    class ManglendeGrunnlagBeregningsregelException : RuntimeException()
 
     fun JsonMessage.fangstOgFiske() =
         when (this.harVerdi(FANGST_OG_FISK)) {

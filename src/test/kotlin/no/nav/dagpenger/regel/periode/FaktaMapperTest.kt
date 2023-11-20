@@ -1,7 +1,8 @@
 package no.nav.dagpenger.regel.periode
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import no.nav.dagpenger.events.inntekt.v1.Inntekt
+import no.nav.dagpenger.regel.periode.FaktaMapper.ManglendeGrunnlagBeregningsregelException
 import no.nav.dagpenger.regel.periode.FaktaMapper.grunnlagBeregningsregel
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_BEREGNINGSREGEL
@@ -37,10 +38,11 @@ class FaktaMapperTest {
             beregningsregelGrunnlag: String? = null,
         ): String {
             val testMap =
-                mutableMapOf<String, Any>(
+                mutableMapOf(
                     // BEHOV_ID to behovId,
                     INNTEKT to inntekt,
                     BEREGNINGSDATO to beregningsdato,
+                    GRUNNLAG_RESULTAT to "{}",
                 )
 
             beregningsregelGrunnlag?.let {
@@ -58,10 +60,11 @@ class FaktaMapperTest {
         behovløser.packet.grunnlagBeregningsregel() shouldBe "Langbein"
 
         testRapid.sendTestMessage(testMessage(beregningsregelGrunnlag = null))
-        behovløser.packet.grunnlagBeregningsregel() shouldBe null
-    }
 
-    private val jsonAdapterInntekt = moshiInstance.adapter(Inntekt::class.java)
+        shouldThrow<ManglendeGrunnlagBeregningsregelException> {
+            behovløser.packet.grunnlagBeregningsregel() shouldBe null
+        }
+    }
 
     private class OnPacketTestListener(rapidsConnection: RapidsConnection) : River.PacketListener {
         var problems: MessageProblems? = null
