@@ -1,6 +1,6 @@
 # Dagpenger-regel-periode
 
-Beregner hvor lang periode bruker har krav på dagpenger.
+Beregner hvor mange uker bruker har krav på dagpenger.
 
 # Komme i gang
 
@@ -19,4 +19,4 @@ Spørsmål knyttet til koden eller prosjektet kan rettes mot:
 
 ## For NAV-ansatte
 
-Interne henvendelser kan sendes via Slack i kanalen #dagpenger.
+Interne henvendelser kan sendes via Slack i kanalen #team-dagpenger-dev.
