@@ -1,4 +1,4 @@
-package no.nav.dagpenger.regel.sats
+package no.nav.dagpenger.regel.periode
 
 import com.natpryce.konfig.ConfigurationMap
 import com.natpryce.konfig.ConfigurationProperties
@@ -15,8 +15,8 @@ object Config {
     private val defaultProperties =
         ConfigurationMap(
             mapOf(
-                "RAPID_APP_NAME" to "dagpenger-regel-sats",
-                "KAFKA_CONSUMER_GROUP_ID" to "dagpenger-regel-sats-v1",
+                "RAPID_APP_NAME" to "dagpenger-regel-periode",
+                "KAFKA_CONSUMER_GROUP_ID" to "dagpenger-regel-periode-v1",
                 "KAFKA_RAPID_TOPIC" to "teamdagpenger.regel.v1",
                 "KAFKA_RESET_POLICY" to "latest",
                 "UNLEASH_SERVER_API_URL" to "https://localhost:1234",
@@ -34,7 +34,7 @@ object Config {
     val unleash: Unleash by lazy {
         DefaultUnleash(
             UnleashConfig.builder()
-                .appName("dp-regel-sats")
+                .appName("dp-regel-periode")
                 .instanceId(runCatching { InetAddress.getLocalHost().hostName }.getOrElse { "ukjent" })
                 .unleashAPI(properties[Key("UNLEASH_SERVER_API_URL", stringType)] + "/api/")
                 .apiKey(properties[Key("UNLEASH_SERVER_API_TOKEN", stringType)])

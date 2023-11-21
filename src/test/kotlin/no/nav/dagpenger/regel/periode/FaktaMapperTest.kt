@@ -27,10 +27,17 @@ class FaktaMapperTest {
     private val testRapid = TestRapid()
 
     private companion object {
+        private val emptyInntekt =
+            mapOf(
+                "inntektsId" to "12345",
+                "inntektsListe" to emptyList<String>(),
+                "sisteAvsluttendeKalenderMåned" to YearMonth.of(2018, 3),
+            )
+
         private fun testMessage(
-            behovId: String = "behovId",
+            // TODO behovId: String = "behovId",
             beregningsdato: Any = LocalDate.MAX,
-            inntekt: Any = "{}",
+            inntekt: Any = emptyInntekt,
             lærling: Any? = false,
             avtjentVerneplikt: Any? = false,
             regelverksdato: Any? = LocalDate.MAX,
@@ -69,7 +76,7 @@ class FaktaMapperTest {
                 testMap[BRUKT_INNTEKTSPERIODE] = it
             }
 
-            inntekt?.let {
+            inntekt.let {
                 testMap[INNTEKT] = it
             }
             return JsonMessage.newMessage(testMap).toJson()

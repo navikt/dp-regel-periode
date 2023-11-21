@@ -5,7 +5,6 @@ import no.nav.dagpenger.grunnbelop.Grunnbeløp
 import no.nav.dagpenger.grunnbelop.Regel
 import no.nav.dagpenger.grunnbelop.forDato
 import no.nav.dagpenger.grunnbelop.getGrunnbeløpForRegel
-import no.nav.dagpenger.regel.sats.Config
 import java.math.BigDecimal
 import java.time.LocalDate
 
