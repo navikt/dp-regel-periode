@@ -22,13 +22,13 @@ class PeriodeBehovløserTest {
         testrapid.inspektør.size shouldBe 1
         testrapid.inspektør.message(0).toString().let { resultJson ->
             resultJson shouldEqualSpecifiedJsonIgnoringOrder """
-{
-   "periodeResultat": {
-     "regelIdentifikator": "Periode.v1",
-     "periodeAntallUker": 52
-   }
- }
- """
+            {
+               "periodeResultat": {
+                 "regelIdentifikator": "Periode.v1",
+                 "periodeAntallUker": 52
+               }
+             }
+      """
         }
     }
 
