@@ -9,6 +9,7 @@ import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 import no.nav.nare.core.evaluations.Evaluering
+import java.net.URI
 
 class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListener {
     companion object {
@@ -23,6 +24,7 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
         val GRUNNLAG_BEREGNINGSREGEL = "beregningsregel"
         val BEREGNINGSDATO = "beregningsDato"
         val REGELVERKSDATO = "regelverksdato"
+        val PROBLEM = "system_problem"
         internal val rapidFilter: River.() -> Unit = {
             validate { it.requireKey(INNTEKT, GRUNNLAG_RESULTAT, BEREGNINGSDATO) }
             validate {
@@ -47,25 +49,34 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
         packet: JsonMessage,
         context: MessageContext,
     ) {
-        val fakta = packetToFakta(packet, GrunnbeløpStrategy())
+        try {
+            val fakta = packetToFakta(packet, GrunnbeløpStrategy())
+            val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
+            val periodeResultat: Int? =
+                finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel).also {
+                    tellHvilkenPeriodeSomBleGitt(it)
+                }
+            val subsumsjon =
+                PeriodeSubsumsjon(
+                    ulidGenerator.nextULID(),
+                    ulidGenerator.nextULID(),
+                    REGELIDENTIFIKATOR,
+                    periodeResultat ?: 0,
+                )
 
-        val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
-
-        val periodeResultat: Int? =
-            finnHøyestePeriodeFraEvaluering(evaluering, fakta.grunnlagBeregningsregel).also {
-                tellHvilkenPeriodeSomBleGitt(it)
-            }
-
-        val subsumsjon =
-            PeriodeSubsumsjon(
-                ulidGenerator.nextULID(),
-                ulidGenerator.nextULID(),
-                REGELIDENTIFIKATOR,
-                periodeResultat ?: 0,
-            )
-
-        packet[PERIODE_RESULTAT] = subsumsjon.toMap()
-        context.publish(packet.toJson())
+            packet[PERIODE_RESULTAT] = subsumsjon.toMap()
+            context.publish(packet.toJson())
+        } catch (e: Exception) {
+            val problem =
+                Problem(
+                    type = URI("urn:dp:error:regel"),
+                    title = "Ukjent feil ved bruk av perioderegel",
+                    instance = URI("urn:dp:regel:periode"),
+                )
+            packet[PROBLEM] = problem.toMap
+            context.publish(packet.toJson())
+            throw e
+        }
     }
 }
 

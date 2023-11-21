@@ -2,6 +2,7 @@ package no.nav.dagpenger.regel.periode
 
 import io.kotest.assertions.json.shouldContainJsonKeyValue
 import io.kotest.assertions.json.shouldEqualSpecifiedJsonIgnoringOrder
+import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
 import org.intellij.lang.annotations.Language
@@ -57,7 +58,37 @@ class PeriodeBehovløserTest {
         }
     }
 
+    @Test
+    fun ` Should add problem on failure`() {
+        shouldThrowAny {
+            testrapid.sendTestMessage(feilJson)
+        }
+        testrapid.inspektør.size shouldBe 1
+        testrapid.inspektør.message(0).toString().let { resultJson ->
+            resultJson shouldEqualSpecifiedJsonIgnoringOrder """
+              {
+                  "system_problem": {
+                    "type": "urn:dp:error:regel",
+                    "title": "Ukjent feil ved bruk av perioderegel",
+                    "status": 500,
+                    "instance": "urn:dp:regel:periode"
+                  }
+              }
+            """
+        }
+    }
+
     private companion object TestData {
+        @Language("JSON")
+        val feilJson =
+            """
+            {
+              "beregningsDato": "2020-05-20",
+              "grunnlagResultat": "ERROR",
+              "inntektV1": "ERROR"
+            } 
+            """.trimIndent()
+
         @Language("JSON")
         val oppfyllerKravTilFangstOgFiskeJson = """
         {
