@@ -1,19 +1,11 @@
 package no.nav.dagpenger.regel.periode
 
+import io.kotest.assertions.json.shouldContainJsonKeyValue
+import io.kotest.assertions.json.shouldEqualSpecifiedJsonIgnoringOrder
 import io.kotest.matchers.shouldBe
-import no.nav.dagpenger.events.Packet
-import no.nav.dagpenger.events.inntekt.v1.Inntekt
-import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.AVTJENT_VERNEPLIKT
-import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
-import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
-import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
-import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.PERIODE_RESULTAT
-import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
-import org.apache.kafka.streams.TopologyTestDriver
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
-import java.time.YearMonth
-import kotlin.test.assertTrue
 
 class PeriodeBehovløserTest {
     private val testrapid = TestRapid()
@@ -23,61 +15,128 @@ class PeriodeBehovløserTest {
     }
 
     @Test
-    fun `Vernepliktperiode burde være 26 uker`() {
-        val nullInntekt =
-            Inntekt(
-                inntektsId = "123",
-                inntektsListe = emptyList(),
-                sisteAvsluttendeKalenderMåned = YearMonth.of(2021, 4),
-            )
+    fun ` Should add PeriodeSubsumsjon`() {
+        testrapid.sendTestMessage(inputJson)
 
-        val testMessage =
-            JsonMessage.newMessage(
-                mapOf(
-                    AVTJENT_VERNEPLIKT to true,
-                    BEREGNINGSDATO to "2020-05-20",
-                    GRUNNLAG_RESULTAT to mapOf(PeriodeBehovløser.GRUNNLAG_BEREGNINGSREGEL to "Verneplikt"),
-                    INNTEKT to
-                        jsonMapper.convertValue(
-                            nullInntekt, Map::class.java,
-                        ),
-                ),
-            )
-
-        testrapid.sendTestMessage(testMessage.toJson())
-
-        val message = testrapid.inspektør.message(0)
-        message[PERIODE_RESULTAT]["periodeAntallUker"].asInt() shouldBe 26
+        testrapid.inspektør.size shouldBe 1
+        testrapid.inspektør.message(0).toString().let { resultJson ->
+            resultJson shouldEqualSpecifiedJsonIgnoringOrder """
+{
+   "periodeResultat": {
+     "regelIdentifikator": "Periode.v1",
+     "periodeAntallUker": 52
+   }
+ }
+ """
+        }
     }
+
     @Test
-    fun ` Should add PeriodeSubsumsjon `() {
-        val json =
+    fun ` Should add PeriodeSubsumsjon with oppfyllerKravTilFangstOgFisk`() {
+        testrapid.sendTestMessage(TestData.oppfyllerKravTilFangstOgFiskeJson)
+
+        testrapid.inspektør.size shouldBe 1
+        testrapid.inspektør.message(0).toString().let { resultJson: String ->
+            resultJson.shouldContainJsonKeyValue(
+                path = "$.periodeResultat.periodeAntallUker",
+                value = 52,
+            )
+        }
+    }
+
+    @Test
+    fun `Vernepliktperiode burde være 26 uker`() {
+        testrapid.sendTestMessage(vernePliktigJson)
+
+        testrapid.inspektør.size shouldBe 1
+        testrapid.inspektør.message(0).toString().let { resultJson: String ->
+            resultJson.shouldContainJsonKeyValue(
+                path = "$.periodeResultat.periodeAntallUker",
+                value = 26,
+            )
+        }
+    }
+
+    private companion object TestData {
+        @Language("JSON")
+        val oppfyllerKravTilFangstOgFiskeJson = """
+        {
+          "beregningsDato": "2018-04-06",
+          "harAvtjentVerneplikt": false,
+          "oppfyllerKravTilFangstOgFisk": true,
+          "grunnlagResultat": {
+            "beregningsregel": "BLA"
+          },
+          "bruktInntektsPeriode": {
+            "førsteMåned": "2016-02",
+            "sisteMåned": "2016-11"
+          },
+          "inntektV1": {
+            "inntektsId": "12345",
+            "inntektsListe": [
+              {
+                "årMåned": "2018-02",
+                "klassifiserteInntekter": [
+                  {
+                    "beløp": "99999",
+                    "inntektKlasse": "FANGST_FISKE"
+                  }
+                ]
+              }
+            ],
+            "manueltRedigert": false,
+            "sisteAvsluttendeKalenderMåned": "2019-02"
+          }
+        }
+        """
+
+        @Language("JSON")
+        val vernePliktigJson =
             """
             {
-                "behovId":"01D6V5QCJCH0NQCHF4PZYB0NRJ",
-                "aktørId":"1000052711564",
-                "vedtakId":3.1018297E7,
-                "beregningsDato":"2019-02-27",
-                "harAvtjentVerneplikt":false,
-                "grunnlagResultat":
-                    {
-                        "beregningsregel": "BLA"
-                    },
-                "bruktInntektsPeriode":
-                    {
-                        "førsteMåned":"2016-02",
-                        "sisteMåned":"2016-11"
-                    }
-
-            }
+              "harAvtjentVerneplikt": true,
+              "beregningsDato": "2020-05-20",
+              "grunnlagResultat": {
+                "beregningsregel": "Verneplikt"
+              },
+              "inntektV1": {
+                "inntektsId": "123",
+                "inntektsListe": [],
+                "manueltRedigert": false,
+                "sisteAvsluttendeKalenderMåned": "2021-04"
+              }
+            } 
             """.trimIndent()
 
-        val packet = Packet(json)
-        packet.putValue("inntektV1", inntekt)
-        TopologyTestDriver(ApplicationTopologyTest.periode.buildTopology(), ApplicationTopologyTest.config).use { topologyTestDriver ->
-            topologyTestDriver.regelInputTopic().also { it.pipeInput(packet) }
-            val ut = topologyTestDriver.regelOutputTopic().readValue()
-            assertTrue { ut.hasField("periodeResultat") }
+        @Language("JSON")
+        val inputJson = """
+        {
+          "beregningsDato": "2019-02-27",
+          "harAvtjentVerneplikt": false,
+          "grunnlagResultat": {
+            "beregningsregel": "BLA"
+          },
+          "bruktInntektsPeriode": {
+            "førsteMåned": "2016-02",
+            "sisteMåned": "2016-11"
+          },
+          "inntektV1": {
+            "inntektsId": "12345",
+            "inntektsListe": [
+              {
+                "årMåned": "2019-02",
+                "klassifiserteInntekter": [
+                  {
+                    "beløp": "25000",
+                    "inntektKlasse": "ARBEIDSINNTEKT"
+                  }
+                ]
+              }
+            ],
+            "manueltRedigert": false,
+            "sisteAvsluttendeKalenderMåned": "2019-02"
+          }
         }
+        """
     }
 }
