@@ -41,7 +41,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(libs.kotest.assertions.core)
-    implementation("io.kotest:kotest-assertions-json-jvm:${libs.versions.kotest.get()}")
+    testImplementation("io.kotest:kotest-assertions-json-jvm:${libs.versions.kotest.get()}")
     testImplementation(libs.mockk)
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")
 }
