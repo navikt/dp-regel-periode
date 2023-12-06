@@ -19,7 +19,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.rapids.and.rivers)
 
-    implementation("com.github.navikt:dagpenger-events:20230831.d11fdb")
+    implementation("com.github.navikt:dagpenger-events:20231204.ee1cc3")
     implementation("com.github.navikt:dp-grunnbelop:2023.05.24-15.26.f42064d9fdc8")
 
     implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.3.0")
