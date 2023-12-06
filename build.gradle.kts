@@ -19,7 +19,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.rapids.and.rivers)
 
-    implementation("com.github.navikt:dagpenger-events:20231204.ee1cc3")
+    implementation("com.github.navikt:dagpenger-events:2023081713361692272216.01ab7c590338")
     implementation("com.github.navikt:dp-grunnbelop:2023.05.24-15.26.f42064d9fdc8")
 
     implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.3.0")
@@ -31,7 +31,7 @@ dependencies {
 
     implementation(libs.kotlin.logging)
 
-    implementation("no.nav:nare:768ae37")
+    implementation("no.nav:nare:13785ff")
 
     // Miljøkonfigurasjon
     implementation(libs.konfig)
