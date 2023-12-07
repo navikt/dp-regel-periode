@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.regel.periode.FaktaMapper.ManglendeGrunnlagBeregningsregelException
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.AVTJENT_VERNEPLIKT
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEHOV_ID
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BRUKT_INNTEKTSPERIODE
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.FANGST_OG_FISKE
@@ -35,7 +36,7 @@ class FaktaMapperTest {
             )
 
         private fun testMessage(
-            // TODO behovId: String = "behovId",
+            behovId: String = "behovId",
             beregningsdato: Any = LocalDate.MAX,
             inntekt: Any = emptyInntekt,
             lærling: Any? = false,
@@ -47,7 +48,7 @@ class FaktaMapperTest {
         ): String {
             val testMap: MutableMap<String, Any> =
                 mutableMapOf(
-                    // BEHOV_ID to behovId,
+                    BEHOV_ID to behovId,
                     INNTEKT to inntekt,
                     BEREGNINGSDATO to beregningsdato,
                     GRUNNLAG_RESULTAT to "{}",

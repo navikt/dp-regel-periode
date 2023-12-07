@@ -46,8 +46,8 @@ class PeriodeBehovløserTest {
     }
 
     @Test
-    fun `Vernepliktperiode burde være 26 uker`() {
-        testrapid.sendTestMessage(vernePliktigJson)
+    fun `Vernepliktperiode skal være 26 uker`() {
+        testrapid.sendTestMessage(vernepliktigTestMessage)
 
         testrapid.inspektør.size shouldBe 1
         testrapid.inspektør.message(0).toString().let { resultJson: String ->
@@ -59,7 +59,7 @@ class PeriodeBehovløserTest {
     }
 
     @Test
-    fun ` Should add problem on failure`() {
+    fun `Should add problem on failure`() {
         shouldThrowAny {
             testrapid.sendTestMessage(feilJson)
         }
@@ -83,6 +83,7 @@ class PeriodeBehovløserTest {
         val feilJson =
             """
             {
+              "behovId": "behovId",
               "beregningsDato": "2020-05-20",
               "grunnlagResultat": "ERROR",
               "inntektV1": "ERROR"
@@ -92,6 +93,7 @@ class PeriodeBehovløserTest {
         @Language("JSON")
         val oppfyllerKravTilFangstOgFiskeJson = """
         {
+          "behovId": "behovId",
           "beregningsDato": "2018-04-06",
           "harAvtjentVerneplikt": false,
           "oppfyllerKravTilFangstOgFisk": true,
@@ -122,9 +124,10 @@ class PeriodeBehovløserTest {
         """
 
         @Language("JSON")
-        val vernePliktigJson =
+        val vernepliktigTestMessage =
             """
             {
+              "behovId": "behovId",
               "harAvtjentVerneplikt": true,
               "beregningsDato": "2020-05-20",
               "grunnlagResultat": {
@@ -142,6 +145,7 @@ class PeriodeBehovløserTest {
         @Language("JSON")
         val inputJson = """
         {
+          "behovId": "behovId",
           "beregningsDato": "2019-02-27",
           "harAvtjentVerneplikt": false,
           "grunnlagResultat": {

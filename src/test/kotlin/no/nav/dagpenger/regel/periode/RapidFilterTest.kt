@@ -1,6 +1,7 @@
 package no.nav.dagpenger.regel.periode
 
 import io.kotest.matchers.shouldBe
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEHOV_ID
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDATO
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
@@ -17,9 +18,10 @@ class RapidFilterTest {
     private val testRapid = TestRapid()
     private val testMessage =
         mapOf(
-            BEREGNINGSDATO to "verdi",
-            INNTEKT to "verid",
-            GRUNNLAG_RESULTAT to "verdi",
+            BEHOV_ID to "behovIdVerdi",
+            BEREGNINGSDATO to "beregningsdatoVerdi",
+            INNTEKT to "inntektVerdi",
+            GRUNNLAG_RESULTAT to "grunnlagResultatVerdi",
         )
 
     @Test
