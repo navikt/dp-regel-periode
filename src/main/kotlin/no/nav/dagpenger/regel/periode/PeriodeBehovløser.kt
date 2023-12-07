@@ -2,6 +2,7 @@ package no.nav.dagpenger.regel.periode
 
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
+import mu.KotlinLogging
 import no.nav.NarePrometheus
 import no.nav.dagpenger.regel.periode.Evalueringer.finnHøyestePeriodeFraEvaluering
 import no.nav.helse.rapids_rivers.JsonMessage
@@ -10,6 +11,8 @@ import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 import no.nav.nare.core.evaluations.Evaluering
 import java.net.URI
+
+private val sikkerLogg = KotlinLogging.logger("tjenestekall")
 
 class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListener {
     companion object {
@@ -50,6 +53,7 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
         context: MessageContext,
     ) {
         try {
+            sikkerLogg.info("Mottok behov for beregning av periode: ${packet.toJson()}")
             val fakta = packetToFakta(packet, GrunnbeløpStrategy())
             val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
             val periodeResultat: Int? =
@@ -66,6 +70,7 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
 
             packet[PERIODE_RESULTAT] = subsumsjon.toMap()
             context.publish(packet.toJson())
+            sikkerLogg.info { "Løste behov for beregning av periode: $periodeResultat med fakta $fakta" }
         } catch (e: Exception) {
             val problem =
                 Problem(
@@ -80,7 +85,6 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
     }
 }
 
-// Prometheus stuff
 private val narePrometheus = NarePrometheus(CollectorRegistry.defaultRegistry)
 
 private fun tellHvilkenPeriodeSomBleGitt(periodeResultat: Int?) {

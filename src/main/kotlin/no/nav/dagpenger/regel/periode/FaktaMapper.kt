@@ -1,7 +1,6 @@
 package no.nav.dagpenger.regel.periode
 
 import com.fasterxml.jackson.databind.JsonNode
-import mu.KotlinLogging
 import no.nav.dagpenger.events.inntekt.v1.Inntekt
 import no.nav.dagpenger.regel.periode.FaktaMapper.avtjentVerneplikt
 import no.nav.dagpenger.regel.periode.FaktaMapper.beregningsdato
@@ -23,8 +22,6 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.REGELVERKSDAT
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.asLocalDate
 import no.nav.helse.rapids_rivers.isMissingOrNull
-
-private val sikkerLogg = KotlinLogging.logger("tjenestekall")
 
 internal fun packetToFakta(
     packet: JsonMessage,
