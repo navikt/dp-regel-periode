@@ -32,13 +32,13 @@ dependencies {
 
     implementation(libs.kotlin.logging)
 
-    implementation("no.nav:nare:768ae37")
+    implementation("no.nav:nare:13785ff")
 
     // Miljøkonfigurasjon
     implementation(libs.konfig)
 
     // unleash
-    implementation("io.getunleash:unleash-client-java:9.1.1")
+    implementation("io.getunleash:unleash-client-java:9.2.0")
 
     testImplementation(kotlin("test"))
     testImplementation(libs.kotest.assertions.core)
