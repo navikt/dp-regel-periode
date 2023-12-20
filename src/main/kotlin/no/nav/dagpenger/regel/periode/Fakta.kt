@@ -1,9 +1,9 @@
 package no.nav.dagpenger.regel.periode
 
-import no.nav.dagpenger.events.inntekt.v1.Inntekt
-import no.nav.dagpenger.events.inntekt.v1.InntektKlasse
-import no.nav.dagpenger.events.inntekt.v1.all
-import no.nav.dagpenger.events.inntekt.v1.sumInntekt
+import no.nav.dagpenger.inntekt.v1.Inntekt
+import no.nav.dagpenger.inntekt.v1.InntektKlasse
+import no.nav.dagpenger.inntekt.v1.all
+import no.nav.dagpenger.inntekt.v1.sumInntekt
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month
