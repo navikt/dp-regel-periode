@@ -44,6 +44,7 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
                 )
             }
             validate { it.rejectKey(PERIODE_RESULTAT) }
+            validate { it.rejectKey(PROBLEM) }
         }
     }
 

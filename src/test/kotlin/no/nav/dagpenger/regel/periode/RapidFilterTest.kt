@@ -6,6 +6,7 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.BEREGNINGSDAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESULTAT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.PERIODE_RESULTAT
+import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.PROBLEM
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.MessageProblems
@@ -42,6 +43,19 @@ class RapidFilterTest {
             }
         testRapid.sendTestMessage(
             JsonMessage.newMessage(messageMedLøsning).toJson(),
+        )
+        testListener.onPacketCalled shouldBe false
+    }
+
+    @Test
+    fun `Skal ikke behandle pakker med problem`() {
+        val testListener = TestListener(testRapid)
+        testRapid.sendTestMessage(
+            JsonMessage.newMessage(
+                testMessage.toMutableMap().also {
+                    it[PROBLEM] = "problem"
+                },
+            ).toJson(),
         )
         testListener.onPacketCalled shouldBe false
     }
