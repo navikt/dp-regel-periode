@@ -20,7 +20,7 @@ class GrunnbeløpStrategy(private val unleash: Unleash = Config.unleash) {
     }
 
     private fun isThisGjusteringTest(dato: LocalDate): Boolean {
-        val gVirkning = LocalDate.of(2023, 5, 15)
+        val gVirkning = LocalDate.of(2024, 4, 29)
         val isAfterGjustering = dato.isAfter(gVirkning.minusDays(1))
         return unleash.isEnabled(GJUSTERING_TEST, false) && isAfterGjustering
     }

@@ -21,7 +21,7 @@ dependencies {
 
     implementation("com.github.navikt:dp-inntekt-kontrakter:1_20231220.55a8a9")
     implementation("com.github.navikt:dagpenger-events:20231220.3050bf")
-    implementation("com.github.navikt:dp-grunnbelop:2023.05.24-15.26.f42064d9fdc8")
+    implementation("com.github.navikt:dp-grunnbelop:2024.04.29-09.52.7ad1a4509774")
 
     implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.3.0")
 
