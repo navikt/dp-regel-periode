@@ -1,5 +1,11 @@
 package no.nav.dagpenger.regel.periode
 
+import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.River
+import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.regel.periode.FaktaMapper.ManglendeGrunnlagBeregningsregelException
@@ -13,12 +19,6 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESU
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.LÆRLING
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.REGELVERKSDATO
-import no.nav.helse.rapids_rivers.JsonMessage
-import no.nav.helse.rapids_rivers.MessageContext
-import no.nav.helse.rapids_rivers.MessageProblems
-import no.nav.helse.rapids_rivers.RapidsConnection
-import no.nav.helse.rapids_rivers.River
-import no.nav.helse.rapids_rivers.testsupport.TestRapid
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.YearMonth

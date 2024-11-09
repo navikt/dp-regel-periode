@@ -1,15 +1,15 @@
 package no.nav.dagpenger.regel.periode
 
+import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.River
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
 import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.NarePrometheus
 import no.nav.dagpenger.regel.periode.Evalueringer.finnHøyestePeriodeFraEvaluering
-import no.nav.helse.rapids_rivers.JsonMessage
-import no.nav.helse.rapids_rivers.MessageContext
-import no.nav.helse.rapids_rivers.RapidsConnection
-import no.nav.helse.rapids_rivers.River
 import no.nav.nare.core.evaluations.Evaluering
 import java.net.URI
 

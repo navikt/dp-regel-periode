@@ -1,6 +1,9 @@
 package no.nav.dagpenger.regel.periode
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
+import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import no.nav.dagpenger.inntekt.v1.Inntekt
 import no.nav.dagpenger.regel.periode.FaktaMapper.avtjentVerneplikt
 import no.nav.dagpenger.regel.periode.FaktaMapper.beregningsdato
@@ -19,9 +22,6 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESU
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.LÆRLING
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.REGELVERKSDATO
-import no.nav.helse.rapids_rivers.JsonMessage
-import no.nav.helse.rapids_rivers.asLocalDate
-import no.nav.helse.rapids_rivers.isMissingOrNull
 
 internal fun packetToFakta(
     packet: JsonMessage,

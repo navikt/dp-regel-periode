@@ -40,6 +40,7 @@ dependencies {
     implementation("io.getunleash:unleash-client-java:9.2.4")
 
     testImplementation(kotlin("test"))
+    testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.kotest.assertions.core)
     testImplementation("io.kotest:kotest-assertions-json-jvm:${libs.versions.kotest.get()}")
     testImplementation(libs.mockk)
