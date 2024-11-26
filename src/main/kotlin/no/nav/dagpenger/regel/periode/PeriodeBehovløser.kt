@@ -3,7 +3,9 @@ package no.nav.dagpenger.regel.periode
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
+import io.micrometer.core.instrument.MeterRegistry
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
 import mu.KotlinLogging
@@ -43,8 +45,8 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
                     GRUNNLAG_BEREGNINGSREGEL,
                 )
             }
-            validate { it.rejectKey(PERIODE_RESULTAT) }
-            validate { it.rejectKey(PROBLEM) }
+            validate { it.forbid(PERIODE_RESULTAT) }
+            validate { it.forbid(PROBLEM) }
         }
     }
 
@@ -55,6 +57,8 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
     override fun onPacket(
         packet: JsonMessage,
         context: MessageContext,
+        metadata: MessageMetadata,
+        meterRegistry: MeterRegistry,
     ) {
         withLoggingContext("behovId" to packet[BEHOV_ID].asText()) {
             try {
