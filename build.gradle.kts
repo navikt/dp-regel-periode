@@ -37,7 +37,7 @@ dependencies {
     implementation(libs.konfig)
 
     // unleash
-    implementation("io.getunleash:unleash-client-java:9.3.1")
+    implementation("io.getunleash:unleash-client-java:9.3.2")
 
     testImplementation(kotlin("test"))
     testImplementation(libs.rapids.and.rivers.test)
