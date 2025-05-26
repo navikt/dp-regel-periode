@@ -20,7 +20,7 @@ dependencies {
     implementation(libs.rapids.and.rivers)
 
     implementation("com.github.navikt:dp-inntekt-kontrakter:1_20231220.55a8a9")
-    implementation("com.github.navikt:dp-grunnbelop:20250526.164.440f3a")
+    implementation("com.github.navikt:dp-grunnbelop:20250526.166.5b778c")
 
     implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.3.0")
 
