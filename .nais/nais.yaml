@@ -45,3 +45,11 @@ spec:
     outbound:
       external:
         - host: dagpenger-unleash-api.nav.cloud.nais.io
+  observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
+    autoInstrumentation:
+      enabled: true
+      runtime: java
