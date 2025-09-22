@@ -1,10 +1,12 @@
 package no.nav.dagpenger.regel.periode
 
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.helse.rapids_rivers.RapidApplication
 
-class ApplicationBuilder(config: Map<String, String>) : RapidsConnection.StatusListener {
+class ApplicationBuilder(
+    config: Map<String, String>,
+) : RapidsConnection.StatusListener {
     companion object {
         private val logger = KotlinLogging.logger { }
     }
