@@ -5,11 +5,11 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
-import mu.KotlinLogging
-import mu.withLoggingContext
 import no.nav.NarePrometheus
 import no.nav.dagpenger.regel.periode.Evalueringer.finnHøyestePeriodeFraEvaluering
 import no.nav.nare.core.evaluations.Evaluering
@@ -17,7 +17,9 @@ import java.net.URI
 
 private val sikkerLogg = KotlinLogging.logger("tjenestekall")
 
-class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListener {
+class PeriodeBehovløser(
+    rapidsConnection: RapidsConnection,
+) : River.PacketListener {
     companion object {
         val LÆRLING = "lærling"
         val REGELIDENTIFIKATOR = "Periode.v1"
@@ -62,7 +64,7 @@ class PeriodeBehovløser(rapidsConnection: RapidsConnection) : River.PacketListe
     ) {
         withLoggingContext("behovId" to packet[BEHOV_ID].asText()) {
             try {
-                sikkerLogg.info("Mottok behov for beregning av periode: ${packet.toJson()}")
+                sikkerLogg.info { "Mottok behov for beregning av periode: ${packet.toJson()}" }
                 val fakta = packetToFakta(packet, GrunnbeløpStrategy())
                 val evaluering: Evaluering = narePrometheus.tellEvaluering { periode.evaluer(fakta) }
                 val periodeResultat: Int? =
@@ -102,7 +104,8 @@ private fun tellHvilkenPeriodeSomBleGitt(periodeResultat: Int?) {
 }
 
 private val periodeGittCounter =
-    Counter.build()
+    Counter
+        .build()
         .name("utfall_dagpengeperiode")
         .labelNames("periode")
         .help("Hvor lang dagpengeperiode ble resultat av subsumsjonen")
