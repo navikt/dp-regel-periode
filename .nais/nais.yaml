@@ -43,6 +43,9 @@ spec:
     - secret: dp-regel-periode-unleash-api-token
   accessPolicy:
     outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
       external:
         - host: dagpenger-unleash-api.nav.cloud.nais.io
   observability:
