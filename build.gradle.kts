@@ -19,7 +19,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.rapids.and.rivers)
 
-    implementation("com.github.navikt:dp-inntekt-kontrakter:1_20250716.854799")
+    implementation("com.github.navikt:dp-inntekt-kontrakter:1_20251210.28d6f9")
     implementation("com.github.navikt:dp-grunnbelop:20250526.166.5b778c")
 
     implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.3.0")
