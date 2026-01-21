@@ -47,7 +47,7 @@ spec:
         - application: logging
           namespace: nais-system
       external:
-        - host: dagpenger-unleash-api.nav.cloud.nais.io
+        - host: teamdagpenger-unleash-api.nav.cloud.nais.io
   observability:
     logging:
       destinations:
