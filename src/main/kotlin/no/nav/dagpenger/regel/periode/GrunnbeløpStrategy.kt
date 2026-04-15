@@ -10,18 +10,19 @@ import java.time.LocalDate
 
 const val GJUSTERING_TEST = "dp-g-justeringstest"
 
-class GrunnbeløpStrategy(private val unleash: Unleash = Config.unleash) {
-    fun grunnbeløp(beregningsdato: LocalDate): BigDecimal {
-        return if (isThisGjusteringTest(beregningsdato)) {
+class GrunnbeløpStrategy(
+    private val unleash: Unleash = Config.unleash,
+) {
+    fun grunnbeløp(beregningsdato: LocalDate): BigDecimal =
+        if (isThisGjusteringTest(beregningsdato)) {
             Grunnbeløp.GjusteringsTest.verdi
         } else {
             getGrunnbeløpForRegel(Regel.Minsteinntekt).forDato(beregningsdato).verdi
         }
-    }
 
     private fun isThisGjusteringTest(dato: LocalDate): Boolean {
         // Dette er HG (Hengende G)
-        val gVirkning = LocalDate.of(2025, 5, 1)
+        val gVirkning = LocalDate.of(2026, 4, 20)
         val isAfterGjustering = dato.isAfter(gVirkning.minusDays(1))
         return unleash.isEnabled(GJUSTERING_TEST, false) && isAfterGjustering
     }
