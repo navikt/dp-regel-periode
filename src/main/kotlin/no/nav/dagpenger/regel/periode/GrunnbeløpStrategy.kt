@@ -22,7 +22,7 @@ class GrunnbeløpStrategy(
 
     private fun isThisGjusteringTest(dato: LocalDate): Boolean {
         // Dette er HG (Hengende G)
-        val gVirkning = LocalDate.of(2026, 4, 20)
+        val gVirkning = LocalDate.of(2026, 6, 1)
         val isAfterGjustering = dato.isAfter(gVirkning.minusDays(1))
         return unleash.isEnabled(GJUSTERING_TEST, false) && isAfterGjustering
     }
