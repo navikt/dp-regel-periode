@@ -1,4 +1,4 @@
 # Ignore everything
 **
-# Except shadow jar
-!build/libs/*.jar
+# Except install target
+!build/install/**
