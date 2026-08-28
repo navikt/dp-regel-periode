@@ -1,6 +1,5 @@
 package no.nav.dagpenger.regel.periode
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
@@ -22,6 +21,7 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.GRUNNLAG_RESU
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.LÆRLING
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.REGELVERKSDATO
+import tools.jackson.databind.JsonNode
 
 internal fun packetToFakta(
     packet: JsonMessage,
@@ -30,7 +30,7 @@ internal fun packetToFakta(
     val verneplikt = packet.avtjentVerneplikt()
     val inntekt: Inntekt = packet.inntekt()
     val beregningsdato = packet.beregningsdato()
-    val regelverksdato = packet.regelverksdato() ?: beregningsdato
+    val regelverksdato = packet.regelverksdato()
     val lærling = packet.lærling()
 
     val bruktInntektsperiode = packet.bruktInntektsperiode()
@@ -55,7 +55,7 @@ internal fun packetToFakta(
 object FaktaMapper {
     fun JsonMessage.grunnlagBeregningsregel(): String {
         try {
-            return this[GRUNNLAG_RESULTAT][GRUNNLAG_BEREGNINGSREGEL].asText()
+            return this[GRUNNLAG_RESULTAT][GRUNNLAG_BEREGNINGSREGEL].asString()
         } catch (e: Exception) {
             throw ManglendeGrunnlagBeregningsregelException()
         }
@@ -103,7 +103,7 @@ object FaktaMapper {
         }
     }
 
-    private fun JsonNode.toBooleanStrict() = this.asText().toBooleanStrict()
+    private fun JsonNode.toBooleanStrict() = this.asString().toBooleanStrict()
 
     class ManglendeInntektException : RuntimeException("Mangler inntekt")
 

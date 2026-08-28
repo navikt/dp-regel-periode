@@ -22,6 +22,8 @@ import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.INNTEKT
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.LÆRLING
 import no.nav.dagpenger.regel.periode.PeriodeBehovløser.Companion.REGELVERKSDATO
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.exc.InvalidFormatException
+import tools.jackson.module.kotlin.KotlinInvalidNullException
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeParseException
@@ -226,7 +228,7 @@ class FaktaMapperTest {
                     ),
             ),
         )
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<KotlinInvalidNullException> {
             packetToFakta(
                 behovløser.packet,
                 GrunnbeløpStrategy(),
@@ -242,7 +244,7 @@ class FaktaMapperTest {
                     ),
             ),
         )
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidFormatException> {
             packetToFakta(
                 behovløser.packet,
                 GrunnbeløpStrategy(),

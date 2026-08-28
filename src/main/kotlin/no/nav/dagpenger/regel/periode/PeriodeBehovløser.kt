@@ -62,7 +62,7 @@ class PeriodeBehovløser(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        withLoggingContext("behovId" to packet[BEHOV_ID].asText()) {
+        withLoggingContext("behovId" to packet[BEHOV_ID].asString()) {
             try {
                 sikkerLogg.info { "Mottok behov for beregning av periode: ${packet.toJson()}" }
                 val fakta = packetToFakta(packet, GrunnbeløpStrategy())
