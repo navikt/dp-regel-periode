@@ -311,8 +311,8 @@ internal class Periode52UkerTest {
     fun generateArbeidsInntekt(
         range: IntRange,
         beløpPerMnd: BigDecimal,
-    ): List<KlassifisertInntektMåned> {
-        return (range).toList().map {
+    ): List<KlassifisertInntektMåned> =
+        (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 1).minusMonths(it.toLong()),
                 listOf(
@@ -323,13 +323,12 @@ internal class Periode52UkerTest {
                 ),
             )
         }
-    }
 
     fun generateFangstOgFiskInntekt(
         range: IntRange,
         beløpPerMnd: BigDecimal,
-    ): List<KlassifisertInntektMåned> {
-        return (range).toList().map {
+    ): List<KlassifisertInntektMåned> =
+        (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 1).minusMonths(it.toLong()),
                 listOf(
@@ -340,13 +339,8 @@ internal class Periode52UkerTest {
                 ),
             )
         }
-    }
 
-    fun generate12MånederFangstOgFiskInntekt(): List<KlassifisertInntektMåned> {
-        return generateArbeidsInntekt(1..12, BigDecimal(1000))
-    }
+    fun generate12MånederFangstOgFiskInntekt(): List<KlassifisertInntektMåned> = generateArbeidsInntekt(1..12, BigDecimal(1000))
 
-    fun generate36MånederFangstOgFiskInntekt(): List<KlassifisertInntektMåned> {
-        return generateArbeidsInntekt(1..36, BigDecimal(1000))
-    }
+    fun generate36MånederFangstOgFiskInntekt(): List<KlassifisertInntektMåned> = generateArbeidsInntekt(1..36, BigDecimal(1000))
 }

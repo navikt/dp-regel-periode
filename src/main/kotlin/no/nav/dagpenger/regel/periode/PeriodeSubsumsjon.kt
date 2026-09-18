@@ -15,14 +15,13 @@ data class PeriodeSubsumsjon(
         val PERIODE = "periodeAntallUker"
     }
 
-    fun toMap(): Map<String, Any> {
-        return mapOf(
+    fun toMap(): Map<String, Any> =
+        mapOf(
             SPORINGSID to sporingsId,
             SUBSUMSJONSID to subsumsjonsId,
             REGELIDENTIFIKATOR to regelidentifikator,
             PERIODE to periode,
         )
-    }
 }
 
 data class InntektsPeriode(

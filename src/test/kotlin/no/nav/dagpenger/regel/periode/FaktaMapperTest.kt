@@ -271,7 +271,9 @@ class FaktaMapperTest {
         }
     }
 
-    private class OnPacketTestListener(rapidsConnection: RapidsConnection) : River.PacketListener {
+    private class OnPacketTestListener(
+        rapidsConnection: RapidsConnection,
+    ) : River.PacketListener {
         var problems: MessageProblems? = null
         lateinit var packet: JsonMessage
 
