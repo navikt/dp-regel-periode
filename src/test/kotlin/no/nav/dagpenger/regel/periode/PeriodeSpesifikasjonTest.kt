@@ -92,7 +92,8 @@ internal class PeriodeSpesifikasjonTest {
         assertSoftly {
             evaluering.resultat shouldBe Resultat.JA
             fakta.erSærregel() shouldBe true
-            evaluering.children.filter { periodeEtterOrdinæreMedJa(it) }
+            evaluering.children
+                .filter { periodeEtterOrdinæreMedJa(it) }
                 .shouldBeEmpty()
         }
     }
@@ -121,7 +122,8 @@ internal class PeriodeSpesifikasjonTest {
         assertSoftly {
             fakta.erSærregel() shouldBe false
             evaluering.resultat shouldBe Resultat.JA
-            evaluering.children.filter { periodeEtterOrdinæreMedJa(it) }
+            evaluering.children
+                .filter { periodeEtterOrdinæreMedJa(it) }
                 .shouldNotBeEmpty()
         }
     }
@@ -131,8 +133,8 @@ internal class PeriodeSpesifikasjonTest {
     private fun generateArbeidsInntekt(
         range: IntRange,
         beløpPerMnd: BigDecimal,
-    ): List<KlassifisertInntektMåned> {
-        return (range).toList().map {
+    ): List<KlassifisertInntektMåned> =
+        (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2020, 2).minusMonths(it.toLong()),
                 listOf(
@@ -143,5 +145,4 @@ internal class PeriodeSpesifikasjonTest {
                 ),
             )
         }
-    }
 }

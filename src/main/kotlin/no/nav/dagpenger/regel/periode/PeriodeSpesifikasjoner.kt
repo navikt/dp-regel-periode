@@ -70,11 +70,12 @@ val ordinærSiste36MånederMedFangstOgFiske104Uker =
         identifikator = "ORDINÆR_36_104_FANGSTOGFISK",
         implementasjon = {
             when {
-                fangstOgFiskeErIkkeAvviklet() && inntektSiste36inkludertFangstOgFiske.divide(
-                    BigDecimal(3),
-                    SCALE,
-                    ROUNDING_MODE,
-                ) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
+                fangstOgFiskeErIkkeAvviklet() &&
+                    inntektSiste36inkludertFangstOgFiske.divide(
+                        BigDecimal(3),
+                        SCALE,
+                        ROUNDING_MODE,
+                    ) >= (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("104")
                 else -> Evaluering.nei("0")
             }
         },
@@ -136,11 +137,12 @@ val ordinærSiste36MånederMedFangstOgFiske52Uker =
         identifikator = "ORDINÆR_36_52_FANGSTOGFISK",
         implementasjon = {
             when {
-                fangstOgFiskeErIkkeAvviklet() && inntektSiste36inkludertFangstOgFiske.divide(
-                    BigDecimal(3),
-                    SCALE,
-                    ROUNDING_MODE,
-                ) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
+                fangstOgFiskeErIkkeAvviklet() &&
+                    inntektSiste36inkludertFangstOgFiske.divide(
+                        BigDecimal(3),
+                        SCALE,
+                        ROUNDING_MODE,
+                    ) < (grunnbeløp.times(BigDecimal(2))) -> Evaluering.ja("52")
                 else -> Evaluering.nei("0")
             }
         },

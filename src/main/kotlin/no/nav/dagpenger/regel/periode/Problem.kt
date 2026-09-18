@@ -9,14 +9,13 @@ data class Problem(
     val instance: URI = URI.create("about:blank"),
 ) {
     companion object {
-        fun fromJson(json: Map<String, Any>): Problem {
-            return Problem(
+        fun fromJson(json: Map<String, Any>): Problem =
+            Problem(
                 URI.create(json["type"] as String),
                 json["title"] as String,
                 json["status"].toString().toInt(),
                 URI.create(json["instance"] as String),
             )
-        }
     }
 
     val toMap: Map<String, Any>

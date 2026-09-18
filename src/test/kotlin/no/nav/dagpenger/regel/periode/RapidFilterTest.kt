@@ -53,11 +53,12 @@ class RapidFilterTest {
     fun `Skal ikke behandle pakker med problem`() {
         val testListener = TestListener(testRapid)
         testRapid.sendTestMessage(
-            JsonMessage.newMessage(
-                testMessage.toMutableMap().also {
-                    it[PROBLEM] = "problem"
-                },
-            ).toJson(),
+            JsonMessage
+                .newMessage(
+                    testMessage.toMutableMap().also {
+                        it[PROBLEM] = "problem"
+                    },
+                ).toJson(),
         )
         testListener.onPacketCalled shouldBe false
     }
@@ -88,13 +89,16 @@ class RapidFilterTest {
         return JsonMessage.newMessage(mutableMap).toJson()
     }
 
-    private class TestListener(rapidsConnection: RapidsConnection) : River.PacketListener {
+    private class TestListener(
+        rapidsConnection: RapidsConnection,
+    ) : River.PacketListener {
         var onPacketCalled = false
 
         init {
-            River(rapidsConnection).apply(
-                PeriodeBehovløser.rapidFilter,
-            ).register(this)
+            River(rapidsConnection)
+                .apply(
+                    PeriodeBehovløser.rapidFilter,
+                ).register(this)
         }
 
         override fun onPacket(

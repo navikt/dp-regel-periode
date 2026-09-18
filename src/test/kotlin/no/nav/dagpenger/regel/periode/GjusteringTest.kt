@@ -81,8 +81,8 @@ internal class GjusteringTest {
     fun generateArbeidsInntekt(
         range: IntRange,
         beløpPerMnd: BigDecimal,
-    ): List<KlassifisertInntektMåned> {
-        return (range).toList().map {
+    ): List<KlassifisertInntektMåned> =
+        (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2020, 1).minusMonths(it.toLong()),
                 listOf(
@@ -93,5 +93,4 @@ internal class GjusteringTest {
                 ),
             )
         }
-    }
 }

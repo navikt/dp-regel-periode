@@ -268,8 +268,8 @@ class FinnerRettPeriodeTest {
     fun generateArbeidsInntekt(
         range: IntRange,
         beløpPerMnd: BigDecimal,
-    ): List<KlassifisertInntektMåned> {
-        return (range).toList().map {
+    ): List<KlassifisertInntektMåned> =
+        (range).toList().map {
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 1).minusMonths(it.toLong()),
                 listOf(
@@ -280,10 +280,9 @@ class FinnerRettPeriodeTest {
                 ),
             )
         }
-    }
 
-    fun getMinusInntekt(): List<KlassifisertInntektMåned> {
-        return listOf(
+    fun getMinusInntekt(): List<KlassifisertInntektMåned> =
+        listOf(
             KlassifisertInntektMåned(
                 YearMonth.of(2019, 3),
                 klassifiserteInntekter =
@@ -299,5 +298,4 @@ class FinnerRettPeriodeTest {
                     ),
             ),
         )
-    }
 }
